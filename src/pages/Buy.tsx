@@ -1,5 +1,7 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileFooter from "@/components/MobileFooter";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import BuyHeroSearch from "@/components/BuyHeroSearch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -184,9 +186,9 @@ const Buy = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+    <div className="min-h-screen bg-background pb-20">
+      <MobileHeader />
+      <main className="pt-16">
         {/* ⬇️ wire up the search */}
         <BuyHeroSearch onSearch={handleSearch} />
 
@@ -273,9 +275,10 @@ const Buy = () => {
           </div>
         </div>
 
-        <AIChatBox />
       </main>
-      <Footer />
+      <FloatingMapButton />
+      <MobileBottomNav />
+      <MobileFooter />
     </div>
   );
 };

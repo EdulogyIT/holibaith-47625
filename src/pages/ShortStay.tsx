@@ -1,5 +1,7 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileFooter from "@/components/MobileFooter";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import ShortStayHeroSearch from "@/components/ShortStayHeroSearch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -217,9 +219,9 @@ const ShortStay = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+    <div className="min-h-screen bg-background pb-20">
+      <MobileHeader />
+      <main className="pt-16">
         {/* Wire up search just like Rent/Buy pages */}
         <ShortStayHeroSearch onSearch={handleSearch} />
 
@@ -310,9 +312,10 @@ const ShortStay = () => {
           </div>
         </div>
 
-        <AIChatBox />
       </main>
-      <Footer />
+      <FloatingMapButton />
+      <MobileBottomNav />
+      <MobileFooter />
     </div>
   );
 };

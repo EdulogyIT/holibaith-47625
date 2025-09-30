@@ -34,49 +34,49 @@ const FeaturedListings = () => {
   ];
 
   return (
-    <section className="px-4 py-6 bg-gray-50">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Featured listings</h2>
-        <button className="text-primary font-medium text-sm">See all</button>
+    <section className="px-4 py-4 bg-gray-50">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-xl font-bold">featured listings</h2>
+        <button className="text-primary font-medium text-xs">See all</button>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {listings.map((listing) => (
           <div
             key={listing.id}
             onClick={() => navigate(`/property/${listing.id}`)}
-            className="bg-white rounded-3xl overflow-hidden shadow-sm border border-border cursor-pointer min-w-[280px] flex-shrink-0"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer min-w-[240px] flex-shrink-0"
           >
             <div className="relative">
               <img
                 src={listing.image}
                 alt={listing.title}
-                className="w-full h-48 object-cover"
+                className="w-full h-36 object-cover"
               />
-              <div className="absolute top-3 left-3 flex gap-2">
-                <Badge className="bg-white text-foreground">
+              <div className="absolute top-2 left-2 flex gap-1.5">
+                <Badge className="bg-white text-foreground text-[10px] py-0.5">
                   {listing.badge}
                 </Badge>
                 {listing.verified && (
-                  <Badge variant="secondary">Verified</Badge>
+                  <Badge variant="secondary" className="text-[10px] py-0.5">Verified</Badge>
                 )}
               </div>
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full"
+                className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full h-8 w-8"
               >
-                <Heart className="h-5 w-5" />
+                <Heart className="h-4 w-4" />
               </Button>
             </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-lg mb-1">{listing.title}</h3>
-              <div className="flex items-center text-muted-foreground text-sm mb-2">
-                <MapPin className="h-4 w-4 mr-1" />
+            <div className="p-3">
+              <h3 className="font-semibold text-sm mb-0.5 truncate">{listing.title}</h3>
+              <div className="flex items-center text-muted-foreground text-xs mb-1.5">
+                <MapPin className="h-3 w-3 mr-0.5" />
                 {listing.location}
               </div>
               <div className="flex justify-between items-center">
-                <div className="font-bold text-lg">{listing.price}</div>
-                <div className="text-sm text-muted-foreground">
+                <div className="font-bold text-sm">{listing.price}</div>
+                <div className="text-[10px] text-muted-foreground">
                   {listing.beds} beds • {listing.baths} baths
                 </div>
               </div>

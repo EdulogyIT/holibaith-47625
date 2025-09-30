@@ -47,9 +47,9 @@ const Index = () => {
       />
       <MobileHeader />
       <main className="pb-20">
-        {/* Background Image Hero */}
+        {/* Background Image Hero - Reduced Height */}
         <div 
-          className="h-[500px] relative bg-cover bg-center"
+          className="h-[400px] relative bg-cover bg-center"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
           }}

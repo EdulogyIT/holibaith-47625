@@ -30,42 +30,42 @@ const LatestInsights = () => {
   ];
 
   return (
-    <section className="px-4 py-6 bg-white">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Latest insights</h2>
-        <button className="text-primary font-medium text-sm">See all</button>
+    <section className="px-4 py-4 bg-white">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-xl font-bold">latest insights</h2>
+        <button className="text-primary font-medium text-xs">See all</button>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4">
+      <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {insights.map((insight) => (
           <div
             key={insight.id}
             onClick={() => navigate(`/blog/${insight.slug}`)}
-            className="flex-shrink-0 w-80 bg-white rounded-3xl overflow-hidden shadow-sm border border-border cursor-pointer"
+            className="flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer"
           >
             <div className="relative">
               <img
                 src={insight.image}
                 alt={insight.title}
-                className="w-full h-48 object-cover"
+                className="w-full h-36 object-cover"
               />
-              <div className="absolute top-3 left-3">
-                <span className="bg-white px-3 py-1 rounded-full text-sm font-medium">
+              <div className="absolute top-2 left-2">
+                <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-medium">
                   {insight.category}
                 </span>
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="font-bold text-xl mb-2">{insight.title}</h3>
-              <p className="text-muted-foreground text-sm mb-4">
+            <div className="p-3">
+              <h3 className="font-bold text-sm mb-1 line-clamp-2">{insight.title}</h3>
+              <p className="text-muted-foreground text-xs mb-2 line-clamp-2">
                 {insight.description}
               </p>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                 <div className="flex items-center">
-                  <User className="h-4 w-4 mr-1" />
+                  <User className="h-3 w-3 mr-0.5" />
                   {insight.author}
                 </div>
                 <div className="flex items-center">
-                  <Clock className="h-4 w-4 mr-1" />
+                  <Clock className="h-3 w-3 mr-0.5" />
                   {insight.readTime}
                 </div>
               </div>
