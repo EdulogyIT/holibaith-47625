@@ -96,56 +96,56 @@ export default function HostDashboard() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "md:grid-cols-3")}>
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{t('host.activeProperties')}</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.activeProperties')}</CardTitle>
+              <Building2 className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{properties.filter(p => p.status === 'active').length}</div>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>{properties.filter(p => p.status === 'active').length}</div>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{t('host.messagesReceived')}</CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.messagesReceived')}</CardTitle>
+              <MessageSquare className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">-</div>
-              <p className="text-xs text-muted-foreground">{t('host.checkMessages')}</p>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>-</div>
+              <p className={cn("text-muted-foreground", isMobile ? "text-[10px]" : "text-xs")}>{t('host.checkMessages')}</p>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
-              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.monthlyRevenue')}</CardTitle>
+              <CalendarDays className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{formatPrice(0)}</div>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>{formatPrice(0)}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
         <Card>
-          <CardHeader>
-            <CardTitle>{t('host.quickActions')}</CardTitle>
+          <CardHeader className={cn(isMobile && "p-3")}>
+            <CardTitle className={cn(isMobile && "text-sm")}>{t('host.quickActions')}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={() => navigate('/publish-property')} className="w-full sm:w-auto">
-                <Plus className="h-4 w-4 mr-2" />
+          <CardContent className={cn(isMobile && "p-3 pt-0")}>
+            <div className={cn("flex flex-col gap-2", isMobile ? "gap-2" : "sm:flex-row gap-4")}>
+              <Button onClick={() => navigate('/publish-property')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <Plus className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                 {t('host.publishProperty')}
               </Button>
-              <Button variant="outline" onClick={() => navigate('/host/listings')} className="w-full sm:w-auto">
-                <Building2 className="h-4 w-4 mr-2" />
+              <Button variant="outline" onClick={() => navigate('/host/listings')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <Building2 className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                 {t('host.viewListings')}
               </Button>
-              <Button variant="outline" onClick={() => navigate('/host/messages')} className="w-full sm:w-auto">
-                <MessageSquare className="h-4 w-4 mr-2" />
+              <Button variant="outline" onClick={() => navigate('/host/messages')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <MessageSquare className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                 {t('host.messages')}
               </Button>
             </div>
@@ -153,23 +153,23 @@ export default function HostDashboard() {
         </Card>
 
         {/* Recent Activity and Calendar */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "lg:grid-cols-2 gap-6")}>
           {properties.length > 0 && (
             <Card>
-              <CardHeader>
-                <CardTitle>{t('host.recentProperties')}</CardTitle>
+              <CardHeader className={cn(isMobile && "p-3")}>
+                <CardTitle className={cn(isMobile && "text-sm")}>{t('host.recentProperties')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+              <CardContent className={cn(isMobile && "p-3 pt-0")}>
+                <div className={cn("space-y-2", isMobile && "space-y-2")}>
                   {properties.slice(0, 3).map((property) => (
-                    <div key={property.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={property.id} className={cn("flex items-center justify-between border rounded-lg", isMobile ? "p-2" : "p-3")}>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{property.title}</p>
-                        <p className="text-sm text-muted-foreground truncate">
+                        <p className={cn("font-medium truncate", isMobile && "text-xs")}>{property.title}</p>
+                        <p className={cn("text-muted-foreground truncate", isMobile ? "text-[10px]" : "text-sm")}>
                           {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
                         </p>
                       </div>
-                      <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="ml-2">
+                      <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className={cn("ml-2", isMobile && "text-[10px] px-1.5 py-0")}>
                         {property.status === 'active' ? t('host.active') : t('host.inactive')}
                       </Badge>
                     </div>

@@ -1,5 +1,8 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,6 +11,7 @@ import { MapPin, Bed, Bath, Square, Clock, Users, Building } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
 import algerImage from "@/assets/city-alger.jpg";
 import oranImage from "@/assets/city-oran.jpg";
@@ -16,11 +20,15 @@ import annabaImage from "@/assets/city-annaba.jpg";
 import villaMediterranean from "@/assets/property-villa-mediterranean.jpg";
 import luxuryApartment from "@/assets/property-luxury-apartment.jpg";
 import shortStay from "@/assets/property-short-stay.jpg";
+import modernApartment from "@/assets/property-modern-apartment.jpg";
+import traditionalHouse from "@/assets/property-traditional-house.jpg";
+import { cn } from "@/lib/utils";
 
 const City = () => {
   const navigate = useNavigate();
   const { t, currentLang } = useLanguage();
   const { cityId } = useParams();
+  const isMobile = useIsMobile();
   
   useScrollToTop();
 
@@ -93,7 +101,7 @@ const City = () => {
     );
   }
 
-  // Sample properties for each city
+  // Sample properties for each city - add more for Alger Centre
   const buyProperties = [
     {
       id: 1,
@@ -115,6 +123,28 @@ const City = () => {
       baths: 2,
       area: "120 m²",
       image: luxuryApartment,
+      type: t('propertyAppartement')
+    },
+    {
+      id: 7,
+      title: `Maison Traditionnelle ${currentCity.name}`,
+      location: `${currentCity.name}, ${t('algeria')}`,
+      price: `3,200,000 ${t('currencyDA')}`,
+      beds: 5,
+      baths: 3,
+      area: "350 m²",
+      image: traditionalHouse,
+      type: t('propertyMaison')
+    },
+    {
+      id: 8,
+      title: `Appartement Moderne ${currentCity.name}`,
+      location: `${currentCity.name}, ${t('algeria')}`,
+      price: `2,100,000 ${t('currencyDA')}`,
+      beds: 3,
+      baths: 2,
+      area: "140 m²",
+      image: modernApartment,
       type: t('propertyAppartement')
     }
   ];
@@ -226,84 +256,84 @@ const City = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+      {isMobile ? <MobileHeader /> : <Navigation />}
+      <main className={cn(isMobile ? "pt-16 pb-20" : "pt-20")}>
         {/* Hero Section */}
-        <div className="relative h-96 overflow-hidden">
+        <div className={cn("relative overflow-hidden", isMobile ? "h-56" : "h-96")}>
           <img 
             src={currentCity.image} 
             alt={currentCity.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 right-0 p-8">
+          <div className={cn("absolute bottom-0 left-0 right-0", isMobile ? "p-4" : "p-8")}>
             <div className="max-w-7xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-playfair font-bold text-white mb-4">
+              <h1 className={cn("font-playfair font-bold text-white mb-2", isMobile ? "text-2xl" : "text-4xl md:text-5xl")}>
                 {currentCity.name}
               </h1>
-              <p className="text-xl text-white/90 font-inter font-light max-w-2xl">
+              <p className={cn("text-white/90 font-inter font-light max-w-2xl", isMobile ? "text-sm" : "text-xl")}>
                 {currentCity.description}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-6" : "py-12")}>
           {/* City Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="text-center p-6 bg-card rounded-xl shadow-sm">
-              <Users className="h-8 w-8 text-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-foreground font-playfair mb-1">
+          <div className={cn("grid grid-cols-3 gap-3 mb-6", isMobile && "gap-2")}>
+            <div className={cn("text-center bg-card rounded-xl shadow-sm", isMobile ? "p-3" : "p-6")}>
+              <Users className={cn("text-primary mx-auto mb-2", isMobile ? "h-5 w-5" : "h-8 w-8")} />
+              <div className={cn("font-bold text-foreground font-playfair mb-1", isMobile ? "text-sm" : "text-2xl")}>
                 {currentCity.stats.population}
               </div>
-              <div className="text-muted-foreground font-inter text-sm">{t('population')}</div>
+              <div className={cn("text-muted-foreground font-inter", isMobile ? "text-xs" : "text-sm")}>{t('population')}</div>
             </div>
-            <div className="text-center p-6 bg-card rounded-xl shadow-sm">
-              <Square className="h-8 w-8 text-accent mx-auto mb-3" />
-              <div className="text-2xl font-bold text-foreground font-playfair mb-1">
+            <div className={cn("text-center bg-card rounded-xl shadow-sm", isMobile ? "p-3" : "p-6")}>
+              <Square className={cn("text-accent mx-auto mb-2", isMobile ? "h-5 w-5" : "h-8 w-8")} />
+              <div className={cn("font-bold text-foreground font-playfair mb-1", isMobile ? "text-sm" : "text-2xl")}>
                 {currentCity.stats.area}
               </div>
-              <div className="text-muted-foreground font-inter text-sm">{t('cityArea')}</div>
+              <div className={cn("text-muted-foreground font-inter", isMobile ? "text-xs" : "text-sm")}>{t('cityArea')}</div>
             </div>
-            <div className="text-center p-6 bg-card rounded-xl shadow-sm">
-              <Clock className="h-8 w-8 text-foreground mx-auto mb-3" />
-              <div className="text-2xl font-bold text-foreground font-playfair mb-1">
+            <div className={cn("text-center bg-card rounded-xl shadow-sm", isMobile ? "p-3" : "p-6")}>
+              <Clock className={cn("text-foreground mx-auto mb-2", isMobile ? "h-5 w-5" : "h-8 w-8")} />
+              <div className={cn("font-bold text-foreground font-playfair mb-1", isMobile ? "text-sm" : "text-2xl")}>
                 {currentCity.stats.founded}
               </div>
-              <div className="text-muted-foreground font-inter text-sm">{t('foundedIn')}</div>
+              <div className={cn("text-muted-foreground font-inter", isMobile ? "text-xs" : "text-sm")}>{t('foundedIn')}</div>
             </div>
           </div>
 
           {/* History Section */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-playfair font-bold text-foreground mb-6">
+          <div className={cn(isMobile ? "mb-6" : "mb-12")}>
+            <h2 className={cn("font-playfair font-bold text-foreground mb-3", isMobile ? "text-xl" : "text-3xl")}>
               {t('historyHeritage')}
             </h2>
-            <div className="bg-card p-8 rounded-xl shadow-sm">
-              <p className="text-muted-foreground font-inter leading-relaxed text-lg">
+            <div className={cn("bg-card rounded-xl shadow-sm", isMobile ? "p-4" : "p-8")}>
+              <p className={cn("text-muted-foreground font-inter leading-relaxed", isMobile ? "text-sm" : "text-lg")}>
                 {currentCity.history}
               </p>
             </div>
           </div>
 
           {/* Properties Tabs */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-playfair font-bold text-foreground mb-6">
+          <div className={cn(isMobile ? "mb-6" : "mb-12")}>
+            <h2 className={cn("font-playfair font-bold text-foreground mb-4", isMobile ? "text-xl" : "text-3xl")}>
               {t('propertiesAvailableIn')} {currentCity.name}
             </h2>
             
             <Tabs defaultValue="buy" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="buy" className="font-inter">
-                  <Building className="h-4 w-4 mr-2" />
+              <TabsList className={cn("grid w-full grid-cols-3", isMobile ? "mb-4 h-9" : "mb-8")}>
+                <TabsTrigger value="buy" className={cn("font-inter", isMobile && "text-xs px-2")}>
+                  <Building className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                   {t('buy')}
                 </TabsTrigger>
-                <TabsTrigger value="rent" className="font-inter">
-                  <MapPin className="h-4 w-4 mr-2" />
+                <TabsTrigger value="rent" className={cn("font-inter", isMobile && "text-xs px-2")}>
+                  <MapPin className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                   {t('rent')}
                 </TabsTrigger>
-                <TabsTrigger value="shortStay" className="font-inter">
-                  <Bed className="h-4 w-4 mr-2" />
+                <TabsTrigger value="shortStay" className={cn("font-inter", isMobile && "text-xs px-2")}>
+                  <Bed className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                   {t('shortStay')}
                 </TabsTrigger>
               </TabsList>
@@ -365,7 +395,14 @@ const City = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      {isMobile ? (
+        <>
+          <MobileBottomNav />
+          <FloatingMapButton />
+        </>
+      ) : (
+        <Footer />
+      )}
     </div>
   );
 };

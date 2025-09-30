@@ -226,20 +226,20 @@ const Profile = () => {
       <MobileHeader />
       
       <main className="pt-16 pb-20">
-        <div className="px-4 py-6">
+        <div className="px-4 py-4">
           {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center gap-4 mb-4">
-              <Avatar className="h-20 w-20 ring-4 ring-primary/20">
+          <div className="mb-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Avatar className="h-14 w-14 ring-2 ring-primary/20">
                 <AvatarImage src="" alt={user.name} />
-                <AvatarFallback className="text-2xl bg-primary text-white">
+                <AvatarFallback className="text-lg bg-primary text-white">
                   {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="text-3xl font-bold mb-1">Profile</h1>
-                <p className="text-muted-foreground">Manage your account</p>
-                <Badge variant="secondary" className="mt-2">
+                <h1 className="text-xl font-bold mb-0.5">Profile</h1>
+                <p className="text-xs text-muted-foreground">Manage your account</p>
+                <Badge variant="secondary" className="mt-1 text-xs">
                   {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
                 </Badge>
               </div>
@@ -247,129 +247,118 @@ const Profile = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex flex-wrap gap-3">
-            <Button variant="outline" size="sm" className="hover-scale bg-white/50 backdrop-blur-sm border-white/20">
-              <Edit className="h-4 w-4 mr-2" />
+          <div className="flex flex-wrap gap-2 mb-4">
+            <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+              <Edit className="h-3 w-3 mr-1" />
               {currentTranslations.editProfile}
             </Button>
-            <Button variant="outline" size="sm" className="hover-scale bg-white/50 backdrop-blur-sm border-white/20">
-              <BookOpen className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+              <BookOpen className="h-3 w-3 mr-1" />
               {currentTranslations.myBookings}
             </Button>
             {hasRole('host') && (
-              <Button variant="outline" size="sm" className="hover-scale bg-white/50 backdrop-blur-sm border-white/20">
-                <Home className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+                <Home className="h-3 w-3 mr-1" />
                 {currentTranslations.publishProperty}
               </Button>
             )}
-            <Button variant="outline" size="sm" onClick={handleLogout} className="hover-scale bg-white/50 backdrop-blur-sm border-white/20">
-              <LogOut className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" onClick={handleLogout} className="text-xs h-8 px-3">
+              <LogOut className="h-3 w-3 mr-1" />
               {currentTranslations.signOut}
             </Button>
           </div>
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="hover-scale bg-gradient-to-br from-card to-accent/10 border-accent/20 shadow-elegant">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">12</div>
-              <div className="text-sm text-muted-foreground font-medium">{currentTranslations.savedProperties}</div>
+        <div className="grid grid-cols-2 gap-3 mb-6 px-4">
+          <Card className="border-accent/20">
+            <CardContent className="p-3">
+              <div className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">12</div>
+              <div className="text-xs text-muted-foreground font-medium">{currentTranslations.savedProperties}</div>
             </CardContent>
           </Card>
-          <Card className="hover-scale bg-gradient-to-br from-card to-accent/10 border-accent/20 shadow-elegant">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">3</div>
-              <div className="text-sm text-muted-foreground font-medium">{currentTranslations.savedSearches}</div>
+          <Card className="border-accent/20">
+            <CardContent className="p-3">
+              <div className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">3</div>
+              <div className="text-xs text-muted-foreground font-medium">{currentTranslations.savedSearches}</div>
             </CardContent>
           </Card>
-          <Card className="hover-scale bg-gradient-to-br from-card to-accent/10 border-accent/20 shadow-elegant">
-            <CardContent className="p-6">
-              <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">2</div>
-              <div className="text-sm text-muted-foreground font-medium">{currentTranslations.upcomingBookings}</div>
+          <Card className="border-accent/20">
+            <CardContent className="p-3">
+              <div className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">2</div>
+              <div className="text-xs text-muted-foreground font-medium">{currentTranslations.upcomingBookings}</div>
             </CardContent>
           </Card>
           {hasRole('host') && (
-            <Card className="hover-scale bg-gradient-to-br from-card to-accent/10 border-accent/20 shadow-elegant">
-              <CardContent className="p-6">
-                <div className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">5</div>
-                <div className="text-sm text-muted-foreground font-medium">{currentTranslations.activeListings}</div>
+            <Card className="border-accent/20">
+              <CardContent className="p-3">
+                <div className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">5</div>
+                <div className="text-xs text-muted-foreground font-medium">{currentTranslations.activeListings}</div>
               </CardContent>
             </Card>
           )}
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="personal" className="space-y-8 animate-fade-in">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 bg-white/80 backdrop-blur-sm shadow-elegant">
-            <TabsTrigger value="personal" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.personalInfo}</span>
-            </TabsTrigger>
-            <TabsTrigger value="account" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.account}</span>
-            </TabsTrigger>
-            <TabsTrigger value="password" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <Shield className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.password}</span>
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <Bell className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.notifications}</span>
-            </TabsTrigger>
-            <TabsTrigger value="privacy" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <Shield className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.privacy}</span>
-            </TabsTrigger>
-            <TabsTrigger value="sessions" className="flex items-center gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all">
-              <Monitor className="h-4 w-4" />
-              <span className="hidden sm:inline">{currentTranslations.sessions}</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="px-4">
+          <Tabs defaultValue="personal" className="space-y-4 animate-fade-in">
+            <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm text-xs h-9">
+              <TabsTrigger value="personal" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+                <User className="h-3 w-3" />
+                <span className="hidden sm:inline text-xs">Info</span>
+              </TabsTrigger>
+              <TabsTrigger value="account" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+                <Settings className="h-3 w-3" />
+                <span className="hidden sm:inline text-xs">Account</span>
+              </TabsTrigger>
+              <TabsTrigger value="password" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+                <Shield className="h-3 w-3" />
+                <span className="hidden sm:inline text-xs">Security</span>
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Personal Information */}
-          <TabsContent value="personal" className="space-y-6">
-            <Card className="bg-gradient-to-br from-card to-accent/5 border-accent/20 shadow-elegant">
-              <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-lg">
-                <CardTitle className="text-primary">{currentTranslations.personalInfo}</CardTitle>
-                <CardDescription>{currentTranslations.personalInfoDesc}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName" className="text-primary font-medium">{currentTranslations.displayName}</Label>
-                    <Input id="displayName" defaultValue={user.name} className="border-accent/30 focus:border-primary transition-colors" />
+            {/* Personal Information */}
+            <TabsContent value="personal" className="space-y-3">
+              <Card className="border-accent/20">
+                <CardHeader className="p-3">
+                  <CardTitle className="text-sm text-primary">{currentTranslations.personalInfo}</CardTitle>
+                  <CardDescription className="text-xs">{currentTranslations.personalInfoDesc}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 p-3">
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="displayName" className="text-xs font-medium">{currentTranslations.displayName}</Label>
+                      <Input id="displayName" defaultValue={user.name} className="text-sm h-9" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="email" className="text-xs font-medium">{currentTranslations.email}</Label>
+                      <Input id="email" defaultValue={user.email} disabled className="text-sm h-9 bg-muted/50" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="phone" className="text-xs font-medium">{currentTranslations.phone}</Label>
+                      <Input id="phone" placeholder="+213 555 123 456" className="text-sm h-9" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="country" className="text-xs font-medium">{currentTranslations.country}</Label>
+                      <Select>
+                        <SelectTrigger className="text-sm h-9">
+                          <SelectValue placeholder="Algeria" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="algeria">Algeria</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-primary font-medium">{currentTranslations.email}</Label>
-                    <Input id="email" defaultValue={user.email} disabled className="border-accent/30 bg-muted/50" />
+                  <div className="flex gap-2">
+                    <Button onClick={handleSave} className="bg-gradient-primary hover:opacity-90 text-xs h-8 flex-1">
+                      <Save className="h-3 w-3 mr-1" />
+                      {currentTranslations.save}
+                    </Button>
+                    <Button variant="outline" onClick={() => setIsEditing(false)} className="text-xs h-8 flex-1">
+                      {currentTranslations.cancel}
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-primary font-medium">{currentTranslations.phone}</Label>
-                    <Input id="phone" placeholder="+213 555 123 456" className="border-accent/30 focus:border-primary transition-colors" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="country" className="text-primary font-medium">{currentTranslations.country}</Label>
-                    <Select>
-                      <SelectTrigger className="border-accent/30 focus:border-primary transition-colors">
-                        <SelectValue placeholder="Algeria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="algeria">Algeria</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <Button onClick={handleSave} className="bg-gradient-primary hover:opacity-90 transition-all shadow-lg">
-                    <Save className="h-4 w-4 mr-2" />
-                    {currentTranslations.save}
-                  </Button>
-                  <Button variant="outline" onClick={() => setIsEditing(false)} className="border-accent/30 hover:bg-accent/10">
-                    {currentTranslations.cancel}
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -533,6 +522,7 @@ const Profile = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </main>
 
       <MobileBottomNav />

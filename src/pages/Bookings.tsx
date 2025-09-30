@@ -150,81 +150,84 @@ const Bookings = () => {
     
     return (
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
-        <div className="md:flex">
-          <div className="md:w-1/3">
+        <div className="flex flex-col">
+          <div className="w-full">
             {primaryImage ? (
               <img 
                 src={primaryImage} 
                 alt={property?.title || 'Property'}
-                className="w-full h-48 md:h-full object-cover"
+                className="w-full h-40 object-cover"
                 onError={(e) => {
-                  // Fallback to a default image if the property image fails to load
                   e.currentTarget.src = '/placeholder.svg';
                 }}
               />
             ) : (
-              <div className="w-full h-48 md:h-full bg-muted flex items-center justify-center">
-                <span className="text-muted-foreground">No image available</span>
+              <div className="w-full h-40 bg-muted flex items-center justify-center">
+                <span className="text-muted-foreground text-xs">No image available</span>
               </div>
             )}
           </div>
-          <div className="md:w-2/3 p-6">
-            <CardHeader className="p-0 mb-4">
-              <div className="flex justify-between items-start mb-2">
-                <CardTitle className="text-lg font-semibold">
+          <div className="p-3">
+            <CardHeader className="p-0 mb-2">
+              <div className="flex justify-between items-start mb-1">
+                <CardTitle className="text-sm font-semibold line-clamp-1">
                   {property?.title || 'Property'}
                 </CardTitle>
-                <Badge className={getStatusColor(booking.status)}>
+                <Badge className={`${getStatusColor(booking.status)} text-xs px-1.5 py-0`}>
                   {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                 </Badge>
               </div>
-              <CardDescription className="flex items-center text-muted-foreground">
-                <MapPin className="h-4 w-4 mr-1" />
+              <CardDescription className="flex items-center text-muted-foreground text-xs">
+                <MapPin className="h-3 w-3 mr-1" />
                 {property?.city && property?.location ? `${property.city}, ${property.location}` : 'Location not available'}
               </CardDescription>
             </CardHeader>
             
-            <CardContent className="p-0 space-y-3">
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4 mr-2" />
-                {format(new Date(booking.check_in_date), 'MMM dd, yyyy')} - {format(new Date(booking.check_out_date), 'MMM dd, yyyy')}
+            <CardContent className="p-0 space-y-2">
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3 mr-1" />
+                {format(new Date(booking.check_in_date), 'MMM dd')} - {format(new Date(booking.check_out_date), 'MMM dd, yyyy')}
               </div>
               
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Users className="h-4 w-4 mr-2" />
+              <div className="flex items-center text-xs text-muted-foreground">
+                <Users className="h-3 w-3 mr-1" />
                 {booking.guests_count} {booking.guests_count === 1 ? 'Guest' : 'Guests'}
               </div>
 
-              <div className="text-sm">
+              <div className="text-xs">
                 <span className="text-muted-foreground">Host: </span>
-                <span className="font-medium">{property?.contact_name || 'Host information not available'}</span>
+                <span className="font-medium">{property?.contact_name || 'N/A'}</span>
               </div>
 
-              <div className="text-sm">
-                <span className="text-muted-foreground">Total Amount: </span>
+              <div className="text-xs">
+                <span className="text-muted-foreground">Total: </span>
                 <span className="font-semibold">{formatPrice(booking.total_amount)}</span>
               </div>
 
-              <div className="flex gap-2 pt-2">
-                {!isPast && (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => window.open(`/property/${booking.properties.id}`, '_blank')}
-                  >
-                    View Details
-                  </Button>
-                )}
-                {property?.contact_email && (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleMessageHost(property.contact_email, property.title)}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-1" />
-                    Message Host
-                  </Button>
-                )}
+              <div className="flex flex-col gap-1.5 pt-2">
+                <div className="flex gap-1.5">
+                  {!isPast && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="flex-1 text-xs h-8"
+                      onClick={() => window.open(`/property/${booking.properties.id}`, '_blank')}
+                    >
+                      View
+                    </Button>
+                  )}
+                  {property?.contact_email && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="flex-1 text-xs h-8"
+                      onClick={() => handleMessageHost(property.contact_email, property.title)}
+                    >
+                      <MessageCircle className="h-3 w-3 mr-1" />
+                      Message
+                    </Button>
+                  )}
+                </div>
                 {!isPast && (booking.status === 'confirmed' || booking.status === 'pending') && (
                   <CancelBookingButton
                     bookingId={booking.id}
@@ -233,8 +236,8 @@ const Bookings = () => {
                   />
                 )}
                 {isPast && (
-                  <Button variant="outline" size="sm">
-                    <Star className="h-4 w-4 mr-1" />
+                  <Button variant="outline" size="sm" className="w-full text-xs h-8">
+                    <Star className="h-3 w-3 mr-1" />
                     Rate Stay
                   </Button>
                 )}
