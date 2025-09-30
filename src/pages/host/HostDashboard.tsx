@@ -74,6 +74,19 @@ export default function HostDashboard() {
   };
 
   if (loading) {
+    if (isMobile) {
+      return (
+        <>
+          <MobileHeader />
+          <div className="flex items-center justify-center min-h-screen pt-16">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              <p className="mt-2 text-muted-foreground">Loading...</p>
+            </div>
+          </div>
+        </>
+      );
+    }
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
