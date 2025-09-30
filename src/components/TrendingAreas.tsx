@@ -21,7 +21,7 @@ const TrendingAreas = () => {
         {areas.map((area) => (
           <button
             key={area.name}
-            onClick={() => navigate(`/buy?location=${encodeURIComponent(area.name)}`)}
+            onClick={() => navigate(`/city/${area.name.toLowerCase()}`)}
             className="flex-shrink-0 bg-white rounded-xl p-3 min-w-[140px] shadow-sm border border-border"
           >
             <div className="text-left">

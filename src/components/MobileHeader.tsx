@@ -45,12 +45,13 @@ const MobileHeader = () => {
           <SheetContent side="right" className="w-80 bg-background p-0">
             <div className="flex flex-col h-full">
               {/* Header with Logo */}
-              <div className="p-6 pb-4">
+              <div className="p-6 pb-4 flex items-center gap-3">
                 <img 
-                  src="/holibayt-logo-transparent.png" 
-                  alt="Holibayt" 
-                  className="h-16 w-auto"
+                  src={holibaytLogo} 
+                  alt="Holibayt Logo" 
+                  className="h-12 w-12"
                 />
+                <span className="text-2xl font-semibold" style={{ color: '#2d5a4a' }}>Holibayt</span>
               </div>
 
               <Separator />

@@ -87,9 +87,9 @@ export default function HostDashboard() {
   return (
     <>
       {isMobile && <MobileHeader />}
-      <div className={cn("space-y-6", isMobile && "pt-16 pb-24")}>
-        <div>
-          <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
+      <div className={cn("space-y-6", isMobile ? "pt-16 pb-24 px-4" : "")}>
+        <div className={cn(isMobile && "text-center")}>
+          <h1 className={cn("text-3xl font-bold", isMobile && "text-2xl")}>{t('host.dashboard')}</h1>
           <p className="text-muted-foreground">
             {t('host.welcomeMessage')}
           </p>
