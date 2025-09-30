@@ -79,6 +79,73 @@ export default function HostDashboard() {
     });
   };
 
+  const menuItems = [
+    { title: 'Reservations', url: '/host', icon: CalendarDays },
+    { title: 'Calendar', url: '/host/calendar', icon: Calendar },
+    { title: 'Listings', url: '/host/listings', icon: Building2 },
+    { title: 'Messages', url: '/host/messages', icon: MessageSquare },
+    { title: 'Payouts & Settings', url: '/host/payouts', icon: CreditCard },
+  ];
+
+  // Mobile Loading State
+  if (loading && isMobile) {
+    return (
+      <>
+        <header className="fixed top-0 left-0 right-0 h-16 bg-background border-b border-border flex items-center justify-between px-4 z-50">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png" 
+              alt="Holibayt" 
+              className="h-8 w-auto"
+            />
+            <h1 className="text-xl font-bold text-foreground">Holibayt</h1>
+          </div>
+        </header>
+        <div className="min-h-screen flex items-center justify-center bg-background pt-16">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-lg text-muted-foreground">Loading dashboard...</p>
+          </div>
+        </div>
+        <MobileBottomNav />
+      </>
+    );
+  }
+
+  // Mobile Error State
+  if (error && isMobile) {
+    return (
+      <>
+        <header className="fixed top-0 left-0 right-0 h-16 bg-background border-b border-border flex items-center justify-between px-4 z-50">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png" 
+              alt="Holibayt" 
+              className="h-8 w-auto"
+            />
+            <h1 className="text-xl font-bold text-foreground">Holibayt</h1>
+          </div>
+        </header>
+        <div className="min-h-screen flex items-center justify-center bg-background p-4 pt-16">
+          <div className="text-center max-w-md">
+            <div className="text-destructive text-xl mb-4">⚠️</div>
+            <h2 className="text-xl font-semibold text-foreground mb-2">Unable to Load Dashboard</h2>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchHostProperties();
+            }}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+        <MobileBottomNav />
+      </>
+    );
+  }
+
+  // Desktop Loading State
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -90,6 +157,7 @@ export default function HostDashboard() {
     );
   }
 
+  // Desktop Error State
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -108,14 +176,6 @@ export default function HostDashboard() {
       </div>
     );
   }
-
-  const menuItems = [
-    { title: 'Reservations', url: '/host', icon: CalendarDays },
-    { title: 'Calendar', url: '/host/calendar', icon: Calendar },
-    { title: 'Listings', url: '/host/listings', icon: Building2 },
-    { title: 'Messages', url: '/host/messages', icon: MessageSquare },
-    { title: 'Payouts & Settings', url: '/host/payouts', icon: CreditCard },
-  ];
 
   if (isMobile) {
     return (
