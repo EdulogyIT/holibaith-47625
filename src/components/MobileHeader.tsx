@@ -24,7 +24,7 @@ const MobileHeader = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-transparent z-50 safe-top">
+    <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50 safe-top">
       <div className="flex items-center justify-between px-4 h-16">
         {/* Logo and Brand Name */}
         <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ const MobileHeader = () => {
             alt="Holibayt Logo" 
             className="h-10 w-10"
           />
-          <span className="text-xl font-semibold text-white">Holibayt</span>
+          <span className="text-xl font-semibold text-foreground">Holibayt</span>
         </div>
 
         <Sheet>

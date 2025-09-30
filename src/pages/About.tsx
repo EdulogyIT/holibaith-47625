@@ -1,12 +1,18 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileFooter from "@/components/MobileFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, Users, Award, Shield } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const About = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   useScrollToTop();
 
   const stats = [
@@ -18,32 +24,32 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {isMobile ? <MobileHeader /> : <Navigation />}
+      <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20")}>
+        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-6" : "py-8")}>
           {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-foreground mb-6 font-playfair">{t('aboutBeitik')}</h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-inter">
+          <div className={cn("text-center", isMobile ? "mb-8" : "mb-16")}>
+            <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-4xl")}>{t('aboutBeitik')}</h1>
+            <p className={cn("text-muted-foreground max-w-3xl mx-auto font-inter", isMobile ? "text-base" : "text-xl")}>
               {t('aboutDescription')}
             </p>
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div className={cn("grid gap-6", isMobile ? "grid-cols-2 gap-4 mb-8" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-16")}>
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <Card key={index} className="text-center">
-                  <CardHeader>
-                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <IconComponent className="w-6 h-6 text-primary" />
+                  <CardHeader className={cn(isMobile && "p-4")}>
+                    <div className={cn("mx-auto bg-primary/10 rounded-lg flex items-center justify-center mb-4", isMobile ? "w-10 h-10 mb-2" : "w-12 h-12")}>
+                      <IconComponent className={cn("text-primary", isMobile ? "w-5 h-5" : "w-6 h-6")} />
                     </div>
-                    <CardTitle className="text-3xl font-bold text-primary font-playfair">{stat.value}</CardTitle>
+                    <CardTitle className={cn("font-bold text-primary font-playfair", isMobile ? "text-xl" : "text-3xl")}>{stat.value}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <h3 className="font-semibold mb-2 font-playfair">{stat.title}</h3>
-                    <p className="text-sm text-muted-foreground font-inter">{stat.description}</p>
+                  <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                    <h3 className={cn("font-semibold mb-2 font-playfair", isMobile ? "text-sm" : "text-base")}>{stat.title}</h3>
+                    <p className={cn("text-muted-foreground font-inter", isMobile ? "text-xs" : "text-sm")}>{stat.description}</p>
                   </CardContent>
                 </Card>
               );
@@ -51,22 +57,22 @@ const About = () => {
           </div>
 
           {/* Company Story */}
-          <div className="bg-muted/50 rounded-lg p-8 mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-6 font-playfair">{t('ourStory')}</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+          <div className={cn("bg-muted/50 rounded-lg", isMobile ? "p-4 mb-8" : "p-8 mb-16")}>
+            <h2 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-2xl mb-4" : "text-3xl")}>{t('ourStory')}</h2>
+            <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2")}>
               <div>
-                <p className="text-muted-foreground mb-4 font-inter">
+                <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
                   {t('storyParagraph1')}
                 </p>
-                <p className="text-muted-foreground mb-4 font-inter">
+                <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
                   {t('storyParagraph2')}
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground mb-4 font-inter">
+                <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
                   {t('storyParagraph3')}
                 </p>
-                <p className="text-muted-foreground font-inter">
+                <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
                   {t('storyParagraph4')}
                 </p>
               </div>
@@ -74,35 +80,35 @@ const About = () => {
           </div>
 
           {/* Mission & Values */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-3")}>
             <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-playfair">{t('ourMission')}</CardTitle>
+              <CardHeader className={cn(isMobile && "p-4")}>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourMission')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground font-inter">
+              <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
                   {t('missionDescription')}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-playfair">{t('ourVision')}</CardTitle>
+              <CardHeader className={cn(isMobile && "p-4")}>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourVision')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground font-inter">
+              <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
                   {t('visionDescription')}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-playfair">{t('ourValues')}</CardTitle>
+              <CardHeader className={cn(isMobile && "p-4")}>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourValues')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground font-inter">
+              <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
                   {t('valuesDescription')}
                 </p>
               </CardContent>
@@ -110,7 +116,14 @@ const About = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      {isMobile ? (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+        </>
+      ) : (
+        <Footer />
+      )}
     </div>
   );
 };
