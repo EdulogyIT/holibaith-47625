@@ -1,5 +1,6 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileFooter from "@/components/MobileFooter";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
@@ -8,12 +9,14 @@ import { useNavigate } from "react-router-dom";
 import PublishPropertySteps from "@/components/PublishPropertySteps";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PublishProperty = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   useScrollToTop();
@@ -120,18 +123,27 @@ const PublishProperty = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+      <MobileHeader />
+      <main className={isMobile ? "pt-16 pb-32" : "pt-20"}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-4 font-playfair">{t('publishProperty')}</h1>
-            <p className="text-lg text-muted-foreground font-inter">{t('addPropertyDetails')}</p>
+            <h1 className={`font-bold text-foreground mb-4 ${isMobile ? 'text-2xl' : 'text-4xl font-playfair'}`}>
+              {t('publishProperty')}
+            </h1>
+            <p className={`text-muted-foreground ${isMobile ? 'text-base' : 'text-lg font-inter'}`}>
+              {t('addPropertyDetails')}
+            </p>
           </div>
 
           <PublishPropertySteps onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
       </main>
-      <Footer />
+      {isMobile && (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+        </>
+      )}
     </div>
   );
 };

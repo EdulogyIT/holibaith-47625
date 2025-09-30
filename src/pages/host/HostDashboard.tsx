@@ -151,38 +151,37 @@ export default function HostDashboard() {
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="space-y-4">
+        {/* Stats Cards - 2 per row */}
+        <div className="grid grid-cols-2 gap-3">
           <Card className="bg-card">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-sm font-medium text-muted-foreground">Active properties</p>
-                <Building2 className="h-5 w-5 text-muted-foreground" />
+                <p className="text-xs font-medium text-muted-foreground">Active properties</p>
+                <Building2 className="h-4 w-4 text-muted-foreground" />
               </div>
-              <p className="text-4xl font-bold text-foreground">
+              <p className="text-3xl font-bold text-foreground">
                 {properties.filter(p => p.status === 'active').length}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card">
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-sm font-medium text-muted-foreground">Messages received</p>
-                <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                <p className="text-xs font-medium text-muted-foreground">Messages</p>
+                <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </div>
-              <p className="text-4xl font-bold text-foreground mb-1">-</p>
-              <p className="text-sm text-muted-foreground">Check your messages</p>
+              <p className="text-3xl font-bold text-foreground mb-1">-</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-card">
-            <CardContent className="p-6">
+          <Card className="bg-card col-span-2">
+            <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-sm font-medium text-muted-foreground">Revenue this month</p>
-                <CalendarDays className="h-5 w-5 text-muted-foreground" />
+                <p className="text-xs font-medium text-muted-foreground">Revenue this month</p>
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
               </div>
-              <p className="text-4xl font-bold text-foreground">{formatPrice(0)}</p>
+              <p className="text-3xl font-bold text-foreground">{formatPrice(0)}</p>
             </CardContent>
           </Card>
         </div>
@@ -191,26 +190,27 @@ export default function HostDashboard() {
         {properties.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground">Recent Properties</h3>
-            {properties.slice(0, 3).map((property) => (
-              <Card key={property.id} className="bg-card">
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-foreground mb-1">{property.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {property.city} • Published {formatDate(property.created_at)}
-                      </p>
+            <div className="grid grid-cols-2 gap-3">
+              {properties.slice(0, 4).map((property) => (
+                <Card key={property.id} className="bg-card overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="aspect-square bg-muted relative">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <p className="text-white text-sm font-medium line-clamp-2 mb-1">{property.title}</p>
+                        <p className="text-white/80 text-xs">{property.city}</p>
+                      </div>
+                      <Badge 
+                        variant={property.status === 'active' ? 'default' : 'secondary'}
+                        className="absolute top-2 right-2 text-xs"
+                      >
+                        {property.status === 'active' ? 'Active' : 'Inactive'}
+                      </Badge>
                     </div>
-                    <Badge 
-                      variant={property.status === 'active' ? 'default' : 'secondary'}
-                      className="ml-2 shrink-0"
-                    >
-                      {property.status === 'active' ? 'Active' : 'Inactive'}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
       </div>
