@@ -1,29 +1,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Phone, 
   Mail, 
-  MapPin, 
-  Clock, 
   Send, 
   MessageCircle, 
   Users,
   Star,
-  Shield,
-  Award
+  Clock,
+  Award,
+  MapPin,
+  ChevronLeft
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
-import heroImage from "@/assets/advisor-consultation-hero.jpg";
+import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ContactAdvisor = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   useScrollToTop();
   
   const [formData, setFormData] = useState({
@@ -36,33 +38,8 @@ const ContactAdvisor = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
     console.log("Form submitted:", formData);
   };
-
-  const contactMethods = [
-    {
-      icon: Phone,
-      title: t('phoneSupport'),
-      description: t('speakDirectly'),
-      details: "+213 (0) 21 123 456",
-      available: t('available247')
-    },
-    {
-      icon: Mail,
-      title: t('emailSupport'),
-      description: t('getDetailedAssistance'),
-      details: "support@holibayt.com",
-      available: t('responseWithin2h')
-    },
-    {
-      icon: MessageCircle,
-      title: t('liveChat'),
-      description: t('instantMessaging'),
-      details: t('chatNow'),
-      available: t('onlineNow')
-    }
-  ];
 
   const advisorStats = [
     { icon: Users, number: "150+", label: t('expertAdvisors') },
@@ -71,72 +48,67 @@ const ContactAdvisor = () => {
     { icon: Award, number: "98%", label: t('satisfactionRate') }
   ];
 
+  const contactMethods = [
+    {
+      icon: Phone,
+      title: t('phoneSupport'),
+      details: "+213 (0) 21 123 456",
+      action: () => window.open('tel:+213021123456')
+    },
+    {
+      icon: Mail,
+      title: t('emailSupport'),
+      details: "support@holibayt.com",
+      action: () => window.open('mailto:support@holibayt.com')
+    },
+    {
+      icon: MessageCircle,
+      title: t('liveChat'),
+      details: t('chatNow'),
+      action: () => navigate('/messages?start=true')
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <div className="min-h-screen bg-background pb-20">
+      {isMobile && <MobileHeader />}
       
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-20 overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={heroImage} 
-            alt="Property advisor consultation" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent"></div>
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="flex items-center space-x-2 mb-4">
-              <Shield className="h-6 w-6 text-accent" />
-              <span className="text-accent font-inter font-medium">{t('trustedExperts')}</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-playfair font-bold text-primary-foreground mb-6 leading-tight">
+      {/* Mobile Layout */}
+      {isMobile ? (
+        <div className="pt-16">
+          {/* Header with Back Button */}
+          <div className="px-4 py-4 border-b border-border bg-background sticky top-16 z-30">
+            <button 
+              onClick={() => navigate(-1)}
+              className="flex items-center text-foreground mb-3"
+            >
+              <ChevronLeft className="w-5 h-5 mr-1" />
+              <span className="text-sm font-inter">{t('back')}</span>
+            </button>
+            <h1 className="text-2xl font-playfair font-bold text-foreground">
               {t('speakToAdvisor')}
             </h1>
-            <p className="text-xl text-primary-foreground/90 font-inter mb-8 leading-relaxed">
-              Get personalized guidance from our certified property experts. We're here to help you make informed decisions with confidence.
+            <p className="text-sm text-muted-foreground font-inter mt-1">
+              Get personalized guidance from experts
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
-                size="lg" 
-                variant="secondary" 
-                className="font-inter font-semibold text-lg px-8 py-4"
-                onClick={() => window.location.href = '/messages?start=true'}
-              >
-                <MessageCircle className="h-5 w-5 mr-2" />
-                Start Chat
-              </Button>
-              <Button 
-                size="lg" 
-                variant="secondary" 
-                className="font-inter font-semibold text-lg px-8 py-4"
-                onClick={() => window.open('tel:+213021999999')}
-              >
-                <Phone className="h-5 w-5 mr-2" />
-                Call Now
-              </Button>
-            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-card/50 backdrop-blur-sm -mt-8 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card rounded-2xl shadow-elegant p-8 border border-border/50">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Stats Grid */}
+          <div className="px-4 py-4 bg-muted/30">
+            <div className="grid grid-cols-2 gap-3">
               {advisorStats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
-                  <div key={index} className="text-center group">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-primary text-primary-foreground rounded-2xl mb-4 shadow-glow group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="h-10 w-10" />
+                  <div key={index} className="bg-background rounded-xl p-3 border border-border">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <IconComponent className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="text-xl font-playfair font-bold text-foreground">
+                        {stat.number}
+                      </div>
                     </div>
-                    <div className="text-4xl font-playfair font-bold text-foreground mb-2">
-                      {stat.number}
-                    </div>
-                    <div className="text-muted-foreground font-inter text-sm">
+                    <div className="text-xs text-muted-foreground font-inter">
                       {stat.label}
                     </div>
                   </div>
@@ -144,173 +116,250 @@ const ContactAdvisor = () => {
               })}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Contact Methods */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-foreground mb-4">
-              {t('chooseContactMethod')}
-            </h2>
-            <p className="text-lg text-muted-foreground font-inter max-w-2xl mx-auto">
-              {t('multipleWaysConnect')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {contactMethods.map((method, index) => {
-              const IconComponent = method.icon;
-              return (
-                <Card key={index} className="group hover:shadow-elegant transition-all duration-500 hover:-translate-y-2 border-2 hover:border-primary/20 bg-gradient-to-br from-card to-card/50">
-                  <CardContent className="p-8 text-center">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-primary text-primary-foreground rounded-2xl mb-6 shadow-glow group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                      <IconComponent className="h-10 w-10" />
+          {/* Quick Contact Methods */}
+          <div className="px-4 py-4">
+            <h2 className="text-lg font-semibold font-playfair mb-3">{t('chooseContactMethod')}</h2>
+            <div className="space-y-2">
+              {contactMethods.map((method, index) => {
+                const IconComponent = method.icon;
+                return (
+                  <button
+                    key={index}
+                    onClick={method.action}
+                    className="w-full flex items-center justify-between p-4 bg-background border border-border rounded-xl active:scale-[0.98] transition-transform"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <IconComponent className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-medium font-inter text-sm">{method.title}</div>
+                        <div className="text-xs text-muted-foreground font-inter">{method.details}</div>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-playfair font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
-                      {method.title}
-                    </h3>
-                    <p className="text-muted-foreground font-inter mb-4 leading-relaxed">
-                      {method.description}
-                    </p>
-                    <div className="text-primary font-inter font-bold text-lg mb-3">
-                      {method.details}
-                    </div>
-                    <div className="inline-flex items-center justify-center px-3 py-1 bg-accent/10 text-accent font-inter text-sm rounded-full border border-accent/20">
-                      {method.available}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    <ChevronLeft className="w-5 h-5 text-muted-foreground rotate-180" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Contact Form */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Form */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-playfair">{t('sendMessage')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">{t('fullName')}</Label>
-                      <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        placeholder={t('yourFullName')}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">{t('email')}</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        placeholder={t('emailPlaceholder')}
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="phone">{t('phoneNumber')}</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        placeholder="+213 XX XX XX XX"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="subject">{t('subject')}</Label>
-                      <Input
-                        id="subject"
-                        value={formData.subject}
-                        onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                        placeholder={t('whatCanWeHelp')}
-                        required
-                      />
-                    </div>
-                  </div>
+          <div className="px-4 py-4">
+            <h2 className="text-lg font-semibold font-playfair mb-3">{t('sendMessage')}</h2>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <Label htmlFor="name" className="text-xs font-inter">{t('fullName')}</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  placeholder={t('yourFullName')}
+                  className="h-11 text-sm"
+                  required
+                />
+              </div>
 
-                  <div>
-                    <Label htmlFor="message">{t('message')}</Label>
-                    <Textarea
-                      id="message"
-                      value={formData.message}
-                      onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      placeholder={t('tellUsMore')}
-                      rows={5}
-                      required
-                    />
+              <div>
+                <Label htmlFor="email" className="text-xs font-inter">{t('email')}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  placeholder={t('emailPlaceholder')}
+                  className="h-11 text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="phone" className="text-xs font-inter">{t('phoneNumber')}</Label>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder="+213 XX XX XX XX"
+                  className="h-11 text-sm"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="subject" className="text-xs font-inter">{t('subject')}</Label>
+                <Input
+                  id="subject"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  placeholder={t('whatCanWeHelp')}
+                  className="h-11 text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="message" className="text-xs font-inter">{t('message')}</Label>
+                <Textarea
+                  id="message"
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  placeholder={t('tellUsMore')}
+                  rows={4}
+                  className="text-sm resize-none"
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full h-11 bg-gradient-primary font-inter text-sm">
+                <Send className="h-4 w-4 mr-2" />
+                {t('sendMessage')}
+              </Button>
+            </form>
+          </div>
+
+          {/* Office Info */}
+          <div className="px-4 py-4 space-y-3 pb-24">
+            <div className="bg-muted/50 rounded-xl p-4 border border-border">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm font-inter mb-1">{t('ourOffice')}</h3>
+                  <p className="text-xs text-muted-foreground font-inter">
+                    123 Boulevard des Martyrs<br />
+                    Alger Centre, 16000<br />
+                    Algiers, Algeria
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-muted/50 rounded-xl p-4 border border-border">
+              <div className="flex items-start gap-3">
+                <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm font-inter mb-1">{t('businessHours')}</h3>
+                  <div className="text-xs text-muted-foreground font-inter space-y-0.5">
+                    <p>{t('mondayFriday')}</p>
+                    <p>{t('saturday')}</p>
+                    <p>{t('sunday')}</p>
                   </div>
+                </div>
+              </div>
+            </div>
 
-                  <Button type="submit" className="w-full bg-gradient-primary font-inter font-medium">
-                    <Send className="h-4 w-4 mr-2" />
-                    {t('sendMessage')}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <MapPin className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-playfair font-semibold text-foreground mb-2">{t('ourOffice')}</h3>
-                      <p className="text-muted-foreground font-inter">
-                        123 Boulevard des Martyrs<br />
-                        Alger Centre, 16000<br />
-                        Algiers, Algeria
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <Clock className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <h3 className="font-playfair font-semibold text-foreground mb-2">{t('businessHours')}</h3>
-                      <div className="text-muted-foreground font-inter space-y-1">
-                        <p>{t('mondayFriday')}</p>
-                        <p>{t('saturday')}</p>
-                        <p>{t('sunday')}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-primary text-primary-foreground">
-                <CardContent className="p-6 text-center">
-                  <h3 className="font-playfair font-semibold text-xl mb-2">{t('needImmediateHelp')}</h3>
-                  <p className="mb-4 opacity-90">{t('call247Hotline')}</p>
-                  <Button variant="secondary" size="lg" className="font-inter font-semibold">
-                    <Phone className="h-4 w-4 mr-2" />
-                    +213 (0) 21 999 999
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="bg-gradient-primary rounded-xl p-4 text-primary-foreground">
+              <h3 className="font-semibold text-sm font-inter mb-2 text-center">{t('needImmediateHelp')}</h3>
+              <p className="text-xs mb-3 opacity-90 text-center">{t('call247Hotline')}</p>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="w-full font-inter text-sm h-9"
+                onClick={() => window.open('tel:+213021999999')}
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                +213 (0) 21 999 999
+              </Button>
             </div>
           </div>
         </div>
-      </section>
+      ) : (
+        // Desktop version
+        <div className="pt-20">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <h1 className="text-3xl font-playfair font-bold mb-6">{t('speakToAdvisor')}</h1>
+            
+            <div className="grid grid-cols-4 gap-4 mb-8">
+              {advisorStats.map((stat, index) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div key={index} className="bg-card rounded-lg p-4 border text-center">
+                    <IconComponent className="h-6 w-6 text-primary mx-auto mb-2" />
+                    <div className="text-2xl font-bold">{stat.number}</div>
+                    <div className="text-xs text-muted-foreground">{stat.label}</div>
+                  </div>
+                );
+              })}
+            </div>
 
-      <Footer />
+            <div className="grid md:grid-cols-3 gap-4 mb-8">
+              {contactMethods.map((method, index) => {
+                const IconComponent = method.icon;
+                return (
+                  <button
+                    key={index}
+                    onClick={method.action}
+                    className="bg-card border rounded-lg p-4 hover:shadow-lg transition-shadow text-center"
+                  >
+                    <IconComponent className="h-8 w-8 text-primary mx-auto mb-2" />
+                    <h3 className="font-semibold mb-1">{method.title}</h3>
+                    <p className="text-sm text-primary">{method.details}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <form onSubmit={handleSubmit} className="bg-card border rounded-lg p-6 space-y-4">
+              <h2 className="text-xl font-semibold mb-4">{t('sendMessage')}</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name">{t('fullName')}</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">{t('email')}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="phone">{t('phoneNumber')}</Label>
+                  <Input
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="subject">{t('subject')}</Label>
+                  <Input
+                    id="subject"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="message">{t('message')}</Label>
+                <Textarea
+                  id="message"
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  rows={5}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full bg-gradient-primary">
+                <Send className="h-4 w-4 mr-2" />
+                {t('sendMessage')}
+              </Button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };
