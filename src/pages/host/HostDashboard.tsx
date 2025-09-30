@@ -10,6 +10,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropertyCalendar from '@/components/PropertyCalendar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileHeader from '@/components/MobileHeader';
+import MobileBottomNav from '@/components/MobileBottomNav';
+import MobileFooter from '@/components/MobileFooter';
+import FloatingMapButton from '@/components/FloatingMapButton';
+import { cn } from '@/lib/utils';
 
 interface Property {
   id: string;
@@ -29,6 +35,7 @@ export default function HostDashboard() {
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,101 +85,111 @@ export default function HostDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
-        <p className="text-muted-foreground">
-          {t('host.welcomeMessage')}
-        </p>
-      </div>
+    <>
+      {isMobile && <MobileHeader />}
+      <div className={cn("space-y-6", isMobile && "pt-16 pb-24")}>
+        <div>
+          <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
+          <p className="text-muted-foreground">
+            {t('host.welcomeMessage')}
+          </p>
+        </div>
 
-      {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.activeProperties')}</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.filter(p => p.status === 'active').length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.messagesReceived')}</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">-</div>
-            <p className="text-xs text-muted-foreground">{t('host.checkMessages')}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatPrice(0)}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('host.quickActions')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4">
-            <Button onClick={() => navigate('/publish-property')}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t('host.publishProperty')}
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/host/listings')}>
-              <Building2 className="h-4 w-4 mr-2" />
-              {t('host.viewListings')}
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/host/messages')}>
-              <MessageSquare className="h-4 w-4 mr-2" />
-              {t('host.messages')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Activity and Calendar */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {properties.length > 0 && (
+        {/* Quick Stats */}
+        <div className="grid gap-4 md:grid-cols-3">
           <Card>
-            <CardHeader>
-              <CardTitle>{t('host.recentProperties')}</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('host.activeProperties')}</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {properties.slice(0, 3).map((property) => (
-                  <div key={property.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <p className="font-medium">{property.title}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
-                      </p>
-                    </div>
-                    <Badge variant={property.status === 'active' ? 'default' : 'secondary'}>
-                      {property.status === 'active' ? t('host.active') : t('host.inactive')}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
+              <div className="text-2xl font-bold">{properties.filter(p => p.status === 'active').length}</div>
             </CardContent>
           </Card>
-        )}
-        
-        {/* Property Calendar */}
-        <PropertyCalendar />
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('host.messagesReceived')}</CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">-</div>
+              <p className="text-xs text-muted-foreground">{t('host.checkMessages')}</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
+              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatPrice(0)}</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('host.quickActions')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button onClick={() => navigate('/publish-property')} className="w-full sm:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                {t('host.publishProperty')}
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/host/listings')} className="w-full sm:w-auto">
+                <Building2 className="h-4 w-4 mr-2" />
+                {t('host.viewListings')}
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/host/messages')} className="w-full sm:w-auto">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {t('host.messages')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Activity and Calendar */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          {properties.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('host.recentProperties')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {properties.slice(0, 3).map((property) => (
+                    <div key={property.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate">{property.title}</p>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
+                        </p>
+                      </div>
+                      <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="ml-2">
+                        {property.status === 'active' ? t('host.active') : t('host.inactive')}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {/* Property Calendar */}
+          <PropertyCalendar />
+        </div>
       </div>
-    </div>
+      {isMobile && (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+          <FloatingMapButton />
+        </>
+      )}
+    </>
   );
 }

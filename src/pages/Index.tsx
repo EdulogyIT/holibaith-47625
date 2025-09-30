@@ -47,14 +47,14 @@ const Index = () => {
       />
       <MobileHeader />
       <main className="pb-20">
-        {/* Background Image Hero - Reduced Height */}
+        {/* Background Image Hero - Reduced Height and Moved Up */}
         <div 
-          className="h-[400px] relative bg-cover bg-center"
+          className="h-[360px] relative bg-cover bg-center"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
           }}
         >
-          <div className="absolute inset-0 flex flex-col justify-end pb-6">
+          <div className="absolute inset-0 flex flex-col justify-end pb-4">
             <MobileHeroSearch />
           </div>
         </div>
