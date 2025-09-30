@@ -21,6 +21,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import heroImage from "@/assets/contact-advisor-hero.jpg";
 
 const ContactAdvisor = () => {
   const { t } = useLanguage();
@@ -76,21 +77,31 @@ const ContactAdvisor = () => {
       {/* Mobile Layout */}
       {isMobile ? (
         <div className="pt-16">
-          {/* Header with Back Button */}
-          <div className="px-4 py-4 border-b border-border bg-background sticky top-16 z-30">
-            <button 
-              onClick={() => navigate(-1)}
-              className="flex items-center text-foreground mb-3"
-            >
-              <ChevronLeft className="w-5 h-5 mr-1" />
-              <span className="text-sm font-inter">{t('back')}</span>
-            </button>
-            <h1 className="text-2xl font-playfair font-bold text-foreground">
-              {t('speakToAdvisor')}
-            </h1>
-            <p className="text-sm text-muted-foreground font-inter mt-1">
-              Get personalized guidance from experts
-            </p>
+          {/* Header with Back Button and Background */}
+          <div className="relative px-4 py-6 border-b border-border bg-background overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <img 
+                src={heroImage} 
+                alt="Contact advisor" 
+                className="w-full h-full object-cover opacity-20"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background"></div>
+            </div>
+            <div className="relative z-10">
+              <button 
+                onClick={() => navigate('/')}
+                className="flex items-center text-foreground mb-3 active:scale-95 transition-transform"
+              >
+                <ChevronLeft className="w-5 h-5 mr-1" />
+                <span className="text-sm font-inter">{t('back')}</span>
+              </button>
+              <h1 className="text-2xl font-playfair font-bold text-foreground">
+                {t('speakToAdvisor')}
+              </h1>
+              <p className="text-sm text-muted-foreground font-inter mt-1">
+                Get personalized guidance from experts
+              </p>
+            </div>
           </div>
 
           {/* Stats Grid */}
