@@ -157,7 +157,11 @@ export default function HostListings() {
       {properties.length > 0 ? (
         <div className={`grid gap-${isMobile ? '3' : '6'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
           {properties.map((property) => (
-            <Card key={property.id} className={`overflow-hidden ${isMobile ? '' : 'hover:shadow-lg transition-shadow'}`}>
+            <Card 
+              key={property.id} 
+              className={`overflow-hidden ${isMobile ? 'cursor-pointer active:scale-95 transition-transform' : 'hover:shadow-lg transition-shadow'}`}
+              onClick={isMobile ? () => navigate(`/property/${property.id}`) : undefined}
+            >
               <div className="relative">
                 <img 
                   src={property.images?.[0] || '/placeholder.svg'}
@@ -173,13 +177,13 @@ export default function HostListings() {
                   {property.status === 'active' ? t('host.active') : property.status}
                 </Badge>
                 {isMobile && (
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                )}
-                {isMobile && (
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <p className="text-white text-sm font-medium line-clamp-2">{property.title}</p>
-                    <p className="text-white/80 text-xs">{property.city}</p>
-                  </div>
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-2 left-2 right-2">
+                      <p className="text-white text-sm font-medium line-clamp-2">{property.title}</p>
+                      <p className="text-white/80 text-xs">{property.city}</p>
+                    </div>
+                  </>
                 )}
               </div>
               
