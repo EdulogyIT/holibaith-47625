@@ -151,90 +151,133 @@ const Property = () => {
       {isMobile ? <MobileHeader /> : <Navigation />}
       <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20 pb-8")}>
         {isMobile ? (
-          // Mobile App Layout
-          <div className="space-y-4">
-            {/* Property Images Gallery - Full Width */}
-            <div className="space-y-2">
-              <div className="aspect-[4/3] bg-muted overflow-hidden">
-                <img 
-                  src={property.images[0]} 
-                  alt={property.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="grid grid-cols-3 gap-2 px-4">
-                {property.images.slice(1, 4).map((image, index) => (
-                  <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src={image} 
-                      alt={`${property.title} ${index + 2}`}
-                      className="w-full h-full object-cover"
-                    />
+          // Mobile App Layout - Reference Model
+          <div className="space-y-0">
+            {/* Property Images Gallery - 2x3 Grid */}
+            <div className="grid grid-cols-2 gap-0.5 bg-border">
+              {property.images.slice(0, 5).map((image, index) => (
+                <div key={index} className="aspect-[4/3] bg-muted overflow-hidden relative">
+                  <img 
+                    src={image} 
+                    alt={`${property.title} ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+              {property.images.length > 5 && (
+                <div className="aspect-[4/3] bg-muted overflow-hidden relative">
+                  <img 
+                    src={property.images[5]} 
+                    alt={`${property.title} 6`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <span className="text-white text-2xl font-bold">+{property.images.length - 5}</span>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
 
-            {/* Property Info - Compact */}
-            <div className="px-4 space-y-4">
-              <div className="flex justify-between items-start gap-2">
-                <div className="flex-1">
-                  <h1 className="text-xl font-bold font-playfair mb-1">{property.title}</h1>
-                  <div className="flex items-center text-muted-foreground text-sm">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    <span className="font-inter">{property.city}, {property.location}</span>
-                  </div>
+            {/* Content Section */}
+            <div className="px-4 pt-4 space-y-5">
+              {/* Title and Location */}
+              <div>
+                <div className="flex justify-between items-start gap-2 mb-2">
+                  <h1 className="text-2xl font-bold font-playfair">{property.title}</h1>
+                  <Badge variant="secondary" className="text-xs px-2 py-1 font-inter shrink-0">
+                    {t(property.property_type) || property.property_type}
+                  </Badge>
                 </div>
-                <Badge variant="secondary" className="text-xs px-2 py-1 font-inter shrink-0">
-                  {t(property.property_type) || property.property_type}
-                </Badge>
-              </div>
-              
-              <div className="text-2xl font-bold text-primary font-playfair">
-                {formatPrice(property.price, property.price_type)}
+                <div className="flex items-center text-muted-foreground text-sm mb-3">
+                  <MapPin className="w-4 h-4 mr-1.5" />
+                  <span className="font-inter">{property.city}, {property.location}</span>
+                </div>
+                <div className="text-3xl font-bold text-primary font-playfair">
+                  {formatPrice(property.price, property.price_type)}
+                </div>
               </div>
 
-              {/* Property Stats */}
-              <div className="flex items-center gap-4 py-3 px-4 bg-muted/50 rounded-lg">
-                {property.bedrooms && (
-                  <div className="flex items-center gap-1.5">
-                    <Bed className="w-4 h-4 text-primary" />
-                    <div>
-                      <div className="text-xs font-semibold">{property.bedrooms}</div>
-                      <div className="text-[10px] text-muted-foreground">{t('chambers')}</div>
+              {/* Property Highlights */}
+              <div className="space-y-3">
+                <h2 className="text-lg font-semibold font-playfair">{t('propertyHighlights') || 'Property highlights'}</h2>
+                <div className="grid grid-cols-2 gap-2">
+                  {property.bedrooms && (
+                    <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <Bed className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-muted-foreground font-inter">{t('chambers')}</div>
+                        <div className="text-sm font-semibold font-inter">{property.bedrooms} {t('chambers')}</div>
+                      </div>
+                    </div>
+                  )}
+                  {property.bathrooms && (
+                    <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <Bath className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-muted-foreground font-inter">{t('bathrooms')}</div>
+                        <div className="text-sm font-semibold font-inter">{property.bathrooms} {t('bathrooms')}</div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <Square className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs text-muted-foreground font-inter">{t('areaField')}</div>
+                      <div className="text-sm font-semibold font-inter">{property.area} m²</div>
                     </div>
                   </div>
-                )}
-                {property.bathrooms && (
-                  <div className="flex items-center gap-1.5">
-                    <Bath className="w-4 h-4 text-primary" />
-                    <div>
-                      <div className="text-xs font-semibold">{property.bathrooms}</div>
-                      <div className="text-[10px] text-muted-foreground">{t('bathrooms')}</div>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center gap-1.5">
-                  <Square className="w-4 h-4 text-primary" />
-                  <div>
-                    <div className="text-xs font-semibold">{property.area} m²</div>
-                    <div className="text-[10px] text-muted-foreground">{t('areaField')}</div>
-                  </div>
+                  {property.features && Object.entries(property.features).slice(0, 3).map(([key, value]) => (
+                    value && (
+                      <div key={key} className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl border border-border">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <div className="w-2 h-2 bg-primary rounded-full" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold font-inter">{t(key) || key}</div>
+                        </div>
+                      </div>
+                    )
+                  ))}
                 </div>
               </div>
+
+              {/* Dates Section for short-stay */}
+              {property.category === 'short-stay' && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-sm font-medium mb-1 font-inter">{t('checkIn')}</div>
+                      <div className="text-lg text-primary font-semibold font-inter">Select date</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium mb-1 font-inter">{t('checkOut')}</div>
+                      <div className="text-lg text-primary font-semibold font-inter">Select date</div>
+                    </div>
+                  </div>
+                  <PropertyDatePicker 
+                    onDateChange={(dates) => console.log("Selected dates:", dates)}
+                  />
+                </div>
+              )}
 
               {/* Description */}
               <div className="space-y-2">
-                <h3 className="text-base font-semibold font-playfair">{t('description')}</h3>
+                <h3 className="text-lg font-semibold font-playfair">{t('description')}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed font-inter">
                   {property.description}
                 </p>
               </div>
 
-              {/* Features */}
+              {/* All Features */}
               {property.features && Object.keys(property.features).length > 0 && (
-                <div className="space-y-2">
-                  <h3 className="text-base font-semibold font-playfair">{t('characteristics')}</h3>
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold font-playfair">{t('characteristics')}</h3>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(property.features).map(([key, value]) => (
                       value && (
@@ -248,29 +291,114 @@ const Property = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
-              {property.category === 'short-stay' ? (
-                <div className="space-y-3 pt-2">
-                  <PropertyDatePicker 
-                    onDateChange={(dates) => console.log("Selected dates:", dates)}
-                  />
-                  <BookingModal 
-                    property={{
-                      id: property.id,
-                      title: property.title,
-                      price: property.price,
-                      price_type: property.price_type,
-                      category: property.category
-                    }}
-                  />
-                </div>
-              ) : property.category === 'sale' ? (
-                <div className="space-y-2 pt-2">
+              {/* Location */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold font-playfair">{t('location')}</h3>
+                <MapboxMap 
+                  location={`${property.city}, ${property.location}`}
+                  address={property.full_address || `${property.city}, ${property.location}`}
+                />
+              </div>
+
+              {/* Contact Owner */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold font-playfair flex items-center">
+                  <User className="w-5 h-5 mr-2" />
+                  {t('contactOwner')}
+                </h3>
+                {property.contact_name ? (
+                  <div className="space-y-3">
+                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
+                      <h4 className="font-semibold text-sm mb-2 font-inter">{property.contact_name}</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center text-xs text-muted-foreground font-inter">
+                          <Phone className="w-3.5 h-3.5 mr-2" />
+                          {property.contact_phone}
+                        </div>
+                        <div className="flex items-center text-xs text-muted-foreground font-inter">
+                          <Mail className="w-3.5 h-3.5 mr-2" />
+                          {property.contact_email}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="lg" className="bg-gradient-primary hover:shadow-elegant font-inter">
+                        <Phone className="w-4 h-4 mr-1.5" />
+                        {t('callBtn')}
+                      </Button>
+                      <Button 
+                        size="lg"
+                        variant="outline" 
+                        className="font-inter"
+                        onClick={() => setIsMessageModalOpen(true)}
+                      >
+                        <Mail className="w-4 h-4 mr-1.5" />
+                        {t('sendMessageBtn')}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
                   <Button 
-                    className="w-full bg-gradient-primary hover:shadow-elegant"
+                    size="lg"
+                    className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
+                    onClick={() => setIsMessageModalOpen(true)}
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    {t('contactOwnerSecure')}
+                  </Button>
+                )}
+              </div>
+
+              {/* Property Details */}
+              <div className="space-y-3 pb-6">
+                <h3 className="text-lg font-semibold font-playfair">{t('listingDetails')}</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between py-2 border-b border-border">
+                    <span className="text-muted-foreground font-inter">{t('reference')}</span>
+                    <span className="font-medium font-inter">BK-{property.id.substring(0, 8)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-border">
+                    <span className="text-muted-foreground font-inter">{t('typeField')}</span>
+                    <span className="font-medium font-inter">{t(property.property_type) || property.property_type}</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-muted-foreground font-inter">{t('publishedOn')}</span>
+                    <span className="font-medium font-inter">{formatDate(property.created_at)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fixed Bottom CTA */}
+            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border p-4 safe-bottom z-40">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="text-xs text-muted-foreground font-inter">
+                    {property.category === 'short-stay' ? t('pricePerNight') : t('totalPrice')}
+                  </div>
+                  <div className="text-2xl font-bold text-primary font-playfair">
+                    {formatPrice(property.price, property.price_type)}
+                  </div>
+                </div>
+              </div>
+              {property.category === 'short-stay' ? (
+                <BookingModal 
+                  property={{
+                    id: property.id,
+                    title: property.title,
+                    price: property.price,
+                    price_type: property.price_type,
+                    category: property.category
+                  }}
+                />
+              ) : property.category === 'sale' ? (
+                <div className="space-y-2">
+                  <Button 
+                    size="lg"
+                    className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
                     onClick={() => setIsScheduleModalOpen(true)}
                   >
-                    <Calendar className="w-4 h-4 mr-2" />
+                    <Calendar className="w-5 h-5 mr-2" />
                     {t('scheduleVisit')}
                   </Button>
                   {(() => {
@@ -291,109 +419,15 @@ const Property = () => {
                   })()}
                 </div>
               ) : (
-                <div className="space-y-2 pt-2">
-                  <Button 
-                    className="w-full bg-gradient-primary hover:shadow-elegant"
-                    onClick={() => setIsScheduleModalOpen(true)}
-                  >
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {t('scheduleVisit')}
-                  </Button>
-                  {(() => {
-                    const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
-                    const securityDepositAmount = Math.round(propertyPrice * 0.2 * 100) / 100;
-                    return (
-                      <PaymentButton
-                        propertyId={property.id}
-                        paymentType="security_deposit"
-                        amount={securityDepositAmount}
-                        currency="EUR"
-                        description={`Security deposit for ${property.title}`}
-                        className="w-full"
-                      >
-                        {t('paySecurityDeposit')} ({formatPrice(securityDepositAmount)})
-                      </PaymentButton>
-                    );
-                  })()}
-                </div>
+                <Button 
+                  size="lg"
+                  className="w-full bg-gradient-primary hover:shadow-elegant font-inter text-base"
+                  onClick={() => setIsScheduleModalOpen(true)}
+                >
+                  <Calendar className="w-5 h-5 mr-2" />
+                  {t('scheduleVisit')}
+                </Button>
               )}
-
-              {/* Contact Owner */}
-              <div className="space-y-2 pt-2">
-                <h3 className="text-base font-semibold font-playfair flex items-center">
-                  <User className="w-4 h-4 mr-2" />
-                  {t('contactOwner')}
-                </h3>
-                {property.contact_name ? (
-                  <div className="space-y-3">
-                    <div className="p-3 bg-muted/50 rounded-lg">
-                      <h4 className="font-semibold text-sm mb-2 font-inter">{property.contact_name}</h4>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center text-xs text-muted-foreground font-inter">
-                          <Phone className="w-3.5 h-3.5 mr-1.5" />
-                          {property.contact_phone}
-                        </div>
-                        <div className="flex items-center text-xs text-muted-foreground font-inter">
-                          <Mail className="w-3.5 h-3.5 mr-1.5" />
-                          {property.contact_email}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button className="bg-gradient-primary hover:shadow-elegant font-inter">
-                        <Phone className="w-4 h-4 mr-1" />
-                        {t('callBtn')}
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="font-inter"
-                        onClick={() => setIsMessageModalOpen(true)}
-                      >
-                        <Mail className="w-4 h-4 mr-1" />
-                        {t('sendMessageBtn')}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground font-inter">
-                      {t('secureContactDescription')}
-                    </p>
-                    <Button 
-                      className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
-                      onClick={() => setIsMessageModalOpen(true)}
-                    >
-                      <Mail className="w-4 h-4 mr-2" />
-                      {t('contactOwnerSecure')}
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {/* Property Details */}
-              <div className="space-y-2 pt-2 pb-4">
-                <h3 className="text-base font-semibold font-playfair">{t('listingDetails')}</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between py-2">
-                    <span className="text-muted-foreground font-inter">{t('reference')}</span>
-                    <span className="font-medium font-inter">BK-{property.id}</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-muted-foreground font-inter">{t('typeField')}</span>
-                    <span className="font-medium font-inter">{t(property.property_type) || property.property_type}</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-muted-foreground font-inter">{t('publishedOn')}</span>
-                    <span className="font-medium font-inter">{formatDate(property.created_at)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Map */}
-              <MapboxMap 
-                location={`${property.city}, ${property.location}`}
-                address={property.full_address || `${property.city}, ${property.location}`}
-              />
             </div>
           </div>
         ) : (
