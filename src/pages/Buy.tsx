@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import buyHeroBg from "@/assets/buy-hero-bg.jpg";
 
 interface Property {
   id: string;
@@ -204,7 +205,7 @@ const Buy = () => {
           <div 
             className="relative pt-4 pb-6 px-4"
             style={{
-              backgroundImage: `url(${require('@/assets/buy-hero-bg.jpg')})`,
+              backgroundImage: `url(${buyHeroBg})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
