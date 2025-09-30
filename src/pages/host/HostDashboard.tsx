@@ -21,6 +21,7 @@ interface Property {
   status: string;
   created_at: string;
   category: string;
+  images: string[];
 }
 
 export default function HostDashboard() {
@@ -191,25 +192,38 @@ export default function HostDashboard() {
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground">Recent Properties</h3>
             <div className="grid grid-cols-2 gap-3">
-              {properties.slice(0, 4).map((property) => (
-                <Card key={property.id} className="bg-card overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="aspect-square bg-muted relative">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <p className="text-white text-sm font-medium line-clamp-2 mb-1">{property.title}</p>
-                        <p className="text-white/80 text-xs">{property.city}</p>
+              {properties.slice(0, 4).map((property) => {
+                const propertyImages = Array.isArray(property.images) ? property.images : [];
+                const imageUrl = propertyImages.length > 0 ? propertyImages[0] : '/placeholder.svg';
+                
+                return (
+                  <Card key={property.id} className="bg-card overflow-hidden">
+                    <CardContent className="p-0">
+                      <div className="aspect-square relative">
+                        <img 
+                          src={imageUrl}
+                          alt={property.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <p className="text-white text-sm font-medium line-clamp-2 mb-1">{property.title}</p>
+                          <p className="text-white/80 text-xs">{property.city}</p>
+                        </div>
+                        <Badge 
+                          variant={property.status === 'active' ? 'default' : 'secondary'}
+                          className="absolute top-2 right-2 text-xs"
+                        >
+                          {property.status === 'active' ? 'Active' : 'Inactive'}
+                        </Badge>
                       </div>
-                      <Badge 
-                        variant={property.status === 'active' ? 'default' : 'secondary'}
-                        className="absolute top-2 right-2 text-xs"
-                      >
-                        {property.status === 'active' ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         )}

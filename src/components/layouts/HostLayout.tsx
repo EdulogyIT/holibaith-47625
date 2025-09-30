@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -30,6 +30,7 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const hostMenuItems = [
     { title: 'Reservations', url: '/host', icon: Calendar },
@@ -75,7 +76,7 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
             <h1 className="text-xl font-bold text-foreground">Holibayt</h1>
           </div>
           
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
@@ -101,7 +102,10 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
                     Quick Actions
                   </h3>
                   <Button 
-                    onClick={() => navigate('/publish-property')} 
+                    onClick={() => {
+                      navigate('/publish-property');
+                      setIsSheetOpen(false);
+                    }} 
                     className="w-full justify-start bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
                   >
                     <Plus className="h-4 w-4 mr-3" />
@@ -119,7 +123,10 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
                       <Button
                         key={item.title}
                         variant="ghost"
-                        onClick={() => navigate(item.url)}
+                        onClick={() => {
+                          navigate(item.url);
+                          setIsSheetOpen(false);
+                        }}
                         className={cn(
                           "w-full justify-start",
                           location.pathname === item.url && "bg-primary text-primary-foreground"
@@ -137,7 +144,10 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start mb-2"
-                    onClick={() => navigate('/')}
+                    onClick={() => {
+                      navigate('/');
+                      setIsSheetOpen(false);
+                    }}
                   >
                     <Home className="h-4 w-4 mr-3" />
                     Back to Home

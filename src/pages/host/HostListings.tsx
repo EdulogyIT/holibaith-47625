@@ -18,6 +18,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Property {
   id: string;
@@ -38,6 +39,7 @@ export default function HostListings() {
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -99,77 +101,90 @@ export default function HostListings() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className={isMobile ? "space-y-2" : "flex items-center justify-between"}>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">{t('host.listings')}</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className={`font-bold text-foreground ${isMobile ? 'text-2xl' : 'text-3xl'}`}>{t('host.listings')}</h1>
+          <p className={`text-muted-foreground ${isMobile ? 'text-sm' : 'mt-2'}`}>
             {t('host.manageProperties')}
           </p>
         </div>
-        <Button onClick={() => navigate('/publish-property')}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('host.newListing')}
-        </Button>
+        {!isMobile && (
+          <Button onClick={() => navigate('/publish-property')}>
+            <Plus className="h-4 w-4 mr-2" />
+            {t('host.newListing')}
+          </Button>
+        )}
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className={`grid gap-${isMobile ? '3' : '6'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-3'}`}>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.activeListings')}</CardTitle>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>{t('host.activeListings')}</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeProperties}</div>
-            <p className="text-xs text-muted-foreground">sur {properties.length} total</p>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+            <div className={`font-bold ${isMobile ? 'text-2xl' : 'text-2xl'}`}>{activeProperties}</div>
+            {!isMobile && <p className="text-xs text-muted-foreground">sur {properties.length} total</p>}
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.totalMessages')}</CardTitle>
-            <MessageSquare className="h-4 w-4 text-blue-600" />
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>{t('host.totalMessages')}</CardTitle>
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">-</div>
-            <p className="text-xs text-muted-foreground">{t('host.messagesReceived')}</p>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+            <div className={`font-bold ${isMobile ? 'text-2xl' : 'text-2xl'}`}>-</div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.totalViews')}</CardTitle>
-            <Eye className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">-</div>
-            <p className="text-xs text-muted-foreground">{t('host.thisMonth')}</p>
-          </CardContent>
-        </Card>
+        {!isMobile && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('host.totalViews')}</CardTitle>
+              <Eye className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">-</div>
+              <p className="text-xs text-muted-foreground">{t('host.thisMonth')}</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Properties Grid */}
       {properties.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`grid gap-${isMobile ? '3' : '6'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
           {properties.map((property) => (
-            <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card key={property.id} className={`overflow-hidden ${isMobile ? '' : 'hover:shadow-lg transition-shadow'}`}>
               <div className="relative">
                 <img 
                   src={property.images?.[0] || '/placeholder.svg'}
                   alt={property.title}
-                  className="w-full h-48 object-cover"
+                  className={`w-full object-cover ${isMobile ? 'aspect-square' : 'h-48'}`}
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder.svg';
                   }}
                 />
                 <Badge 
-                  className={`absolute top-3 left-3 ${getStatusColor(property.status)}`}
+                  className={`absolute ${isMobile ? 'top-2 right-2 text-xs' : 'top-3 left-3'} ${getStatusColor(property.status)}`}
                 >
                   {property.status === 'active' ? t('host.active') : property.status}
                 </Badge>
+                {isMobile && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                )}
+                {isMobile && (
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <p className="text-white text-sm font-medium line-clamp-2">{property.title}</p>
+                    <p className="text-white/80 text-xs">{property.city}</p>
+                  </div>
+                )}
               </div>
               
-              <CardContent className="p-4">
+              {!isMobile && (
+                <CardContent className="p-4">
                 <div className="space-y-3">
                   <div>
                     <h3 className="font-semibold text-lg line-clamp-2">{property.title}</h3>
@@ -235,6 +250,7 @@ export default function HostListings() {
                   </div>
                 </div>
               </CardContent>
+              )}
             </Card>
           ))}
         </div>

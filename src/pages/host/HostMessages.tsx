@@ -17,6 +17,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ContactRequest {
   id: string;
@@ -36,6 +37,7 @@ interface ContactRequest {
 export default function HostMessages() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const [messages, setMessages] = useState<ContactRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<ContactRequest | null>(null);
@@ -159,45 +161,47 @@ export default function HostMessages() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">{t('host.messagesPage')}</h1>
-        <p className="text-muted-foreground">
+        <h1 className={`font-bold ${isMobile ? 'text-2xl' : 'text-3xl'}`}>{t('host.messagesPage')}</h1>
+        <p className={`text-muted-foreground ${isMobile ? 'text-sm' : ''}`}>
           {t('host.manageContactRequests')}
         </p>
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={`grid gap-${isMobile ? '3' : '4'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-3'}`}>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.unreadMessages')}</CardTitle>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>{t('host.unreadMessages')}</CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
             <div className="text-2xl font-bold">{pendingCount}</div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.totalMessages')}</CardTitle>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>{t('host.totalMessages')}</CardTitle>
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
             <div className="text-2xl font-bold">{totalCount}</div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.responseRate')}</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {totalCount > 0 ? Math.round((messages.filter(m => m.status === 'replied').length / totalCount) * 100) : 0}%
-            </div>
-          </CardContent>
-        </Card>
+        {!isMobile && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('host.responseRate')}</CardTitle>
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {totalCount > 0 ? Math.round((messages.filter(m => m.status === 'replied').length / totalCount) * 100) : 0}%
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Messages List */}

@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, CreditCard, Building2, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PaymentAccount {
   id: string;
@@ -49,6 +50,7 @@ export default function HostPayouts() {
   const { user } = useAuth();
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [paymentAccounts, setPaymentAccounts] = useState<PaymentAccount[]>([]);
   const [commissionTransactions, setCommissionTransactions] = useState<CommissionTransaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -204,43 +206,45 @@ export default function HostPayouts() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Payouts & Settings</h1>
-        <p className="text-muted-foreground">
+        <h1 className={`font-bold ${isMobile ? 'text-2xl' : 'text-3xl'}`}>Payouts & Settings</h1>
+        <p className={`text-muted-foreground ${isMobile ? 'text-sm' : ''}`}>
           Manage your payment accounts and view your earnings
         </p>
       </div>
 
       {/* Earnings Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className={`grid gap-${isMobile ? '3' : '4'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-3'}`}>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Total Earnings</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
             <div className="text-2xl font-bold">{formatPrice(totalEarnings)}</div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Payouts</CardTitle>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Pending Payouts</CardTitle>
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
             <div className="text-2xl font-bold">{formatPrice(pendingEarnings)}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Payment Accounts</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{paymentAccounts.length}</div>
-          </CardContent>
-        </Card>
+        {!isMobile && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Payment Accounts</CardTitle>
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{paymentAccounts.length}</div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       <Tabs defaultValue="accounts" className="space-y-4">
