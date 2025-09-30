@@ -113,7 +113,7 @@ const MobileHeroSearch = () => {
       </div>
 
       {/* Filter Options Based on Tab */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-2 overflow-x-auto">
         {/* Property Type / Housing Type - For Buy and Rent */}
         {(selectedTab === 'buy' || selectedTab === 'rent') && (
           <select
@@ -154,11 +154,11 @@ const MobileHeroSearch = () => {
                   type="button"
                   variant="outline"
                   className={cn(
-                    "flex-1 min-w-[140px] h-12 rounded-full text-sm bg-white border border-input justify-start",
+                    "flex-shrink-0 w-[30%] h-12 rounded-full text-xs bg-white border border-input justify-start px-2",
                     !dateRange?.from && "text-muted-foreground"
                   )}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mr-1 h-3 w-3" />
                   {dateRange?.from ? format(dateRange.from, "dd/MM/yy") : t('checkIn')}
                 </Button>
               </PopoverTrigger>
@@ -177,12 +177,12 @@ const MobileHeroSearch = () => {
                   type="button"
                   variant="outline"
                   className={cn(
-                    "flex-1 min-w-[140px] h-12 rounded-full text-sm bg-white border border-input justify-start",
+                    "flex-shrink-0 w-[30%] h-12 rounded-full text-xs bg-white border border-input justify-start px-2",
                     !dateRange?.to && "text-muted-foreground"
                   )}
                   disabled={!dateRange?.from}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mr-1 h-3 w-3" />
                   {dateRange?.to ? format(dateRange.to, "dd/MM/yy") : t('checkOut')}
                 </Button>
               </PopoverTrigger>
@@ -195,12 +195,12 @@ const MobileHeroSearch = () => {
               </PopoverContent>
             </Popover>
 
-            <div className="flex-1 min-w-[140px] relative">
-              <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
+            <div className="flex-shrink-0 w-[30%] relative">
+              <Users className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground h-3 w-3 z-10" />
               <Input
                 type="text"
                 placeholder={t('travelers')}
-                className="h-12 pl-10 rounded-full text-sm bg-white border border-input"
+                className="h-12 pl-7 pr-2 rounded-full text-xs bg-white border border-input"
                 value={travelers}
                 onChange={(e) => setTravelers(e.target.value)}
               />
