@@ -24,12 +24,7 @@ const MobileHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-transparent z-50 safe-top">
-      <div className="flex items-center justify-between px-4 h-16">
-        <img 
-          src="/holibayt-logo-transparent.png" 
-          alt="Holibayt" 
-          className="h-10 w-auto"
-        />
+      <div className="flex items-center justify-end px-4 h-16">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white rounded-xl">
