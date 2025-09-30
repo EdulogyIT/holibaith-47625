@@ -34,13 +34,20 @@ export default function HostDashboard() {
   const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchHostProperties();
   }, [user]);
 
   const fetchHostProperties = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('No user found, skipping fetch');
+      setLoading(false);
+      return;
+    }
+    
+    console.log('Fetching properties for user:', user.id);
     
     try {
       const { data, error } = await supabase
@@ -51,11 +58,14 @@ export default function HostDashboard() {
 
       if (error) {
         console.error('Error fetching properties:', error);
+        setError(`Failed to load properties: ${error.message}`);
       } else {
+        console.log('Properties loaded:', data?.length || 0);
         setProperties(data || []);
       }
     } catch (error) {
       console.error('Error fetching properties:', error);
+      setError('An unexpected error occurred while loading properties');
     } finally {
       setLoading(false);
     }
@@ -71,10 +81,29 @@ export default function HostDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">{t('host.loadingProperties')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-lg text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center max-w-md">
+          <div className="text-destructive text-xl mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-foreground mb-2">Unable to Load Dashboard</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={() => {
+            setError(null);
+            setLoading(true);
+            fetchHostProperties();
+          }}>
+            Try Again
+          </Button>
         </div>
       </div>
     );
