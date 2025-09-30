@@ -27,13 +27,13 @@ const MobileHeader = () => {
     <header className="fixed top-0 left-0 right-0 bg-transparent z-50 safe-top">
       <div className="flex items-center justify-between px-4 h-16">
         {/* Logo and Brand Name */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm">
           <img 
             src={holibaytLogo} 
             alt="Holibayt Logo" 
-            className="h-10 w-10"
+            className="h-12 w-12"
           />
-          <span className="text-xl font-semibold text-white">Holibayt</span>
+          <span className="text-2xl font-semibold" style={{ color: '#2d5a4a' }}>Holibayt</span>
         </div>
 
         <Sheet>
