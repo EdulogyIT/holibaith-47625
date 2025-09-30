@@ -21,7 +21,7 @@ const ExploreCities = () => {
   return (
     <section className="px-4 py-6 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Explore by cities</h2>
+        <h2 className="text-2xl font-bold">Explore by Cities</h2>
         <button className="text-primary font-medium text-sm">See all</button>
       </div>
       <div className="grid grid-cols-2 gap-4">

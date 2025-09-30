@@ -38,14 +38,13 @@ const MobileHeader = () => {
           </SheetTrigger>
           <SheetContent side="right" className="w-80 bg-background p-0">
             <div className="flex flex-col h-full">
-              {/* Header with Logo and Title */}
+              {/* Header with Logo */}
               <div className="p-6 pb-4">
                 <img 
                   src="/holibayt-logo-transparent.png" 
                   alt="Holibayt" 
-                  className="h-16 w-auto mb-2"
+                  className="h-16 w-auto"
                 />
-                <SheetTitle className="text-2xl font-semibold text-foreground">Holibayt</SheetTitle>
               </div>
 
               <Separator />
@@ -100,6 +99,16 @@ const MobileHeader = () => {
                     <MapPin className="h-5 w-5" />
                     <span className="text-base font-medium">Blog</span>
                   </button>
+
+                  {user && (
+                    <button
+                      onClick={() => handleNavigation("/host/dashboard")}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                    >
+                      <Building2 className="h-5 w-5" />
+                      <span className="text-base font-medium">Host Dashboard</span>
+                    </button>
+                  )}
                 </div>
 
                 <Separator className="my-4" />

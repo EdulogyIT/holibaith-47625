@@ -1,5 +1,9 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
+import MobileFooter from "@/components/MobileFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -142,8 +146,13 @@ const Property = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+      <div className="hidden md:block">
+        <Navigation />
+      </div>
+      <div className="md:hidden">
+        <MobileHeader />
+      </div>
+      <main className="pt-20 pb-24 md:pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
@@ -466,6 +475,17 @@ const Property = () => {
           />
         </>
       )}
+      
+      <div className="md:hidden">
+        <MobileFooter />
+      </div>
+      <div className="hidden md:block">
+        <Footer />
+      </div>
+      <div className="md:hidden">
+        <MobileBottomNav />
+        <FloatingMapButton />
+      </div>
     </div>
   );
 };

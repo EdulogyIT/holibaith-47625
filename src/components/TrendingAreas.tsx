@@ -14,7 +14,7 @@ const TrendingAreas = () => {
   return (
     <section className="px-4 py-4 bg-white">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold">trending areas</h2>
+        <h2 className="text-xl font-bold">Trending Areas</h2>
         <button className="text-primary font-medium text-xs">See all</button>
       </div>
       <div className="flex gap-2.5 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
