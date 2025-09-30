@@ -213,28 +213,6 @@ const Buy = () => {
             <div className="absolute inset-0 bg-black/40" />
             
             <div className="relative z-10 space-y-3">
-              {/* Tabs */}
-              <div className="flex gap-2 bg-white/95 backdrop-blur-sm rounded-2xl p-1.5">
-                <button 
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-[#2d5a4a] text-white font-semibold text-sm transition-all"
-                  onClick={() => navigate('/buy')}
-                >
-                  Buy
-                </button>
-                <button 
-                  className="flex-1 py-2.5 px-4 rounded-xl text-gray-600 font-medium text-sm transition-all hover:bg-gray-100"
-                  onClick={() => navigate('/short-stay')}
-                >
-                  Short Stay
-                </button>
-                <button 
-                  className="flex-1 py-2.5 px-4 rounded-xl text-gray-600 font-medium text-sm transition-all hover:bg-gray-100"
-                  onClick={() => navigate('/rent')}
-                >
-                  Rent
-                </button>
-              </div>
-
               {/* Location Search */}
               <div className="relative bg-white rounded-2xl p-4 shadow-lg">
                 <div className="flex items-center gap-3">
