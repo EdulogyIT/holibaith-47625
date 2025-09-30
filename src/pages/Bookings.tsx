@@ -1,5 +1,6 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -247,15 +248,15 @@ const Bookings = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="pt-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <MobileHeader />
+        <main className="pt-16 pb-20">
+          <div className="px-4 py-8">
             <Card className="text-center py-12">
               <CardContent>
-                <h1 className="text-2xl font-bold mb-4">Please log in to view your bookings</h1>
+                <h1 className="text-2xl font-bold mb-4">Please log in</h1>
                 <p className="text-muted-foreground mb-4">
-                  You need to be signed in to access your booking information.
+                  Sign in to view your bookings
                 </p>
                 <Button onClick={() => window.location.href = '/login'}>
                   Log In
@@ -264,19 +265,19 @@ const Bookings = () => {
             </Card>
           </div>
         </main>
-        <Footer />
+        <MobileBottomNav />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-4 font-playfair">My Bookings</h1>
-            <p className="text-lg text-muted-foreground font-inter">
+    <div className="min-h-screen bg-gray-50">
+      <MobileHeader />
+      <main className="pt-16 pb-20">
+        <div className="px-4 py-6">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold mb-2">Trips</h1>
+            <p className="text-muted-foreground">
               Manage your reservations and past stays
             </p>
           </div>
@@ -298,9 +299,9 @@ const Bookings = () => {
             </Card>
           ) : (
             <Tabs defaultValue="upcoming" className="space-y-6">
-              <TabsList className="grid w-full max-w-md grid-cols-2">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="upcoming">Upcoming ({upcomingBookings.length})</TabsTrigger>
-                <TabsTrigger value="past">Past Stays ({pastBookings.length})</TabsTrigger>
+                <TabsTrigger value="past">Past ({pastBookings.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="upcoming" className="space-y-4">
@@ -344,7 +345,8 @@ const Bookings = () => {
           )}
         </div>
       </main>
-      <Footer />
+      <MobileBottomNav />
+      <FloatingMapButton />
     </div>
   );
 };

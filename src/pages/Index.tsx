@@ -46,15 +46,15 @@ const Index = () => {
         canonicalUrl="https://holibayt.com"
       />
       <MobileHeader />
-      <main className="pt-16 pb-20">
+      <main className="pb-20">
         {/* Background Image Hero */}
         <div 
-          className="h-96 relative bg-cover bg-center"
+          className="h-[500px] relative bg-cover bg-center"
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url(/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png)`
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
           }}
         >
-          <div className="absolute inset-0 flex flex-col justify-end">
+          <div className="absolute inset-0 flex flex-col justify-end pb-6">
             <MobileHeroSearch />
           </div>
         </div>

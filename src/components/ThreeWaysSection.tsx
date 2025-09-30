@@ -28,9 +28,9 @@ const ThreeWaysSection = () => {
   ];
 
   return (
-    <section className="px-4 py-6">
+    <section className="px-4 py-6 bg-gray-50">
       <h2 className="text-2xl font-bold text-center mb-6">
-        Three Ways To Live In Algeria
+        Three ways to live in Algeria
       </h2>
       <div className="space-y-4">
         {ways.map((way) => {

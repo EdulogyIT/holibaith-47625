@@ -8,11 +8,11 @@ const MobileBottomNav = () => {
   const { t } = useLanguage();
 
   const navItems = [
-    { id: "explore", icon: Search, label: t('explore') || "Explore", path: "/" },
-    { id: "wishlist", icon: Heart, label: t('wishlist') || "Wishlist", path: "/wishlist" },
-    { id: "trips", icon: Calendar, label: t('trips') || "Trips", path: "/bookings" },
-    { id: "messages", icon: MessageCircle, label: t('messages') || "Messages", path: "/messages" },
-    { id: "profile", icon: User, label: t('profile') || "Profile", path: "/profile" },
+    { id: "explore", icon: Search, label: "Explore", path: "/" },
+    { id: "wishlist", icon: Heart, label: "Wishlist", path: "/wishlist" },
+    { id: "trips", icon: Calendar, label: "Trips", path: "/bookings" },
+    { id: "messages", icon: MessageCircle, label: "Messages", path: "/messages" },
+    { id: "profile", icon: User, label: "Profile", path: "/profile" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

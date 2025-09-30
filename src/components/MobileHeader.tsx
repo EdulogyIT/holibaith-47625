@@ -4,16 +4,16 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const MobileHeader = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50 safe-top">
+    <header className="fixed top-0 left-0 right-0 bg-transparent z-50 safe-top">
       <div className="flex items-center justify-between px-4 h-16">
         <img 
           src="/holibayt-logo-transparent.png" 
           alt="Holibayt" 
-          className="h-10 w-auto"
+          className="h-12 w-auto"
         />
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white">
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>

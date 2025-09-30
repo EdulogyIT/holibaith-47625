@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -185,15 +186,16 @@ const Messages = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="pt-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <MobileHeader />
+        <main className="pt-16 pb-20">
+          <div className="px-4 py-8">
             <Card className="text-center py-12">
               <CardContent>
-                <h1 className="text-2xl font-bold mb-4">Please log in to view your messages</h1>
+                <MessageCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h1 className="text-2xl font-bold mb-4">Please log in</h1>
                 <p className="text-muted-foreground mb-4">
-                  You need to be signed in to access your conversations.
+                  Sign in to view your messages
                 </p>
                 <Button onClick={() => window.location.href = '/login'}>
                   Log In
@@ -202,173 +204,167 @@ const Messages = () => {
             </Card>
           </div>
         </main>
-        <Footer />
+        <MobileBottomNav />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="pt-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <MobileHeader />
+        <main className="pt-16 pb-20">
+          <div className="px-4 py-8">
             <div className="text-center">Loading...</div>
           </div>
         </main>
-        <Footer />
+        <MobileBottomNav />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-4 font-playfair">Messages</h1>
-            <p className="text-lg text-muted-foreground font-inter">
-              Chat with our support team and property advisors
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <MobileHeader />
+      <main className="pt-16 pb-20">
+        <div className="px-4 py-6">
+          <h1 className="text-3xl font-bold mb-6">Messages</h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
-            {/* Conversations List */}
-            <Card className="lg:col-span-1">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="h-5 w-5" />
-                  Conversations
-                </CardTitle>
-                <Button onClick={startNewConversation} size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  New
+          {/* WhatsApp-style UI */}
+          {selectedConversation ? (
+            <div className="bg-white rounded-3xl shadow-sm border border-border overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
+              {/* Chat Header */}
+              <div className="flex items-center gap-3 p-4 border-b bg-gray-50">
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => setSelectedConversation(null)}
+                >
+                  ←
                 </Button>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-[500px]">
-                  {conversations.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                      <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                      <p>No conversations yet</p>
-                      <Button onClick={startNewConversation} variant="outline" size="sm" className="mt-2">
-                        Start your first conversation
-                      </Button>
-                    </div>
-                  ) : (
-                    conversations.map((conversation) => (
-                      <div
-                        key={conversation.id}
-                        onClick={() => setSelectedConversation(conversation.id)}
-                        className={`p-4 border-b cursor-pointer hover:bg-muted/50 transition-colors ${
-                          selectedConversation === conversation.id ? 'bg-muted' : ''
-                        }`}
-                      >
-                        <div className="font-medium">{conversation.subject || 'General Inquiry'}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {format(new Date(conversation.updated_at), 'MMM dd, HH:mm')}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Status: {conversation.status}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </ScrollArea>
-              </CardContent>
-            </Card>
+                <div className="flex-1">
+                  <div className="font-semibold">
+                    {conversations.find(c => c.id === selectedConversation)?.subject || 'Support Team'}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Online</div>
+                </div>
+              </div>
 
-            {/* Messages */}
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>
-                  {selectedConversation 
-                    ? conversations.find(c => c.id === selectedConversation)?.subject || 'General Inquiry'
-                    : 'Select a conversation'
-                  }
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                {selectedConversation ? (
-                  <div className="flex flex-col h-[500px]">
-                    <ScrollArea className="flex-1 p-4">
-                      {messages.length === 0 ? (
-                        <div className="text-center text-muted-foreground py-8">
-                          <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                          <p>No messages yet. Start the conversation!</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {messages.map((message) => (
-                            <div
-                              key={message.id}
-                              className={`flex ${
-                                message.sender_id === user?.id ? 'justify-end' : 'justify-start'
-                              }`}
-                            >
-                              <div
-                                className={`max-w-[70%] p-3 rounded-lg ${
-                                  message.sender_id === user?.id
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted'
-                                }`}
-                              >
-                                {message.sender_id !== user?.id && (
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <User className="h-3 w-3" />
-                                    <span className="text-xs font-medium">
-                                      Support Team
-                                    </span>
-                                  </div>
-                                )}
-                                <div className="text-sm">{message.content}</div>
-                                <div
-                                  className={`text-xs mt-1 ${
-                                    message.sender_id === user?.id
-                                      ? 'text-primary-foreground/70'
-                                      : 'text-muted-foreground'
-                                  }`}
-                                >
-                                  {format(new Date(message.created_at), 'HH:mm')}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </ScrollArea>
-                    
-                    {/* Message Input */}
-                    <div className="p-4 border-t">
-                      <div className="flex gap-2">
-                        <Input
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          placeholder="Type your message..."
-                          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                          disabled={sendingMessage}
-                        />
-                        <Button onClick={sendMessage} disabled={sendingMessage || !newMessage.trim()}>
-                          <Send className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+              {/* Messages */}
+              <ScrollArea className="flex-1 p-4 bg-[#e5ddd5]" style={{ height: 'calc(100% - 130px)' }}>
+                {messages.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p>No messages yet</p>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-[500px] text-muted-foreground">
-                    <div className="text-center">
-                      <MessageCircle className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                      <p>Select a conversation to start chatting</p>
-                    </div>
+                  <div className="space-y-2">
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`flex ${
+                          message.sender_id === user?.id ? 'justify-end' : 'justify-start'
+                        }`}
+                      >
+                        <div
+                          className={`max-w-[75%] p-3 rounded-lg shadow-sm ${
+                            message.sender_id === user?.id
+                              ? 'bg-[#dcf8c6]'
+                              : 'bg-white'
+                          }`}
+                        >
+                          {message.sender_id !== user?.id && (
+                            <div className="text-xs font-medium text-primary mb-1">
+                              Support Team
+                            </div>
+                          )}
+                          <div className="text-sm break-words">{message.content}</div>
+                          <div className="text-xs text-muted-foreground mt-1 text-right">
+                            {format(new Date(message.created_at), 'HH:mm')}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </ScrollArea>
+
+              {/* Message Input */}
+              <div className="p-3 border-t bg-gray-50">
+                <div className="flex gap-2">
+                  <Input
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    disabled={sendingMessage}
+                    className="rounded-full"
+                  />
+                  <Button 
+                    onClick={sendMessage} 
+                    disabled={sendingMessage || !newMessage.trim()}
+                    size="icon"
+                    className="rounded-full"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {conversations.length === 0 ? (
+                <Card className="text-center py-12">
+                  <CardContent>
+                    <MessageCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h2 className="text-xl font-semibold mb-2">No conversations</h2>
+                    <p className="text-muted-foreground mb-4">
+                      Start a conversation with our support team
+                    </p>
+                    <Button onClick={startNewConversation}>
+                      Start Chat
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold">Chats</h2>
+                    <Button onClick={startNewConversation} size="sm">
+                      <Plus className="h-4 w-4 mr-1" />
+                      New
+                    </Button>
+                  </div>
+                  {conversations.map((conversation) => (
+                    <div
+                      key={conversation.id}
+                      onClick={() => setSelectedConversation(conversation.id)}
+                      className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-border cursor-pointer hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <MessageCircle className="h-6 w-6 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold truncate">
+                          {conversation.subject || 'General Inquiry'}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Tap to open chat
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {format(new Date(conversation.updated_at), 'MMM dd')}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </main>
-      <Footer />
+      <MobileBottomNav />
+      <FloatingMapButton />
     </div>
   );
 };

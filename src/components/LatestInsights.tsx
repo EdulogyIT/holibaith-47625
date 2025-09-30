@@ -30,10 +30,10 @@ const LatestInsights = () => {
   ];
 
   return (
-    <section className="px-4 py-6">
+    <section className="px-4 py-6 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Latest Insights</h2>
-        <button className="text-primary font-medium">See all</button>
+        <h2 className="text-2xl font-bold">Latest insights</h2>
+        <button className="text-primary font-medium text-sm">See all</button>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4">
         {insights.map((insight) => (

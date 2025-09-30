@@ -7,11 +7,15 @@ const FloatingMapButton = () => {
 
   return (
     <Button
-      onClick={() => navigate("/buy")} // Navigate to buy page with map view
-      className="fixed bottom-24 right-4 h-14 w-14 rounded-full bg-primary shadow-lg z-40 hover:scale-110 transition-transform"
+      onClick={() => navigate("/buy")}
+      className="fixed bottom-24 right-4 h-14 w-14 rounded-full shadow-lg z-40 hover:scale-110 transition-transform"
+      style={{ 
+        backgroundColor: 'hsl(var(--primary))',
+        color: 'white'
+      }}
       size="icon"
     >
-      <Map className="h-6 w-6 text-white" />
+      <Map className="h-6 w-6" />
     </Button>
   );
 };

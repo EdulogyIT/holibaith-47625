@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import Navigation from '@/components/Navigation';
-import Footer from '@/components/Footer';
+import MobileHeader from '@/components/MobileHeader';
+import MobileBottomNav from '@/components/MobileBottomNav';
+import FloatingMapButton from '@/components/FloatingMapButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -221,25 +222,27 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/50 to-accent/10 animate-fade-in">
-      <Navigation />
+    <div className="min-h-screen bg-gray-50">
+      <MobileHeader />
       
-      <main className="container mx-auto px-4 py-8 mt-20">
-        {/* Header */}
-        <div className="mb-8 animate-scale-in">
-          <div className="flex items-center gap-6 mb-6 p-6 rounded-2xl bg-gradient-primary shadow-elegant">
-            <Avatar className="h-20 w-20 ring-4 ring-white/20 shadow-lg">
-              <AvatarImage src="" alt={user.name} />
-              <AvatarFallback className="text-2xl bg-white/20 text-white backdrop-blur-sm">
-                {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{currentTranslations.title}</h1>
-              <p className="text-white/80 text-lg">{currentTranslations.subtitle}</p>
-              <Badge variant="secondary" className="mt-3 bg-white/20 text-white hover:bg-white/30 transition-all">
-                {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
-              </Badge>
+      <main className="pt-16 pb-20">
+        <div className="px-4 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center gap-4 mb-4">
+              <Avatar className="h-20 w-20 ring-4 ring-primary/20">
+                <AvatarImage src="" alt={user.name} />
+                <AvatarFallback className="text-2xl bg-primary text-white">
+                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-3xl font-bold mb-1">Profile</h1>
+                <p className="text-muted-foreground">Manage your account</p>
+                <Badge variant="secondary" className="mt-2">
+                  {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
+                </Badge>
+              </div>
             </div>
           </div>
 
@@ -532,7 +535,8 @@ const Profile = () => {
         </Tabs>
       </main>
 
-      <Footer />
+      <MobileBottomNav />
+      <FloatingMapButton />
     </div>
   );
 };
