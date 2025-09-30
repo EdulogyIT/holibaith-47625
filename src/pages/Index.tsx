@@ -10,7 +10,6 @@ import ExpertGuidanceCTA from "@/components/ExpertGuidanceCTA";
 import MobileFooter from "@/components/MobileFooter";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FloatingMapButton from "@/components/FloatingMapButton";
-import AIChatBox from "@/components/AIChatBox";
 
 const Index = () => {
   const schema = {
@@ -69,7 +68,6 @@ const Index = () => {
       </main>
       <MobileBottomNav />
       <FloatingMapButton />
-      <AIChatBox />
     </div>
   );
 };

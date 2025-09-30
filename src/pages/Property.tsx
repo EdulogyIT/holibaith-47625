@@ -15,7 +15,6 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useEffect, useState } from "react";
 import MapboxMap from "@/components/MapboxMap";
-import AIChatBox from "@/components/AIChatBox";
 import PropertyDatePicker from "@/components/PropertyDatePicker";
 import { PaymentButton } from "@/components/PaymentButton";
 import { BookingModal } from "@/components/BookingModal";
@@ -454,7 +453,6 @@ const Property = () => {
         </div>
       </main>
       <Footer />
-      <AIChatBox />
       
       {/* Modals */}
       {property && (

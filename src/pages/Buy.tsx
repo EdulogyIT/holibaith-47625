@@ -12,7 +12,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import PropertyFilters from "@/components/PropertyFilters";
 import { useState, useEffect } from "react";
-import AIChatBox from "@/components/AIChatBox";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { supabase } from "@/integrations/supabase/client";
 

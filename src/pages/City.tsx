@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Bed, Bath, Square, Clock, Users, Building } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import AIChatBox from "@/components/AIChatBox";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useEffect } from "react";
 import algerImage from "@/assets/city-alger.jpg";
@@ -367,7 +366,6 @@ const City = () => {
         </div>
       </main>
       <Footer />
-      <AIChatBox />
     </div>
   );
 };
