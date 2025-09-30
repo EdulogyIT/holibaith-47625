@@ -339,7 +339,7 @@ const City = () => {
               </TabsList>
               
               <TabsContent value="buy" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {buyProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="buy" />
                   ))}
@@ -357,7 +357,7 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="rent" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {rentProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="rent" />
                   ))}
@@ -375,7 +375,7 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="shortStay" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {shortStayProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="shortStay" />
                   ))}

@@ -2,18 +2,23 @@ import MobileHeader from "@/components/MobileHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import MobileFooter from "@/components/MobileFooter";
 import FloatingMapButton from "@/components/FloatingMapButton";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import BuyHeroSearch from "@/components/BuyHeroSearch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { MapPin, Bed, Bath, Square, Loader2 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom"; // ⬅️ add useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import PropertyFilters from "@/components/PropertyFilters";
 import { useState, useEffect } from "react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
 interface Property {
   id: string;
@@ -41,9 +46,10 @@ const num = (v: unknown) => {
 
 const Buy = () => {
   const navigate = useNavigate();
-  const locationHook = useLocation(); // ⬅️
+  const locationHook = useLocation();
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
+  const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,58 +132,61 @@ const Buy = () => {
 
   const PropertyCard = ({ property }: { property: Property }) => (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
-      <div className="relative h-48 overflow-hidden">
+      <div className={cn("relative overflow-hidden", isMobile ? "h-32" : "h-48")}>
         <img
           src={property.images?.[0] || "/placeholder-property.jpg"}
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-3 left-3">
-          <Badge className="bg-primary text-primary-foreground">
+        <div className={cn("absolute left-2", isMobile ? "top-2" : "top-3")}>
+          <Badge className={cn("bg-primary text-primary-foreground", isMobile && "text-xs px-1.5 py-0")}>
             {t(property.property_type) || property.property_type}
           </Badge>
         </div>
       </div>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold text-foreground line-clamp-2">
+      <CardHeader className={cn(isMobile ? "p-2 pb-1" : "pb-2")}>
+        <CardTitle className={cn("font-semibold text-foreground line-clamp-2", isMobile ? "text-xs" : "text-lg")}>
           {property.title}
         </CardTitle>
         <div className="flex items-center text-muted-foreground">
-          <MapPin className="h-4 w-4 mr-1" />
-          <span className="text-sm">
+          <MapPin className={cn(isMobile ? "h-3 w-3 mr-0.5" : "h-4 w-4 mr-1")} />
+          <span className={cn(isMobile ? "text-[10px]" : "text-sm")}>
             {(property.city || "").trim()}
             {property.city && property.location ? ", " : ""}
             {(property.location || "").trim()}
           </span>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex items-center justify-between mb-3">
-          <div className="text-2xl font-bold text-primary">
+      <CardContent className={cn(isMobile ? "p-2 pt-0" : "pt-0")}>
+        <div className={cn("flex items-center justify-between", isMobile ? "mb-1" : "mb-3")}>
+          <div className={cn("font-bold text-primary", isMobile ? "text-sm" : "text-2xl")}>
             {formatPrice(num(property.price), property.price_type)}
           </div>
         </div>
 
-        <div className="flex items-center gap-4 text-muted-foreground text-sm mb-4">
+        <div className={cn("flex items-center gap-2 text-muted-foreground mb-2", isMobile ? "text-[10px] gap-1" : "text-sm gap-4")}>
           {property.bedrooms && (
             <div className="flex items-center">
-              <Bed className="h-4 w-4 mr-1" />
+              <Bed className={cn(isMobile ? "h-3 w-3 mr-0.5" : "h-4 w-4 mr-1")} />
               <span>{property.bedrooms}</span>
             </div>
           )}
           {property.bathrooms && (
             <div className="flex items-center">
-              <Bath className="h-4 w-4 mr-1" />
+              <Bath className={cn(isMobile ? "h-3 w-3 mr-0.5" : "h-4 w-4 mr-1")} />
               <span>{property.bathrooms}</span>
             </div>
           )}
           <div className="flex items-center">
-            <Square className="h-4 w-4 mr-1" />
+            <Square className={cn(isMobile ? "h-3 w-3 mr-0.5" : "h-4 w-4 mr-1")} />
             <span>{num(property.area)} m²</span>
           </div>
         </div>
 
-        <Button className="w-full" onClick={() => navigate(`/property/${property.id}`)}>
+        <Button 
+          className={cn("w-full", isMobile && "text-xs h-7")} 
+          onClick={() => navigate(`/property/${property.id}`)}
+        >
           {t("viewDetails")}
         </Button>
       </CardContent>
@@ -186,14 +195,55 @@ const Buy = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <MobileHeader />
-      <main className="pt-16">
-        {/* ⬇️ wire up the search */}
-        <BuyHeroSearch onSearch={handleSearch} />
+      {isMobile ? <MobileHeader /> : <Navigation />}
+      <main className={cn(isMobile ? "pt-16" : "pt-20")}>
+        {!isMobile && <BuyHeroSearch onSearch={handleSearch} />}
+        
+        {/* Mobile Compact Search */}
+        {isMobile && (
+          <div className="p-3 bg-card border-b">
+            <div className="flex gap-2">
+              <Input
+                placeholder={t("searchLocation")}
+                value={locationHook.search ? new URLSearchParams(locationHook.search).get("location") || "" : ""}
+                onChange={(e) => {
+                  const newParams = new URLSearchParams(locationHook.search);
+                  if (e.target.value) {
+                    newParams.set("location", e.target.value);
+                  } else {
+                    newParams.delete("location");
+                  }
+                  navigate({ search: newParams.toString() });
+                }}
+                className="text-sm h-9"
+              />
+              <select
+                className="h-9 px-2 text-xs border rounded-md"
+                value={new URLSearchParams(locationHook.search).get("type") || ""}
+                onChange={(e) => {
+                  const newParams = new URLSearchParams(locationHook.search);
+                  if (e.target.value) {
+                    newParams.set("type", e.target.value);
+                  } else {
+                    newParams.delete("type");
+                  }
+                  navigate({ search: newParams.toString() });
+                }}
+              >
+                <option value="">{t("propertyType")}</option>
+                <option value="apartment">{t("apartment")}</option>
+                <option value="house">{t("house")}</option>
+                <option value="villa">{t("villa")}</option>
+                <option value="terrain">{t("land")}</option>
+              </select>
+            </div>
+          </div>
+        )}
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="lg:w-1/4">
+        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-4" : "py-8")}>
+          <div className={cn("flex flex-col", !isMobile && "lg:flex-row gap-8")}>
+            {!isMobile && (
+              <div className="lg:w-1/4">
               <PropertyFilters
                 onFilterChange={(filters) => {
                   let filtered = properties;
@@ -239,14 +289,15 @@ const Buy = () => {
                 }}
                 listingType="buy"
               />
-            </div>
+              </div>
+            )}
 
-            <div className="lg:w-3/4">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground font-playfair">
+            <div className={cn(isMobile ? "w-full" : "lg:w-3/4")}>
+              <div className={cn("flex items-center justify-between", isMobile ? "mb-3" : "mb-6")}>
+                <h2 className={cn("font-bold text-foreground font-playfair", isMobile ? "text-lg" : "text-2xl")}>
                   {t("propertiesForSale")}
                 </h2>
-                <div className="text-muted-foreground">
+                <div className={cn("text-muted-foreground", isMobile && "text-xs")}>
                   {filteredProperties.length} {t("properties")} {t("found")}
                 </div>
               </div>
@@ -264,7 +315,7 @@ const Buy = () => {
                   <div className="text-muted-foreground">{t("adjustFiltersOrCheckLater")}</div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 xl:grid-cols-3 gap-6")}>
                   {filteredProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} />
                   ))}
@@ -276,8 +327,14 @@ const Buy = () => {
 
       </main>
       <FloatingMapButton />
-      <MobileBottomNav />
-      <MobileFooter />
+      {isMobile ? (
+        <>
+          <MobileBottomNav />
+          <MobileFooter />
+        </>
+      ) : (
+        <Footer />
+      )}
     </div>
   );
 };
