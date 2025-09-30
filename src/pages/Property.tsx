@@ -227,7 +227,7 @@ const Property = () => {
                    </div>
 
                   <div className={cn("space-y-3", !isMobile && "space-y-4")}>
-                    <h3 className={cn("font-semibold font-playfair", isMobile ? "text-base" : "text-xl")}>{t('descriptionField')}</h3>
+                    <h3 className={cn("font-semibold font-playfair", isMobile ? "text-lg" : "text-xl")}>Description</h3>
                     <p className={cn("text-muted-foreground leading-relaxed font-inter", isMobile && "text-sm")}>{property.description}</p>
                   </div>
                 </CardContent>
@@ -235,8 +235,8 @@ const Property = () => {
 
               {/* Features */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="font-playfair">{t('characteristics')}</CardTitle>
+                <CardHeader className={cn(isMobile && "p-4")}>
+                  <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-2xl")}>Characteristics</CardTitle>
                 </CardHeader>
                  <CardContent>
                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -364,10 +364,10 @@ const Property = () => {
 
               {/* Contact Owner */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center font-playfair">
-                    <User className="w-5 h-5 mr-2" />
-                    {t('contactOwner')}
+                <CardHeader className={cn(isMobile && "p-4")}>
+                  <CardTitle className={cn("flex items-center font-playfair", isMobile ? "text-lg" : "text-2xl")}>
+                    <User className={cn(isMobile ? "w-4 h-4 mr-2" : "w-5 h-5 mr-2")} />
+                    Contact Owner
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -423,8 +423,8 @@ const Property = () => {
 
               {/* Property Details */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="font-playfair">{t('listingDetails')}</CardTitle>
+                <CardHeader className={cn(isMobile && "p-4")}>
+                  <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-2xl")}>Listing Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
