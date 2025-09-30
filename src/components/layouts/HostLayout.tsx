@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Calendar, 
   CalendarDays, 
@@ -22,6 +23,12 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+
+  // On mobile, let the page handle its own layout
+  if (isMobile) {
+    return <>{children}</>;
+  }
 
   const hostMenuItems = [
     { title: 'Reservations', url: '/host', icon: Calendar },
