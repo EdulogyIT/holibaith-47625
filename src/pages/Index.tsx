@@ -1,11 +1,16 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import HeroSection from "@/components/HeroSection";
-import QuickAccessSection from "@/components/QuickAccessSection";
-import ServicesSection from "@/components/ServicesSection";
-import CitiesSection from "@/components/CitiesSection";
-import AIChatBox from "@/components/AIChatBox";
 import SEOHead from "@/components/SEOHead";
+import MobileHeader from "@/components/MobileHeader";
+import MobileHeroSearch from "@/components/MobileHeroSearch";
+import TrendingAreas from "@/components/TrendingAreas";
+import FeaturedListings from "@/components/FeaturedListings";
+import LatestInsights from "@/components/LatestInsights";
+import ThreeWaysSection from "@/components/ThreeWaysSection";
+import ExploreCities from "@/components/ExploreCities";
+import ExpertGuidanceCTA from "@/components/ExpertGuidanceCTA";
+import MobileFooter from "@/components/MobileFooter";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
+import AIChatBox from "@/components/AIChatBox";
 
 const Index = () => {
   const schema = {
@@ -32,7 +37,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <SEOHead 
         title="Accueil - Immobilier Algérie"
         description="Découvrez des milliers de propriétés à vendre et à louer en Algérie. Villa, appartement, studio - Trouvez votre propriété idéale avec Holibayt."
@@ -40,20 +45,30 @@ const Index = () => {
         schema={schema}
         canonicalUrl="https://holibayt.com"
       />
-      <Navigation />
-      <main>
-        <HeroSection />
-        <div className="py-1">
-          <QuickAccessSection />
+      <MobileHeader />
+      <main className="pt-16 pb-20">
+        {/* Background Image Hero */}
+        <div 
+          className="h-96 relative bg-cover bg-center"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url(/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png)`
+          }}
+        >
+          <div className="absolute inset-0 flex flex-col justify-end">
+            <MobileHeroSearch />
+          </div>
         </div>
-        <div className="py-1">
-          <ServicesSection />
-        </div>
-        <div className="py-2">
-          <CitiesSection />
-        </div>
+
+        <TrendingAreas />
+        <FeaturedListings />
+        <LatestInsights />
+        <ThreeWaysSection />
+        <ExploreCities />
+        <ExpertGuidanceCTA />
+        <MobileFooter />
       </main>
-      <Footer />
+      <MobileBottomNav />
+      <FloatingMapButton />
       <AIChatBox />
     </div>
   );
