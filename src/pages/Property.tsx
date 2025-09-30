@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 import MapboxMap from "@/components/MapboxMap";
 import PropertyDatePicker from "@/components/PropertyDatePicker";
@@ -22,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import ScheduleVisitModal from "@/components/ScheduleVisitModal";
 import MessageOwnerModal from "@/components/MessageOwnerModal";
+import { cn } from "@/lib/utils";
 
 interface Property {
   id: string;
@@ -51,6 +53,7 @@ const Property = () => {
   const { id } = useParams();
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
+  const isMobile = useIsMobile();
   const [property, setProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,14 +119,14 @@ const Property = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="pt-20">
+        {isMobile ? <MobileHeader /> : <Navigation />}
+        <main className={cn(isMobile ? "pt-16" : "pt-20")}>
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
             <span className="ml-2">{t('loading')}</span>
           </div>
         </main>
-        <Footer />
+        {isMobile ? <MobileBottomNav /> : <Footer />}
       </div>
     );
   }
@@ -131,41 +134,36 @@ const Property = () => {
   if (error || !property) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="pt-20">
+        {isMobile ? <MobileHeader /> : <Navigation />}
+        <main className={cn(isMobile ? "pt-16" : "pt-20")}>
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold mb-4">{t('propertyNotFound') || 'Property not found'}</h1>
             <p className="text-muted-foreground">{error || 'The requested property could not be found.'}</p>
           </div>
         </main>
-        <Footer />
+        {isMobile ? <MobileBottomNav /> : <Footer />}
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="hidden md:block">
-        <Navigation />
-      </div>
-      <div className="md:hidden">
-        <MobileHeader />
-      </div>
-      <main className="pt-20 pb-24 md:pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {isMobile ? <MobileHeader /> : <Navigation />}
+      <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20 pb-8")}>
+        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-4" : "py-8")}>
+          <div className={cn("grid gap-6", isMobile ? "grid-cols-1" : "lg:grid-cols-3 gap-8")}>
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className={cn("space-y-4", !isMobile && "lg:col-span-2 space-y-6")}>
               {/* Property Images Gallery */}
-              <div className="space-y-4">
-                <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+              <div className={cn("space-y-2", !isMobile && "space-y-4")}>
+                <div className={cn("bg-muted rounded-lg overflow-hidden", isMobile ? "aspect-video" : "aspect-video")}>
                   <img 
                     src={property.images[0]} 
                     alt={property.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className={cn("grid gap-2", isMobile ? "grid-cols-3" : "md:grid-cols-4 gap-4")}>
                   {property.images.slice(1).map((image, index) => (
                     <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
                       <img 
@@ -180,57 +178,57 @@ const Property = () => {
 
               {/* Property Info */}
               <Card>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
+                <CardHeader className={cn(isMobile && "p-4")}>
+                  <div className={cn("flex justify-between items-start", isMobile && "flex-col gap-2")}>
                      <div>
-                       <CardTitle className="text-3xl mb-2 font-playfair">{property.title}</CardTitle>
-                       <div className="flex items-center text-muted-foreground mb-2">
-                         <MapPin className="w-5 h-5 mr-2" />
-                         <span className="text-lg font-inter">{property.city}, {property.location}</span>
+                       <CardTitle className={cn("font-playfair mb-2", isMobile ? "text-xl" : "text-3xl")}>{property.title}</CardTitle>
+                       <div className={cn("flex items-center text-muted-foreground mb-2", isMobile && "text-sm")}>
+                         <MapPin className={cn(isMobile ? "w-4 h-4 mr-1" : "w-5 h-5 mr-2")} />
+                         <span className={cn("font-inter", isMobile ? "text-sm" : "text-lg")}>{property.city}, {property.location}</span>
                        </div>
                      </div>
-                     <Badge variant="secondary" className="text-lg px-3 py-1 font-inter">{t(property.property_type) || property.property_type}</Badge>
+                     <Badge variant="secondary" className={cn("font-inter", isMobile ? "text-xs px-2 py-0.5" : "text-lg px-3 py-1")}>{t(property.property_type) || property.property_type}</Badge>
                    </div>
-                   <div className="text-4xl font-bold text-primary font-playfair">{formatPrice(property.price, property.price_type)}</div>
+                   <div className={cn("font-bold text-primary font-playfair", isMobile ? "text-2xl" : "text-4xl")}>{formatPrice(property.price, property.price_type)}</div>
                 </CardHeader>
-                <CardContent>
-                   <div className="flex justify-between items-center p-4 bg-muted/50 rounded-lg mb-6">
+                <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                   <div className={cn("flex justify-between items-center bg-muted/50 rounded-lg mb-4", isMobile ? "p-3 text-sm" : "p-4 mb-6")}>
                      {property.bedrooms && (
                        <>
                          <div className="flex items-center text-center">
-                           <Bed className="w-6 h-6 mr-2 text-primary" />
+                           <Bed className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
                            <div>
-                             <div className="font-semibold font-inter">{property.bedrooms}</div>
-                             <div className="text-sm text-muted-foreground font-inter">{t('chambers')}</div>
+                             <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.bedrooms}</div>
+                             <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('chambers')}</div>
                            </div>
                          </div>
-                         <Separator orientation="vertical" className="h-12" />
+                         <Separator orientation="vertical" className={cn(isMobile ? "h-8" : "h-12")} />
                        </>
                      )}
                      {property.bathrooms && (
                        <>
                          <div className="flex items-center text-center">
-                           <Bath className="w-6 h-6 mr-2 text-primary" />
+                           <Bath className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
                            <div>
-                             <div className="font-semibold font-inter">{property.bathrooms}</div>
-                             <div className="text-sm text-muted-foreground font-inter">{t('bathrooms')}</div>
+                             <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.bathrooms}</div>
+                             <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('bathrooms')}</div>
                            </div>
                          </div>
-                         <Separator orientation="vertical" className="h-12" />
+                         <Separator orientation="vertical" className={cn(isMobile ? "h-8" : "h-12")} />
                        </>
                      )}
                      <div className="flex items-center text-center">
-                       <Square className="w-6 h-6 mr-2 text-primary" />
+                       <Square className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
                        <div>
-                         <div className="font-semibold font-inter">{property.area} m²</div>
-                         <div className="text-sm text-muted-foreground font-inter">{t('areaField')}</div>
+                         <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.area} m²</div>
+                         <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('areaField')}</div>
                        </div>
                      </div>
                    </div>
 
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-semibold font-playfair">{t('descriptionField')}</h3>
-                    <p className="text-muted-foreground leading-relaxed font-inter">{property.description}</p>
+                  <div className={cn("space-y-3", !isMobile && "space-y-4")}>
+                    <h3 className={cn("font-semibold font-playfair", isMobile ? "text-base" : "text-xl")}>{t('descriptionField')}</h3>
+                    <p className={cn("text-muted-foreground leading-relaxed font-inter", isMobile && "text-sm")}>{property.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -474,16 +472,15 @@ const Property = () => {
         </>
       )}
       
-      <div className="md:hidden">
-        <MobileFooter />
-      </div>
-      <div className="hidden md:block">
+      {isMobile ? (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+          <FloatingMapButton />
+        </>
+      ) : (
         <Footer />
-      </div>
-      <div className="md:hidden">
-        <MobileBottomNav />
-        <FloatingMapButton />
-      </div>
+      )}
     </div>
   );
 };

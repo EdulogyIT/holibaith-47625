@@ -212,11 +212,11 @@ const Buy = () => {
           >
             <div className="absolute inset-0 bg-black/40" />
             
-            <div className="relative z-10 space-y-3">
+            <div className="relative z-10 space-y-2">
               {/* Location Search */}
-              <div className="relative bg-white rounded-2xl p-4 shadow-lg">
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-gray-400" />
+              <div className="relative bg-white rounded-xl p-3 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-gray-400" />
                   <input
                     type="text"
                     placeholder="City, neighborhood or address"
@@ -230,19 +230,19 @@ const Buy = () => {
                       }
                       navigate({ search: newParams.toString() });
                     }}
-                    className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-base"
+                    className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
                   />
-                  <button className="p-2 bg-gray-100 rounded-full">
-                    <Search className="h-5 w-5 text-gray-600" />
+                  <button className="p-1.5 bg-gray-100 rounded-full">
+                    <Search className="h-4 w-4 text-gray-600" />
                   </button>
                 </div>
               </div>
 
               {/* Filters Row */}
-              <div className="flex gap-3">
-                <div className="flex-1 relative bg-white rounded-2xl p-4 shadow-lg">
+              <div className="flex gap-2">
+                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
                   <select
-                    className="w-full text-gray-700 outline-none text-base appearance-none bg-transparent"
+                    className="w-full text-gray-700 outline-none text-sm appearance-none bg-transparent"
                     value={new URLSearchParams(locationHook.search).get("type") || ""}
                     onChange={(e) => {
                       const newParams = new URLSearchParams(locationHook.search);
@@ -262,13 +262,13 @@ const Buy = () => {
                   </select>
                 </div>
                 
-                <div className="flex-1 relative bg-white rounded-2xl p-4 shadow-lg">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-gray-400" />
+                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="h-4 w-4 text-gray-400" />
                     <input
                       type="text"
                       placeholder="Max budget"
-                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-base"
+                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
                       value={new URLSearchParams(locationHook.search).get("budget") || ""}
                       onChange={(e) => {
                         const newParams = new URLSearchParams(locationHook.search);
