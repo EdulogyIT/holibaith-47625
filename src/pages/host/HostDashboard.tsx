@@ -74,19 +74,6 @@ export default function HostDashboard() {
   };
 
   if (loading) {
-    if (isMobile) {
-      return (
-        <>
-          <MobileHeader />
-          <div className="flex items-center justify-center min-h-screen pt-16">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-muted-foreground">Loading...</p>
-            </div>
-          </div>
-        </>
-      );
-    }
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -97,216 +84,112 @@ export default function HostDashboard() {
     );
   }
 
-  if (isMobile) {
-    return (
-      <>
-        <MobileHeader />
-        <div className="pt-16 pb-24 px-4 bg-background min-h-screen">
-          {/* Welcome Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-1">{t('host.dashboard')}</h1>
-            <p className="text-sm text-muted-foreground">
-              {t('host.welcomeMessage')}
-            </p>
-          </div>
+  return (
+    <>
+      {isMobile && <MobileHeader />}
+      <div className={cn("space-y-6", isMobile ? "pt-16 pb-24 px-4" : "")}>
+        <div className={cn(isMobile && "text-center")}>
+          <h1 className={cn("text-3xl font-bold", isMobile && "text-2xl")}>{t('host.dashboard')}</h1>
+          <p className="text-muted-foreground">
+            {t('host.welcomeMessage')}
+          </p>
+        </div>
 
-          {/* Stats Grid - App Style */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm">
-              <Building2 className="h-6 w-6 text-primary mb-2" />
-              <div className="text-2xl font-bold mb-1">{properties.filter(p => p.status === 'active').length}</div>
-              <div className="text-xs text-muted-foreground">{t('host.activeProperties')}</div>
-            </div>
-            
-            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm">
-              <MessageSquare className="h-6 w-6 text-primary mb-2" />
-              <div className="text-2xl font-bold mb-1">-</div>
-              <div className="text-xs text-muted-foreground">{t('host.messagesReceived')}</div>
-            </div>
-            
-            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm">
-              <CalendarDays className="h-6 w-6 text-primary mb-2" />
-              <div className="text-2xl font-bold mb-1">{formatPrice(0)}</div>
-              <div className="text-xs text-muted-foreground">{t('host.monthlyRevenue')}</div>
-            </div>
-          </div>
+        {/* Quick Stats */}
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "md:grid-cols-3")}>
+          <Card>
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.activeProperties')}</CardTitle>
+              <Building2 className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+            </CardHeader>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>{properties.filter(p => p.status === 'active').length}</div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.messagesReceived')}</CardTitle>
+              <MessageSquare className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+            </CardHeader>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>-</div>
+              <p className={cn("text-muted-foreground", isMobile ? "text-[10px]" : "text-xs")}>{t('host.checkMessages')}</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className={cn("flex flex-row items-center justify-between space-y-0", isMobile ? "pb-1 p-3" : "pb-2")}>
+              <CardTitle className={cn("font-medium", isMobile ? "text-xs" : "text-sm")}>{t('host.monthlyRevenue')}</CardTitle>
+              <CalendarDays className={cn("text-muted-foreground", isMobile ? "h-3 w-3" : "h-4 w-4")} />
+            </CardHeader>
+            <CardContent className={cn(isMobile && "p-3 pt-0")}>
+              <div className={cn("font-bold", isMobile ? "text-lg" : "text-2xl")}>{formatPrice(0)}</div>
+            </CardContent>
+          </Card>
+        </div>
 
-          {/* Quick Actions - App Style */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-3">{t('host.quickActions')}</h2>
-            <div className="space-y-3">
-              <Button 
-                onClick={() => navigate('/publish-property')} 
-                className="w-full h-14 text-base rounded-xl shadow-sm"
-                size="lg"
-              >
-                <Plus className="h-5 w-5 mr-2" />
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader className={cn(isMobile && "p-3")}>
+            <CardTitle className={cn(isMobile && "text-sm")}>{t('host.quickActions')}</CardTitle>
+          </CardHeader>
+          <CardContent className={cn(isMobile && "p-3 pt-0")}>
+            <div className={cn("flex flex-col gap-2", isMobile ? "gap-2" : "sm:flex-row gap-4")}>
+              <Button onClick={() => navigate('/publish-property')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <Plus className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
                 {t('host.publishProperty')}
               </Button>
-              <div className="grid grid-cols-2 gap-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/host/listings')} 
-                  className="h-14 rounded-xl"
-                >
-                  <Building2 className="h-5 w-5 mr-2" />
-                  {t('host.viewListings')}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/host/messages')} 
-                  className="h-14 rounded-xl"
-                >
-                  <MessageSquare className="h-5 w-5 mr-2" />
-                  {t('host.messages')}
-                </Button>
-              </div>
+              <Button variant="outline" onClick={() => navigate('/host/listings')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <Building2 className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
+                {t('host.viewListings')}
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/host/messages')} className={cn("w-full", isMobile && "text-xs h-9")}>
+                <MessageSquare className={cn(isMobile ? "h-3 w-3 mr-1" : "h-4 w-4 mr-2")} />
+                {t('host.messages')}
+              </Button>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Recent Properties - App Style */}
+        {/* Recent Activity and Calendar */}
+        <div className={cn("grid gap-4", isMobile ? "grid-cols-1" : "lg:grid-cols-2 gap-6")}>
           {properties.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold mb-3">{t('host.recentProperties')}</h2>
-              <div className="space-y-3">
-                {properties.slice(0, 3).map((property) => (
-                  <div 
-                    key={property.id} 
-                    className="bg-card rounded-xl p-4 border border-border shadow-sm"
-                  >
-                    <div className="flex items-start justify-between mb-2">
+            <Card>
+              <CardHeader className={cn(isMobile && "p-3")}>
+                <CardTitle className={cn(isMobile && "text-sm")}>{t('host.recentProperties')}</CardTitle>
+              </CardHeader>
+              <CardContent className={cn(isMobile && "p-3 pt-0")}>
+                <div className={cn("space-y-2", isMobile && "space-y-2")}>
+                  {properties.slice(0, 3).map((property) => (
+                    <div key={property.id} className={cn("flex items-center justify-between border rounded-lg", isMobile ? "p-2" : "p-3")}>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-base mb-1 truncate">{property.title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {property.city}
+                        <p className={cn("font-medium truncate", isMobile && "text-xs")}>{property.title}</p>
+                        <p className={cn("text-muted-foreground truncate", isMobile ? "text-[10px]" : "text-sm")}>
+                          {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
                         </p>
                       </div>
-                      <Badge 
-                        variant={property.status === 'active' ? 'default' : 'secondary'} 
-                        className="ml-2 shrink-0"
-                      >
+                      <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className={cn("ml-2", isMobile && "text-[10px] px-1.5 py-0")}>
                         {property.status === 'active' ? t('host.active') : t('host.inactive')}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {t('host.publishedOn')} {formatDate(property.created_at)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
           
-          {/* Calendar */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-3">Calendar</h2>
-            <PropertyCalendar />
-          </div>
+          {/* Property Calendar */}
+          <PropertyCalendar />
         </div>
-        <MobileFooter />
-        <MobileBottomNav />
-        <FloatingMapButton />
-      </>
-    );
-  }
-
-  // Desktop view
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
-        <p className="text-muted-foreground">
-          {t('host.welcomeMessage')}
-        </p>
       </div>
-
-      {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.activeProperties')}</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.filter(p => p.status === 'active').length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.messagesReceived')}</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">-</div>
-            <p className="text-xs text-muted-foreground">{t('host.checkMessages')}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatPrice(0)}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('host.quickActions')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button onClick={() => navigate('/publish-property')} className="w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              {t('host.publishProperty')}
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/host/listings')} className="w-full">
-              <Building2 className="h-4 w-4 mr-2" />
-              {t('host.viewListings')}
-            </Button>
-            <Button variant="outline" onClick={() => navigate('/host/messages')} className="w-full">
-              <MessageSquare className="h-4 w-4 mr-2" />
-              {t('host.messages')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Activity and Calendar */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {properties.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('host.recentProperties')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {properties.slice(0, 3).map((property) => (
-                  <div key={property.id} className="flex items-center justify-between border rounded-lg p-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{property.title}</p>
-                      <p className="text-sm text-muted-foreground truncate">
-                        {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
-                      </p>
-                    </div>
-                    <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="ml-2">
-                      {property.status === 'active' ? t('host.active') : t('host.inactive')}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {/* Property Calendar */}
-        <PropertyCalendar />
-      </div>
-    </div>
+      {isMobile && (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+          <FloatingMapButton />
+        </>
+      )}
+    </>
   );
 }

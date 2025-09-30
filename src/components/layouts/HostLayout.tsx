@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HostLayoutProps {
   children: ReactNode;
@@ -23,7 +22,6 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
 
   const hostMenuItems = [
     { title: 'Reservations', url: '/host', icon: Calendar },
@@ -42,12 +40,6 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
     navigate('/');
   };
 
-  // On mobile, render children directly without layout wrapper
-  if (isMobile) {
-    return <>{children}</>;
-  }
-
-  // Desktop layout with sidebar
   return (
     <div className="min-h-screen flex w-full bg-background">
       {/* Sidebar */}
