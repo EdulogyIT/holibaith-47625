@@ -123,6 +123,7 @@ const App = () => (
                   <HostLayout>
                     <Routes>
                       <Route index element={<HostDashboard />} />
+                      <Route path="dashboard" element={<HostDashboard />} />
                       <Route path="calendar" element={<PropertyCalendar />} />
                       <Route path="listings" element={<HostListings />} />
                       <Route path="messages" element={<HostMessages />} />
