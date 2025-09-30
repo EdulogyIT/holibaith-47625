@@ -206,49 +206,49 @@ const City = () => {
       className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden"
       onClick={() => navigate(`/property/${property.id}`)}
     >
-      <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-48" : "aspect-video")}>
+      <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-32" : "aspect-video")}>
         <img 
           src={property.image} 
           alt={property.title}
           className="w-full h-full object-cover"
         />
       </div>
-      <CardHeader className={cn(isMobile && "p-4 pb-2")}>
-        <div className="flex justify-between items-start gap-2">
-          <CardTitle className={cn("font-playfair", isMobile ? "text-xl" : "text-xl")}>{property.title}</CardTitle>
-          <Badge variant="secondary" className={cn("font-inter shrink-0", isMobile && "text-xs")}>{property.type}</Badge>
+      <CardHeader className={cn(isMobile && "p-2 pb-1")}>
+        <div className="flex justify-between items-start gap-1">
+          <CardTitle className={cn("font-playfair", isMobile ? "text-sm leading-tight" : "text-xl")}>{property.title}</CardTitle>
+          <Badge variant="secondary" className={cn("font-inter shrink-0", isMobile && "text-[10px] px-1.5 py-0")}>{property.type}</Badge>
         </div>
-        <div className="flex items-center text-muted-foreground mt-1">
-          <MapPin className={cn(isMobile ? "w-4 h-4 mr-1" : "w-4 h-4 mr-1")} />
-          <span className={cn("font-inter", isMobile ? "text-sm" : "text-sm")}>{property.location}</span>
+        <div className="flex items-center text-muted-foreground mt-0.5">
+          <MapPin className={cn(isMobile ? "w-3 h-3 mr-0.5" : "w-4 h-4 mr-1")} />
+          <span className={cn("font-inter", isMobile ? "text-xs" : "text-sm")}>{property.location}</span>
         </div>
       </CardHeader>
-      <CardContent className={cn(isMobile && "p-4 pt-0")}>
-        <div className="flex justify-between items-center mb-4">
-          <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-2xl" : "text-2xl")}>{property.price}</span>
+      <CardContent className={cn(isMobile && "p-2 pt-0")}>
+        <div className="flex justify-between items-center mb-2">
+          <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-base" : "text-2xl")}>{property.price}</span>
         </div>
-        <div className={cn("flex justify-between text-muted-foreground mb-4 font-inter", isMobile ? "text-sm gap-2" : "text-sm")}>
-          <div className="flex items-center gap-1">
-            <Bed className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
+        <div className={cn("flex justify-between text-muted-foreground mb-2 font-inter", isMobile ? "text-xs gap-1" : "text-sm")}>
+          <div className="flex items-center gap-0.5">
+            <Bed className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
             {property.beds}
           </div>
-          <div className="flex items-center gap-1">
-            <Bath className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
+          <div className="flex items-center gap-0.5">
+            <Bath className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
             {property.baths}
           </div>
-          <div className="flex items-center gap-1">
-            <Square className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
+          <div className="flex items-center gap-0.5">
+            <Square className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
             {property.area}
           </div>
         </div>
         <Button 
-          className={cn("w-full bg-[#2d5a4a] hover:bg-[#2d5a4a]/90 font-inter flex items-center justify-center", isMobile ? "h-12 text-base" : "min-h-[44px]")} 
+          className={cn("w-full bg-primary hover:bg-primary/90 font-inter flex items-center justify-center", isMobile ? "h-8 text-xs" : "min-h-[44px]")} 
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/property/${property.id}`);
           }}
         >
-          {listingType === 'shortStay' ? t('reserve') : 'seeDetails'}
+          {listingType === 'shortStay' ? t('reserve') : t('seeDetails')}
         </Button>
       </CardContent>
     </Card>

@@ -226,18 +226,18 @@ const Property = () => {
                      </div>
                    </div>
 
-                  <div className={cn("space-y-3", !isMobile && "space-y-4")}>
-                    <h3 className={cn("font-semibold font-playfair", isMobile ? "text-lg" : "text-xl")}>Description</h3>
-                    <p className={cn("text-muted-foreground leading-relaxed font-inter", isMobile && "text-sm")}>{property.description}</p>
-                  </div>
+                   <div className={cn("space-y-3", !isMobile && "space-y-4")}>
+                     <h3 className={cn("font-semibold font-playfair", isMobile ? "text-base" : "text-xl")}>Description</h3>
+                     <p className={cn("text-muted-foreground leading-relaxed font-inter", isMobile ? "text-sm" : "text-base")}>{property.description}</p>
+                   </div>
                 </CardContent>
               </Card>
 
               {/* Features */}
-              <Card>
+               <Card>
                 <CardHeader className={cn(isMobile && "p-4")}>
-                  <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-2xl")}>Characteristics</CardTitle>
-                </CardHeader>
+                   <CardTitle className={cn("font-playfair", isMobile ? "text-base" : "text-2xl")}>Characteristics</CardTitle>
+                 </CardHeader>
                  <CardContent>
                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                      {property.features && Object.entries(property.features).map(([key, value]) => (
@@ -363,13 +363,13 @@ const Property = () => {
               )}
 
               {/* Contact Owner */}
-              <Card>
-                <CardHeader className={cn(isMobile && "p-4")}>
-                  <CardTitle className={cn("flex items-center font-playfair", isMobile ? "text-lg" : "text-2xl")}>
-                    <User className={cn(isMobile ? "w-4 h-4 mr-2" : "w-5 h-5 mr-2")} />
-                    Contact Owner
-                  </CardTitle>
-                </CardHeader>
+               <Card>
+                 <CardHeader className={cn(isMobile && "p-4")}>
+                   <CardTitle className={cn("flex items-center font-playfair", isMobile ? "text-base" : "text-2xl")}>
+                     <User className={cn(isMobile ? "w-4 h-4 mr-2" : "w-5 h-5 mr-2")} />
+                     Contact Owner
+                   </CardTitle>
+                 </CardHeader>
                 <CardContent className="space-y-4">
                   {property.contact_name ? (
                     // Show contact details for property owners
@@ -422,10 +422,10 @@ const Property = () => {
               </Card>
 
               {/* Property Details */}
-              <Card>
-                <CardHeader className={cn(isMobile && "p-4")}>
-                  <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-2xl")}>Listing Details</CardTitle>
-                </CardHeader>
+               <Card>
+                 <CardHeader className={cn(isMobile && "p-4")}>
+                   <CardTitle className={cn("font-playfair", isMobile ? "text-base" : "text-2xl")}>Listing Details</CardTitle>
+                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground font-inter">{t('reference')}</span>
@@ -450,7 +450,6 @@ const Property = () => {
           </div>
         </div>
       </main>
-      <Footer />
       
       {/* Modals */}
       {property && (
@@ -474,7 +473,6 @@ const Property = () => {
       
       {isMobile ? (
         <>
-          <MobileFooter />
           <MobileBottomNav />
           <FloatingMapButton />
         </>
