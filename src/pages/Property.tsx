@@ -350,7 +350,7 @@ const Property = () => {
               </div>
 
               {/* Property Details */}
-              <div className="space-y-3 pb-6">
+              <div className="space-y-3 pb-32">
                 <h3 className="text-lg font-semibold font-playfair">{t('listingDetails')}</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between py-2 border-b border-border">
