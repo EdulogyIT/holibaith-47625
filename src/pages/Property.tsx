@@ -150,305 +150,550 @@ const Property = () => {
     <div className="min-h-screen bg-background">
       {isMobile ? <MobileHeader /> : <Navigation />}
       <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20 pb-8")}>
-        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-4" : "py-8")}>
-          <div className={cn("grid gap-6", isMobile ? "grid-cols-1" : "lg:grid-cols-3 gap-8")}>
-            {/* Main Content */}
-            <div className={cn("space-y-4", !isMobile && "lg:col-span-2 space-y-6")}>
-              {/* Property Images Gallery */}
-              <div className={cn("space-y-2", !isMobile && "space-y-4")}>
-                <div className={cn("bg-muted rounded-lg overflow-hidden", isMobile ? "aspect-video" : "aspect-video")}>
-                  <img 
-                    src={property.images[0]} 
-                    alt={property.title}
-                    className="w-full h-full object-cover"
-                  />
+        {isMobile ? (
+          // Mobile App Layout
+          <div className="space-y-4">
+            {/* Property Images Gallery - Full Width */}
+            <div className="space-y-2">
+              <div className="aspect-[4/3] bg-muted overflow-hidden">
+                <img 
+                  src={property.images[0]} 
+                  alt={property.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2 px-4">
+                {property.images.slice(1, 4).map((image, index) => (
+                  <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src={image} 
+                      alt={`${property.title} ${index + 2}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Property Info - Compact */}
+            <div className="px-4 space-y-4">
+              <div className="flex justify-between items-start gap-2">
+                <div className="flex-1">
+                  <h1 className="text-xl font-bold font-playfair mb-1">{property.title}</h1>
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    <span className="font-inter">{property.city}, {property.location}</span>
+                  </div>
                 </div>
-                <div className={cn("grid gap-2", isMobile ? "grid-cols-3" : "md:grid-cols-4 gap-4")}>
-                  {property.images.slice(1).map((image, index) => (
-                    <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
-                      <img 
-                        src={image} 
-                        alt={`${property.title} ${index + 2}`}
-                        className="w-full h-full object-cover"
-                      />
+                <Badge variant="secondary" className="text-xs px-2 py-1 font-inter shrink-0">
+                  {t(property.property_type) || property.property_type}
+                </Badge>
+              </div>
+              
+              <div className="text-2xl font-bold text-primary font-playfair">
+                {formatPrice(property.price, property.price_type)}
+              </div>
+
+              {/* Property Stats */}
+              <div className="flex items-center gap-4 py-3 px-4 bg-muted/50 rounded-lg">
+                {property.bedrooms && (
+                  <div className="flex items-center gap-1.5">
+                    <Bed className="w-4 h-4 text-primary" />
+                    <div>
+                      <div className="text-xs font-semibold">{property.bedrooms}</div>
+                      <div className="text-[10px] text-muted-foreground">{t('chambers')}</div>
                     </div>
-                  ))}
+                  </div>
+                )}
+                {property.bathrooms && (
+                  <div className="flex items-center gap-1.5">
+                    <Bath className="w-4 h-4 text-primary" />
+                    <div>
+                      <div className="text-xs font-semibold">{property.bathrooms}</div>
+                      <div className="text-[10px] text-muted-foreground">{t('bathrooms')}</div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center gap-1.5">
+                  <Square className="w-4 h-4 text-primary" />
+                  <div>
+                    <div className="text-xs font-semibold">{property.area} m²</div>
+                    <div className="text-[10px] text-muted-foreground">{t('areaField')}</div>
+                  </div>
                 </div>
               </div>
 
-              {/* Property Info */}
-              <Card>
-                <CardHeader className={cn(isMobile && "p-4")}>
-                  <div className={cn("flex justify-between items-start", isMobile && "flex-col gap-2")}>
-                     <div>
-                       <CardTitle className={cn("font-playfair mb-2", isMobile ? "text-xl" : "text-3xl")}>{property.title}</CardTitle>
-                       <div className={cn("flex items-center text-muted-foreground mb-2", isMobile && "text-sm")}>
-                         <MapPin className={cn(isMobile ? "w-4 h-4 mr-1" : "w-5 h-5 mr-2")} />
-                         <span className={cn("font-inter", isMobile ? "text-sm" : "text-lg")}>{property.city}, {property.location}</span>
-                       </div>
-                     </div>
-                     <Badge variant="secondary" className={cn("font-inter", isMobile ? "text-xs px-2 py-0.5" : "text-lg px-3 py-1")}>{t(property.property_type) || property.property_type}</Badge>
-                   </div>
-                   <div className={cn("font-bold text-primary font-playfair", isMobile ? "text-2xl" : "text-4xl")}>{formatPrice(property.price, property.price_type)}</div>
-                </CardHeader>
-                <CardContent className={cn(isMobile && "p-4 pt-0")}>
-                   <div className={cn("flex justify-between items-center bg-muted/50 rounded-lg mb-4", isMobile ? "p-3 text-sm" : "p-4 mb-6")}>
-                     {property.bedrooms && (
-                       <>
-                         <div className="flex items-center text-center">
-                           <Bed className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
-                           <div>
-                             <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.bedrooms}</div>
-                             <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('chambers')}</div>
-                           </div>
-                         </div>
-                         <Separator orientation="vertical" className={cn(isMobile ? "h-8" : "h-12")} />
-                       </>
-                     )}
-                     {property.bathrooms && (
-                       <>
-                         <div className="flex items-center text-center">
-                           <Bath className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
-                           <div>
-                             <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.bathrooms}</div>
-                             <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('bathrooms')}</div>
-                           </div>
-                         </div>
-                         <Separator orientation="vertical" className={cn(isMobile ? "h-8" : "h-12")} />
-                       </>
-                     )}
-                     <div className="flex items-center text-center">
-                       <Square className={cn(isMobile ? "w-4 h-4 mr-1" : "w-6 h-6 mr-2", "text-primary")} />
-                       <div>
-                         <div className={cn("font-semibold font-inter", isMobile && "text-xs")}>{property.area} m²</div>
-                         <div className={cn("text-muted-foreground font-inter", isMobile ? "text-[10px]" : "text-sm")}>{t('areaField')}</div>
-                       </div>
-                     </div>
-                   </div>
-
-                   <div className={cn("space-y-3", !isMobile && "space-y-4")}>
-                     <h3 className={cn("font-semibold font-playfair", isMobile ? "text-base" : "text-xl")}>Description</h3>
-                     <p className={cn("text-muted-foreground leading-relaxed font-inter", isMobile ? "text-sm" : "text-base")}>{property.description}</p>
-                   </div>
-                </CardContent>
-              </Card>
+              {/* Description */}
+              <div className="space-y-2">
+                <h3 className="text-base font-semibold font-playfair">{t('description')}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed font-inter">
+                  {property.description}
+                </p>
+              </div>
 
               {/* Features */}
-               <Card>
-                <CardHeader className={cn(isMobile && "p-4")}>
-                   <CardTitle className={cn("font-playfair", isMobile ? "text-base" : "text-2xl")}>Characteristics</CardTitle>
-                 </CardHeader>
-                 <CardContent>
-                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                     {property.features && Object.entries(property.features).map(([key, value]) => (
-                       value && (
-                         <div key={key} className="flex items-center p-3 bg-muted/50 rounded-lg">
-                           <div className="w-2 h-2 bg-primary rounded-full mr-3" />
-                           <span className="text-sm font-inter">{t(key) || key}</span>
-                         </div>
-                       )
-                     ))}
-                   </div>
-                 </CardContent>
-              </Card>
-               {/* Map */}
-               <MapboxMap 
-                 location={`${property.city}, ${property.location}`}
-                 address={property.full_address || `${property.city}, ${property.location}`}
-               />
-            </div>
+              {property.features && Object.keys(property.features).length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-base font-semibold font-playfair">{t('characteristics')}</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(property.features).map(([key, value]) => (
+                      value && (
+                        <div key={key} className="flex items-center gap-2 p-2.5 bg-muted/50 rounded-lg">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          <span className="text-xs font-inter">{t(key) || key}</span>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Booking/Visit Section */}
+              {/* Action Buttons */}
               {property.category === 'short-stay' ? (
-                <div className="space-y-4">
+                <div className="space-y-3 pt-2">
                   <PropertyDatePicker 
                     onDateChange={(dates) => console.log("Selected dates:", dates)}
                   />
-                  <Card>
-                    <CardContent className="pt-6">
-                      <BookingModal 
-                        property={{
-                          id: property.id,
-                          title: property.title,
-                          price: property.price,
-                          price_type: property.price_type,
-                          category: property.category
-                        }}
-                      />
-                    </CardContent>
-                  </Card>
+                  <BookingModal 
+                    property={{
+                      id: property.id,
+                      title: property.title,
+                      price: property.price,
+                      price_type: property.price_type,
+                      category: property.category
+                    }}
+                  />
                 </div>
               ) : property.category === 'sale' ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-playfair">
-                      {t('purchaseProperty') || 'Purchase Property'}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {t('purchaseDescription') || 'Interested in purchasing this property? Pay earnest money to secure your offer.'}
-                    </p>
-                    <div className="space-y-2">
-                      <Button 
-                        className="w-full bg-gradient-primary hover:shadow-elegant"
-                        onClick={() => setIsScheduleModalOpen(true)}
+                <div className="space-y-2 pt-2">
+                  <Button 
+                    className="w-full bg-gradient-primary hover:shadow-elegant"
+                    onClick={() => setIsScheduleModalOpen(true)}
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {t('scheduleVisit')}
+                  </Button>
+                  {(() => {
+                    const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
+                    const earnestMoneyAmount = Math.round(propertyPrice * 0.05 * 100) / 100;
+                    return (
+                      <PaymentButton
+                        propertyId={property.id}
+                        paymentType="earnest_money"
+                        amount={earnestMoneyAmount}
+                        currency="EUR"
+                        description={`Earnest money for ${property.title}`}
+                        className="w-full"
                       >
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {t('scheduleVisit') || 'Schedule Visit'}
-                      </Button>
-                      {(() => {
-                        // Calculate earnest money as 5% of property price in EUR
-                        const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
-                        const earnestMoneyAmount = Math.round(propertyPrice * 0.05 * 100) / 100; // 5% earnest money
-                        
-                        return (
-                          <PaymentButton
-                            propertyId={property.id}
-                            paymentType="earnest_money"
-                            amount={earnestMoneyAmount}
-                            currency="EUR"
-                            description={`Earnest money for ${property.title}`}
-                            className="w-full"
-                          >
-                            Pay Earnest Money ({formatPrice(earnestMoneyAmount)})
-                          </PaymentButton>
-                        );
-                      })()}
-                    </div>
-                  </CardContent>
-                </Card>
+                        {t('payEarnestMoney')} ({formatPrice(earnestMoneyAmount)})
+                      </PaymentButton>
+                    );
+                  })()}
+                </div>
               ) : (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-playfair">
-                      {t('scheduleVisit') || 'Schedule Property Visit'}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {t('scheduleVisitDescription') || 'Schedule a visit to see this property in person'}
-                    </p>
-                    <div className="space-y-2">
-                      <Button 
-                        className="w-full bg-gradient-primary hover:shadow-elegant"
-                        onClick={() => setIsScheduleModalOpen(true)}
+                <div className="space-y-2 pt-2">
+                  <Button 
+                    className="w-full bg-gradient-primary hover:shadow-elegant"
+                    onClick={() => setIsScheduleModalOpen(true)}
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {t('scheduleVisit')}
+                  </Button>
+                  {(() => {
+                    const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
+                    const securityDepositAmount = Math.round(propertyPrice * 0.2 * 100) / 100;
+                    return (
+                      <PaymentButton
+                        propertyId={property.id}
+                        paymentType="security_deposit"
+                        amount={securityDepositAmount}
+                        currency="EUR"
+                        description={`Security deposit for ${property.title}`}
+                        className="w-full"
                       >
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {t('scheduleVisit') || 'Schedule Visit'}
-                      </Button>
-                      {(() => {
-                        // Calculate security deposit as 20% of property price in EUR
-                        const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
-                        const securityDepositAmount = Math.round(propertyPrice * 0.2 * 100) / 100; // 20% security deposit
-                        
-                        return (
-                          <PaymentButton
-                            propertyId={property.id}
-                            paymentType="security_deposit"
-                            amount={securityDepositAmount}
-                            currency="EUR"
-                            description={`Security deposit for ${property.title}`}
-                            className="w-full"
-                          >
-                            Pay Security Deposit ({formatPrice(securityDepositAmount)})
-                          </PaymentButton>
-                        );
-                      })()}
-                    </div>
-                  </CardContent>
-                </Card>
+                        {t('paySecurityDeposit')} ({formatPrice(securityDepositAmount)})
+                      </PaymentButton>
+                    );
+                  })()}
+                </div>
               )}
 
               {/* Contact Owner */}
-               <Card>
-                 <CardHeader className={cn(isMobile && "p-4")}>
-                   <CardTitle className={cn("flex items-center font-playfair", isMobile ? "text-base" : "text-2xl")}>
-                     <User className={cn(isMobile ? "w-4 h-4 mr-2" : "w-5 h-5 mr-2")} />
-                     Contact Owner
-                   </CardTitle>
-                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {property.contact_name ? (
-                    // Show contact details for property owners
-                    <>
-                      <div>
-                        <h4 className="font-semibold mb-2 font-inter">{property.contact_name}</h4>
-                        <div className="space-y-2">
-                          <div className="flex items-center text-sm text-muted-foreground font-inter">
-                            <Phone className="w-4 h-4 mr-2" />
-                            {property.contact_phone}
-                          </div>
-                          <div className="flex items-center text-sm text-muted-foreground font-inter">
-                            <Mail className="w-4 h-4 mr-2" />
-                            {property.contact_email}
-                          </div>
+              <div className="space-y-2 pt-2">
+                <h3 className="text-base font-semibold font-playfair flex items-center">
+                  <User className="w-4 h-4 mr-2" />
+                  {t('contactOwner')}
+                </h3>
+                {property.contact_name ? (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-muted/50 rounded-lg">
+                      <h4 className="font-semibold text-sm mb-2 font-inter">{property.contact_name}</h4>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center text-xs text-muted-foreground font-inter">
+                          <Phone className="w-3.5 h-3.5 mr-1.5" />
+                          {property.contact_phone}
+                        </div>
+                        <div className="flex items-center text-xs text-muted-foreground font-inter">
+                          <Mail className="w-3.5 h-3.5 mr-1.5" />
+                          {property.contact_email}
                         </div>
                       </div>
-                      <Separator />
-                      <div className="space-y-3">
-                        <Button className="w-full bg-gradient-primary hover:shadow-elegant font-inter">
-                          <Phone className="w-4 h-4 mr-2" />
-                          {t('callBtn')}
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="w-full font-inter"
-                          onClick={() => setIsMessageModalOpen(true)}
-                        >
-                          <Mail className="w-4 h-4 mr-2" />
-                          {t('sendMessageBtn')}
-                        </Button>
-                      </div>
-                    </>
-                  ) : (
-                    // Secure contact interface for public users
-                    <div className="space-y-4">
-                      <p className="text-sm text-muted-foreground font-inter">
-                        {t('secureContactDescription') || 'Send a secure message to the property owner. Your contact information will only be shared if the owner responds.'}
-                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button className="bg-gradient-primary hover:shadow-elegant font-inter">
+                        <Phone className="w-4 h-4 mr-1" />
+                        {t('callBtn')}
+                      </Button>
                       <Button 
-                        className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
+                        variant="outline" 
+                        className="font-inter"
                         onClick={() => setIsMessageModalOpen(true)}
                       >
-                        <Mail className="w-4 h-4 mr-2" />
-                        {t('contactOwnerSecure') || 'Contact Owner Securely'}
+                        <Mail className="w-4 h-4 mr-1" />
+                        {t('sendMessageBtn')}
                       </Button>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground font-inter">
+                      {t('secureContactDescription')}
+                    </p>
+                    <Button 
+                      className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
+                      onClick={() => setIsMessageModalOpen(true)}
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      {t('contactOwnerSecure')}
+                    </Button>
+                  </div>
+                )}
+              </div>
 
               {/* Property Details */}
-               <Card>
-                 <CardHeader className={cn(isMobile && "p-4")}>
-                   <CardTitle className={cn("font-playfair", isMobile ? "text-base" : "text-2xl")}>Listing Details</CardTitle>
-                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between">
+              <div className="space-y-2 pt-2 pb-4">
+                <h3 className="text-base font-semibold font-playfair">{t('listingDetails')}</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between py-2">
                     <span className="text-muted-foreground font-inter">{t('reference')}</span>
                     <span className="font-medium font-inter">BK-{property.id}</span>
                   </div>
-                   <div className="flex justify-between">
-                     <span className="text-muted-foreground font-inter">{t('typeField')}</span>
-                     <span className="font-medium font-inter">{t(property.property_type) || property.property_type}</span>
-                   </div>
-                   <div className="flex justify-between">
-                     <span className="text-muted-foreground font-inter">{t('publishedOn')}</span>
-                     <span className="font-medium font-inter">{formatDate(property.created_at)}</span>
-                   </div>
-                  <Separator />
-                  <div className="flex items-center text-sm text-muted-foreground font-inter">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {t('lastUpdated')}: {t('daysAgo')}
+                  <div className="flex justify-between py-2">
+                    <span className="text-muted-foreground font-inter">{t('typeField')}</span>
+                    <span className="font-medium font-inter">{t(property.property_type) || property.property_type}</span>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex justify-between py-2">
+                    <span className="text-muted-foreground font-inter">{t('publishedOn')}</span>
+                    <span className="font-medium font-inter">{formatDate(property.created_at)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Map */}
+              <MapboxMap 
+                location={`${property.city}, ${property.location}`}
+                address={property.full_address || `${property.city}, ${property.location}`}
+              />
             </div>
           </div>
-        </div>
+        ) : (
+          // Desktop Layout
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Property Images Gallery */}
+                <div className="space-y-4">
+                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src={property.images[0]} 
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-4 gap-4">
+                    {property.images.slice(1).map((image, index) => (
+                      <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+                        <img 
+                          src={image} 
+                          alt={`${property.title} ${index + 2}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Property Info */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-3xl font-playfair mb-2">{property.title}</CardTitle>
+                        <div className="flex items-center text-muted-foreground mb-2">
+                          <MapPin className="w-5 h-5 mr-2" />
+                          <span className="text-lg font-inter">{property.city}, {property.location}</span>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="text-lg px-3 py-1 font-inter">{t(property.property_type) || property.property_type}</Badge>
+                    </div>
+                    <div className="text-4xl font-bold text-primary font-playfair">{formatPrice(property.price, property.price_type)}</div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center bg-muted/50 rounded-lg p-4 mb-6">
+                      {property.bedrooms && (
+                        <>
+                          <div className="flex items-center text-center">
+                            <Bed className="w-6 h-6 mr-2 text-primary" />
+                            <div>
+                              <div className="font-semibold font-inter">{property.bedrooms}</div>
+                              <div className="text-sm text-muted-foreground font-inter">{t('chambers')}</div>
+                            </div>
+                          </div>
+                          <Separator orientation="vertical" className="h-12" />
+                        </>
+                      )}
+                      {property.bathrooms && (
+                        <>
+                          <div className="flex items-center text-center">
+                            <Bath className="w-6 h-6 mr-2 text-primary" />
+                            <div>
+                              <div className="font-semibold font-inter">{property.bathrooms}</div>
+                              <div className="text-sm text-muted-foreground font-inter">{t('bathrooms')}</div>
+                            </div>
+                          </div>
+                          <Separator orientation="vertical" className="h-12" />
+                        </>
+                      )}
+                      <div className="flex items-center text-center">
+                        <Square className="w-6 h-6 mr-2 text-primary" />
+                        <div>
+                          <div className="font-semibold font-inter">{property.area} m²</div>
+                          <div className="text-sm text-muted-foreground font-inter">{t('areaField')}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold font-playfair">{t('description')}</h3>
+                      <p className="text-base text-muted-foreground leading-relaxed font-inter">{property.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Features */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-playfair">{t('characteristics')}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {property.features && Object.entries(property.features).map(([key, value]) => (
+                        value && (
+                          <div key={key} className="flex items-center p-3 bg-muted/50 rounded-lg">
+                            <div className="w-2 h-2 bg-primary rounded-full mr-3" />
+                            <span className="text-sm font-inter">{t(key) || key}</span>
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                {/* Map */}
+                <MapboxMap 
+                  location={`${property.city}, ${property.location}`}
+                  address={property.full_address || `${property.city}, ${property.location}`}
+                />
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Booking/Visit Section */}
+                {property.category === 'short-stay' ? (
+                  <div className="space-y-4">
+                    <PropertyDatePicker 
+                      onDateChange={(dates) => console.log("Selected dates:", dates)}
+                    />
+                    <Card>
+                      <CardContent className="pt-6">
+                        <BookingModal 
+                          property={{
+                            id: property.id,
+                            title: property.title,
+                            price: property.price,
+                            price_type: property.price_type,
+                            category: property.category
+                          }}
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+                ) : property.category === 'sale' ? (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="font-playfair">
+                        {t('purchaseProperty')}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        {t('purchaseDescription')}
+                      </p>
+                      <div className="space-y-2">
+                        <Button 
+                          className="w-full bg-gradient-primary hover:shadow-elegant"
+                          onClick={() => setIsScheduleModalOpen(true)}
+                        >
+                          <Calendar className="w-4 h-4 mr-2" />
+                          {t('scheduleVisit')}
+                        </Button>
+                        {(() => {
+                          const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
+                          const earnestMoneyAmount = Math.round(propertyPrice * 0.05 * 100) / 100;
+                          
+                          return (
+                            <PaymentButton
+                              propertyId={property.id}
+                              paymentType="earnest_money"
+                              amount={earnestMoneyAmount}
+                              currency="EUR"
+                              description={`Earnest money for ${property.title}`}
+                              className="w-full"
+                            >
+                              {t('payEarnestMoney')} ({formatPrice(earnestMoneyAmount)})
+                            </PaymentButton>
+                          );
+                        })()}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="font-playfair">
+                        {t('scheduleVisit')}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        {t('scheduleVisitDescription')}
+                      </p>
+                      <div className="space-y-2">
+                        <Button 
+                          className="w-full bg-gradient-primary hover:shadow-elegant"
+                          onClick={() => setIsScheduleModalOpen(true)}
+                        >
+                          <Calendar className="w-4 h-4 mr-2" />
+                          {t('scheduleVisit')}
+                        </Button>
+                        {(() => {
+                          const propertyPrice = parseFloat(property.price.replace(/[^0-9.-]+/g,"")) || 0;
+                          const securityDepositAmount = Math.round(propertyPrice * 0.2 * 100) / 100;
+                          
+                          return (
+                            <PaymentButton
+                              propertyId={property.id}
+                              paymentType="security_deposit"
+                              amount={securityDepositAmount}
+                              currency="EUR"
+                              description={`Security deposit for ${property.title}`}
+                              className="w-full"
+                            >
+                              {t('paySecurityDeposit')} ({formatPrice(securityDepositAmount)})
+                            </PaymentButton>
+                          );
+                        })()}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Contact Owner */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-2xl font-playfair">
+                      <User className="w-5 h-5 mr-2" />
+                      {t('contactOwner')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {property.contact_name ? (
+                      <>
+                        <div>
+                          <h4 className="font-semibold mb-2 font-inter">{property.contact_name}</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center text-sm text-muted-foreground font-inter">
+                              <Phone className="w-4 h-4 mr-2" />
+                              {property.contact_phone}
+                            </div>
+                            <div className="flex items-center text-sm text-muted-foreground font-inter">
+                              <Mail className="w-4 h-4 mr-2" />
+                              {property.contact_email}
+                            </div>
+                          </div>
+                        </div>
+                        <Separator />
+                        <div className="space-y-3">
+                          <Button className="w-full bg-gradient-primary hover:shadow-elegant font-inter">
+                            <Phone className="w-4 h-4 mr-2" />
+                            {t('callBtn')}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="w-full font-inter"
+                            onClick={() => setIsMessageModalOpen(true)}
+                          >
+                            <Mail className="w-4 h-4 mr-2" />
+                            {t('sendMessageBtn')}
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground font-inter">
+                          {t('secureContactDescription')}
+                        </p>
+                        <Button 
+                          className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
+                          onClick={() => setIsMessageModalOpen(true)}
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          {t('contactOwnerSecure')}
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Property Details */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-playfair">{t('listingDetails')}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground font-inter">{t('reference')}</span>
+                      <span className="font-medium font-inter">BK-{property.id}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground font-inter">{t('typeField')}</span>
+                      <span className="font-medium font-inter">{t(property.property_type) || property.property_type}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground font-inter">{t('publishedOn')}</span>
+                      <span className="font-medium font-inter">{formatDate(property.created_at)}</span>
+                    </div>
+                    <Separator />
+                    <div className="flex items-center text-sm text-muted-foreground font-inter">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {t('lastUpdated')}: {t('daysAgo')}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       
       {/* Modals */}
