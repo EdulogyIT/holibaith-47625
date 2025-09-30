@@ -203,52 +203,52 @@ const City = () => {
 
   const PropertyCard = ({ property, listingType }: { property: any, listingType: string }) => (
     <Card 
-      className="cursor-pointer hover:shadow-lg transition-shadow"
+      className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden"
       onClick={() => navigate(`/property/${property.id}`)}
     >
-      <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+      <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-48" : "aspect-video")}>
         <img 
           src={property.image} 
           alt={property.title}
           className="w-full h-full object-cover"
         />
       </div>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-xl font-playfair">{property.title}</CardTitle>
-          <Badge variant="secondary" className="font-inter">{property.type}</Badge>
+      <CardHeader className={cn(isMobile && "p-4 pb-2")}>
+        <div className="flex justify-between items-start gap-2">
+          <CardTitle className={cn("font-playfair", isMobile ? "text-xl" : "text-xl")}>{property.title}</CardTitle>
+          <Badge variant="secondary" className={cn("font-inter shrink-0", isMobile && "text-xs")}>{property.type}</Badge>
         </div>
-        <div className="flex items-center text-muted-foreground">
-          <MapPin className="w-4 h-4 mr-1" />
-          <span className="text-sm font-inter">{property.location}</span>
+        <div className="flex items-center text-muted-foreground mt-1">
+          <MapPin className={cn(isMobile ? "w-4 h-4 mr-1" : "w-4 h-4 mr-1")} />
+          <span className={cn("font-inter", isMobile ? "text-sm" : "text-sm")}>{property.location}</span>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className={cn(isMobile && "p-4 pt-0")}>
         <div className="flex justify-between items-center mb-4">
-          <span className="text-2xl font-bold text-primary font-playfair">{property.price}</span>
+          <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-2xl" : "text-2xl")}>{property.price}</span>
         </div>
-        <div className="flex justify-between text-sm text-muted-foreground mb-4 font-inter">
-          <div className="flex items-center">
-            <Bed className="w-4 h-4 mr-1" />
+        <div className={cn("flex justify-between text-muted-foreground mb-4 font-inter", isMobile ? "text-sm gap-2" : "text-sm")}>
+          <div className="flex items-center gap-1">
+            <Bed className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
             {property.beds}
           </div>
-          <div className="flex items-center">
-            <Bath className="w-4 h-4 mr-1" />
+          <div className="flex items-center gap-1">
+            <Bath className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
             {property.baths}
           </div>
-          <div className="flex items-center">
-            <Square className="w-4 h-4 mr-1" />
+          <div className="flex items-center gap-1">
+            <Square className={cn(isMobile ? "w-4 h-4" : "w-4 h-4")} />
             {property.area}
           </div>
         </div>
         <Button 
-          className="w-full bg-gradient-primary hover:shadow-elegant font-inter flex items-center justify-center min-h-[44px]" 
+          className={cn("w-full bg-[#2d5a4a] hover:bg-[#2d5a4a]/90 font-inter flex items-center justify-center", isMobile ? "h-12 text-base" : "min-h-[44px]")} 
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/property/${property.id}`);
           }}
         >
-          {listingType === 'shortStay' ? t('reserve') : t('seeDetails')}
+          {listingType === 'shortStay' ? t('reserve') : 'seeDetails'}
         </Button>
       </CardContent>
     </Card>
@@ -339,7 +339,7 @@ const City = () => {
               </TabsList>
               
               <TabsContent value="buy" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {buyProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="buy" />
                   ))}
@@ -357,7 +357,7 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="rent" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {rentProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="rent" />
                   ))}
@@ -375,7 +375,7 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="shortStay" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                <div className={cn("grid gap-4", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
                   {shortStayProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} listingType="shortStay" />
                   ))}

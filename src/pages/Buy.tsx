@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MapPin, Bed, Bath, Square, Loader2 } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Loader2, Search, DollarSign } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -199,43 +199,111 @@ const Buy = () => {
       <main className={cn(isMobile ? "pt-16" : "pt-20")}>
         {!isMobile && <BuyHeroSearch onSearch={handleSearch} />}
         
-        {/* Mobile Compact Search */}
+        {/* Mobile Hero Search with Background */}
         {isMobile && (
-          <div className="p-3 bg-card border-b">
-            <div className="flex gap-2">
-              <Input
-                placeholder={t("searchLocation")}
-                value={locationHook.search ? new URLSearchParams(locationHook.search).get("location") || "" : ""}
-                onChange={(e) => {
-                  const newParams = new URLSearchParams(locationHook.search);
-                  if (e.target.value) {
-                    newParams.set("location", e.target.value);
-                  } else {
-                    newParams.delete("location");
-                  }
-                  navigate({ search: newParams.toString() });
-                }}
-                className="text-sm h-9"
-              />
-              <select
-                className="h-9 px-2 text-xs border rounded-md"
-                value={new URLSearchParams(locationHook.search).get("type") || ""}
-                onChange={(e) => {
-                  const newParams = new URLSearchParams(locationHook.search);
-                  if (e.target.value) {
-                    newParams.set("type", e.target.value);
-                  } else {
-                    newParams.delete("type");
-                  }
-                  navigate({ search: newParams.toString() });
-                }}
-              >
-                <option value="">{t("propertyType")}</option>
-                <option value="apartment">{t("apartment")}</option>
-                <option value="house">{t("house")}</option>
-                <option value="villa">{t("villa")}</option>
-                <option value="terrain">{t("land")}</option>
-              </select>
+          <div 
+            className="relative pt-4 pb-6 px-4"
+            style={{
+              backgroundImage: `url(${require('@/assets/buy-hero-bg.jpg')})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 bg-black/40" />
+            
+            <div className="relative z-10 space-y-3">
+              {/* Tabs */}
+              <div className="flex gap-2 bg-white/95 backdrop-blur-sm rounded-2xl p-1.5">
+                <button 
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-[#2d5a4a] text-white font-semibold text-sm transition-all"
+                  onClick={() => navigate('/buy')}
+                >
+                  Buy
+                </button>
+                <button 
+                  className="flex-1 py-2.5 px-4 rounded-xl text-gray-600 font-medium text-sm transition-all hover:bg-gray-100"
+                  onClick={() => navigate('/short-stay')}
+                >
+                  Short Stay
+                </button>
+                <button 
+                  className="flex-1 py-2.5 px-4 rounded-xl text-gray-600 font-medium text-sm transition-all hover:bg-gray-100"
+                  onClick={() => navigate('/rent')}
+                >
+                  Rent
+                </button>
+              </div>
+
+              {/* Location Search */}
+              <div className="relative bg-white rounded-2xl p-4 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="City, neighborhood or address"
+                    value={new URLSearchParams(locationHook.search).get("location") || ""}
+                    onChange={(e) => {
+                      const newParams = new URLSearchParams(locationHook.search);
+                      if (e.target.value) {
+                        newParams.set("location", e.target.value);
+                      } else {
+                        newParams.delete("location");
+                      }
+                      navigate({ search: newParams.toString() });
+                    }}
+                    className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-base"
+                  />
+                  <button className="p-2 bg-gray-100 rounded-full">
+                    <Search className="h-5 w-5 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Filters Row */}
+              <div className="flex gap-3">
+                <div className="flex-1 relative bg-white rounded-2xl p-4 shadow-lg">
+                  <select
+                    className="w-full text-gray-700 outline-none text-base appearance-none bg-transparent"
+                    value={new URLSearchParams(locationHook.search).get("type") || ""}
+                    onChange={(e) => {
+                      const newParams = new URLSearchParams(locationHook.search);
+                      if (e.target.value) {
+                        newParams.set("type", e.target.value);
+                      } else {
+                        newParams.delete("type");
+                      }
+                      navigate({ search: newParams.toString() });
+                    }}
+                  >
+                    <option value="">Property type</option>
+                    <option value="apartment">{t("apartment")}</option>
+                    <option value="house">{t("house")}</option>
+                    <option value="villa">{t("villa")}</option>
+                    <option value="terrain">{t("land")}</option>
+                  </select>
+                </div>
+                
+                <div className="flex-1 relative bg-white rounded-2xl p-4 shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Max budget"
+                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-base"
+                      value={new URLSearchParams(locationHook.search).get("budget") || ""}
+                      onChange={(e) => {
+                        const newParams = new URLSearchParams(locationHook.search);
+                        if (e.target.value) {
+                          newParams.set("budget", e.target.value);
+                        } else {
+                          newParams.delete("budget");
+                        }
+                        navigate({ search: newParams.toString() });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
