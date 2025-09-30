@@ -167,7 +167,7 @@ export default function HostDashboard() {
                     onClick={() => navigate('/')}
                   >
                     <Home className="h-4 w-4 mr-3" />
-                    Back to Site
+                    Back to Home
                   </Button>
                   <div className="text-xs text-muted-foreground px-3">
                     Logged in as {user?.name}
