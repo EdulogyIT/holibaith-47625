@@ -80,9 +80,9 @@ const MobileHeroSearch = () => {
         ))}
       </div>
 
-      {/* Search Bar */}
+      {/* Search Bar with Integrated Button */}
       <div className="relative">
-        <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+        <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
         <Input
           type="text"
           placeholder={
@@ -95,8 +95,21 @@ const MobileHeroSearch = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          className="pl-12 pr-4 h-14 rounded-2xl bg-white text-base"
+          className="pl-12 pr-16 h-14 rounded-2xl bg-white text-base"
         />
+        <Button
+          onClick={handleSearch}
+          disabled={!location.trim()}
+          size="icon"
+          className={cn(
+            "absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full",
+            location.trim()
+              ? "bg-primary hover:bg-primary/90 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          )}
+        >
+          <Search className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Filter Options Based on Tab */}
@@ -194,21 +207,6 @@ const MobileHeroSearch = () => {
             </div>
           </>
         )}
-
-        {/* Search Button */}
-        <Button
-          onClick={handleSearch}
-          disabled={!location.trim()}
-          className={cn(
-            "h-12 px-6 rounded-full font-medium text-sm flex-shrink-0",
-            location.trim()
-              ? "bg-primary hover:bg-primary/90 text-white"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          )}
-        >
-          <Search className="h-4 w-4 mr-2" />
-          {t('search')}
-        </Button>
       </div>
     </div>
   );
