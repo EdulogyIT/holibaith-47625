@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
+import holibaytLogo from "@/assets/holibayt-logo-new.png";
 
 const MobileHeader = () => {
   const navigate = useNavigate();
@@ -24,7 +25,17 @@ const MobileHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-transparent z-50 safe-top">
-      <div className="flex items-center justify-end px-4 h-16">
+      <div className="flex items-center justify-between px-4 h-16">
+        {/* Logo and Brand Name */}
+        <div className="flex items-center gap-2">
+          <img 
+            src={holibaytLogo} 
+            alt="Holibayt Logo" 
+            className="h-10 w-10"
+          />
+          <span className="text-xl font-semibold text-white">Holibayt</span>
+        </div>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white rounded-xl">
