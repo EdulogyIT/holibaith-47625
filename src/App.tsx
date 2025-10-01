@@ -15,6 +15,7 @@ import ShortStay from "./pages/ShortStay";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import Cities from "./pages/Cities";
 import PublishProperty from "./pages/PublishProperty";
 import EditProperty from "./pages/EditProperty";
 import Property from "./pages/Property";
@@ -58,6 +59,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/cities" element={<Cities />} />
               <Route path="/publish-property" element={
                 <ProtectedRoute requireAuth>
                   <PublishProperty />
