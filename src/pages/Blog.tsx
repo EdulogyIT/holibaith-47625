@@ -94,7 +94,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       {isMobile ? <MobileHeader /> : <Navigation />}
-      <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20")}>
+      <main className={cn(isMobile ? "pt-14 pb-24" : "pt-20")}>
         {/* Hero Section */}
         <section className={cn("bg-gradient-subtle", isMobile ? "py-8" : "py-16")}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

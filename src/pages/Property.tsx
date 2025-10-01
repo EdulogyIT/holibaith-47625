@@ -149,7 +149,7 @@ const Property = () => {
   return (
     <div className="min-h-screen bg-background">
       {isMobile ? <MobileHeader /> : <Navigation />}
-      <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20 pb-8")}>
+      <main className={cn(isMobile ? "pt-14 pb-24" : "pt-20 pb-8")}>
         {isMobile ? (
           // Mobile App Layout - Reference Model
           <div className="space-y-0">

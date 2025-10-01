@@ -194,7 +194,7 @@ const Rent = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {isMobile ? <MobileHeader /> : <Navigation />}
-      <main className={cn(isMobile ? "pt-16" : "pt-20")}>
+      <main className={cn(isMobile ? "pt-14" : "pt-20")}>
         {!isMobile && <RentHeroSearch onSearch={handleSearch} />}
         
         {/* Mobile Hero Search with Background */}

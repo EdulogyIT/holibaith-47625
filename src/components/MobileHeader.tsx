@@ -39,7 +39,7 @@ const MobileHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50 safe-top">
-      <div className="flex items-center justify-between px-4 h-16">
+      <div className="flex items-center justify-between px-4 h-14">
         {/* Logo and Brand Name */}
         <div 
           className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform"
@@ -48,9 +48,9 @@ const MobileHeader = () => {
           <img 
             src={holibaytLogo} 
             alt="Holibayt Logo" 
-            className="h-10 w-10"
+            className="h-9 w-9 object-contain"
           />
-          <span className="text-xl font-semibold text-foreground">Holibayt</span>
+          <span className="text-lg font-semibold text-foreground">Holibayt</span>
         </div>
 
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>

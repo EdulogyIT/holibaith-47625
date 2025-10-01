@@ -48,7 +48,7 @@ const Index = () => {
       <main className="pb-20">
         {/* Background Image Hero - Reduced Height and Moved Up */}
         <div 
-          className="h-[360px] relative bg-cover bg-center"
+          className="h-[360px] relative bg-cover bg-center pt-14"
           style={{
             backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
           }}
