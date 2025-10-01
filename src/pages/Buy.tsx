@@ -9,10 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MapPin, Bed, Bath, Square, Loader2, Search, DollarSign } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Loader2, Search, DollarSign, Heart } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import PropertyFilters from "@/components/PropertyFilters";
 import { useState, useEffect } from "react";
@@ -50,6 +51,7 @@ const Buy = () => {
   const locationHook = useLocation();
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
@@ -144,6 +146,17 @@ const Buy = () => {
             {t(property.property_type) || property.property_type}
           </Badge>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist(property.id);
+          }}
+          className={cn("absolute right-2 bg-white/90 hover:bg-white rounded-full", isMobile ? "top-2 h-7 w-7" : "top-3 h-9 w-9")}
+        >
+          <Heart className={cn(isMobile ? "h-3.5 w-3.5" : "h-4 w-4", isInWishlist(property.id) ? "fill-red-500 text-red-500" : "")} />
+        </Button>
       </div>
       <CardHeader className={cn(isMobile ? "p-2 pb-1" : "pb-2")}>
         <CardTitle className={cn("font-semibold text-foreground line-clamp-2", isMobile ? "text-xs" : "text-lg")}>

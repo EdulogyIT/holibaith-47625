@@ -1,6 +1,7 @@
 import { Heart, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -11,6 +12,7 @@ const FeaturedListings = () => {
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
   const { t } = useLanguage();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const listings = [
     {
@@ -74,11 +76,11 @@ const FeaturedListings = () => {
                 size="icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Handle wishlist toggle
+                  toggleWishlist(String(listing.id));
                 }}
                 className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full h-8 w-8"
               >
-                <Heart className="h-4 w-4" />
+                <Heart className={`h-4 w-4 ${isInWishlist(String(listing.id)) ? 'fill-red-500 text-red-500' : ''}`} />
               </Button>
             </div>
             <div className="p-3">

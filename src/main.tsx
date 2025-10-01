@@ -5,13 +5,16 @@ import './index.css'
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CurrencyProvider } from "./contexts/CurrencyContext";
+import { WishlistProvider } from "./contexts/WishlistContext";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <AuthProvider>
       <LanguageProvider>
         <CurrencyProvider>
-          <App />
+          <WishlistProvider>
+            <App />
+          </WishlistProvider>
         </CurrencyProvider>
       </LanguageProvider>
     </AuthProvider>

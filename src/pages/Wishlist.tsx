@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Heart, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,9 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import MobileHeader from "@/components/MobileHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FloatingMapButton from "@/components/FloatingMapButton";
+import { getMockProperty } from "@/data/mockProperties";
 
 interface WishlistProperty {
   id: string;
@@ -28,55 +31,13 @@ interface WishlistProperty {
 
 const Wishlist = () => {
   const { user, isAuthenticated } = useAuth();
+  const { wishlist, isInWishlist, toggleWishlist } = useWishlist();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [wishlist, setWishlist] = useState<WishlistProperty[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { formatPrice } = useCurrency();
+  const [loading, setLoading] = useState(false);
 
-  const fetchWishlist = async () => {
-    if (!user) return;
-    
-    try {
-      // For now, just set empty array since wishlists table might not exist
-      setWishlist([]);
-    } catch (error) {
-      console.error('Error fetching wishlist:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load wishlist",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const removeFromWishlist = async (wishlistId: string) => {
-    try {
-      // Placeholder for remove functionality
-      toast({
-        title: "Success",
-        description: "Property removed from wishlist"
-      });
-      
-      fetchWishlist();
-    } catch (error) {
-      console.error('Error removing from wishlist:', error);
-      toast({
-        title: "Error",
-        description: "Failed to remove property",
-        variant: "destructive"
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      fetchWishlist();
-    } else {
-      setLoading(false);
-    }
-  }, [user, isAuthenticated]);
+  const wishlistProperties = wishlist.map(id => getMockProperty(id)).filter(Boolean);
 
   if (!isAuthenticated) {
     return (
@@ -112,7 +73,7 @@ const Wishlist = () => {
           
           {loading ? (
             <div className="text-center py-12">Loading...</div>
-          ) : wishlist.length === 0 ? (
+          ) : wishlistProperties.length === 0 ? (
             <Card className="text-center py-12">
               <CardContent>
                 <Heart className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -127,16 +88,16 @@ const Wishlist = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {wishlist.map((item) => {
-                const property = item.properties;
+              {wishlistProperties.map((property) => {
+                if (!property) return null;
                 return (
                   <div
-                    key={item.id}
+                    key={property.id}
                     className="bg-white rounded-3xl overflow-hidden shadow-sm border border-border"
                   >
                     <div className="relative">
                       <img
-                        src={property.images?.[0] || '/placeholder.svg'}
+                        src={property.image}
                         alt={property.title}
                         className="w-full h-48 object-cover cursor-pointer"
                         onClick={() => navigate(`/property/${property.id}`)}
@@ -145,7 +106,13 @@ const Wishlist = () => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full"
-                        onClick={() => removeFromWishlist(item.id)}
+                        onClick={() => {
+                          toggleWishlist(String(property.id));
+                          toast({
+                            title: "Removed from wishlist",
+                            description: "Property removed from your wishlist"
+                          });
+                        }}
                       >
                         <Heart className="h-5 w-5 fill-red-500 text-red-500" />
                       </Button>
@@ -154,14 +121,14 @@ const Wishlist = () => {
                       <h3 className="font-semibold text-lg mb-1">{property.title}</h3>
                       <div className="flex items-center text-muted-foreground text-sm mb-2">
                         <MapPin className="h-4 w-4 mr-1" />
-                        {property.city}
+                        {property.location}
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="font-bold text-lg">
-                          {property.price?.toLocaleString()} DZD
+                          {formatPrice(property.price)}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          {property.bedrooms} beds • {property.bathrooms} baths
+                          {property.beds} beds • {property.baths} baths
                         </div>
                       </div>
                       <Button 

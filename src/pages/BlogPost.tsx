@@ -564,10 +564,10 @@ const BlogPost = () => {
         </article>
       </main>
       {isMobile ? (
-        <>
+        <div className="pb-6">
           <MobileFooter />
           <MobileBottomNav />
-        </>
+        </div>
       ) : (
         <Footer />
       )}
