@@ -3,8 +3,8 @@ import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
 const MobileFooter = () => {
   return (
     <footer className="bg-gray-100 pb-20">
-      <div className="px-4 py-8">
-        <div className="flex justify-center gap-6 mb-6">
+      <div className="px-4 pt-6 pb-3">
+        <div className="flex justify-center gap-6 mb-4">
           <button className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center hover:bg-blue-200 transition-colors">
             <Facebook className="h-6 w-6 text-blue-600" />
           </button>

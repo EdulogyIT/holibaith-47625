@@ -112,7 +112,8 @@ const City = () => {
       baths: 3,
       area: "280 m²",
       image: villaMediterranean,
-      type: t('propertyVilla')
+      type: t('propertyVilla'),
+      description: `Beautiful Mediterranean-style villa in ${currentCity.name} featuring spacious living areas, modern amenities, and stunning views. Perfect for families looking for luxury and comfort.`
     },
     {
       id: 2,
@@ -123,7 +124,8 @@ const City = () => {
       baths: 2,
       area: "120 m²",
       image: luxuryApartment,
-      type: t('propertyAppartement')
+      type: t('propertyAppartement'),
+      description: `Modern luxury apartment in the heart of ${currentCity.name}. Features include high-end finishes, natural lighting, and access to premium facilities. Ideal for urban living.`
     },
     {
       id: 7,
@@ -134,7 +136,8 @@ const City = () => {
       baths: 3,
       area: "350 m²",
       image: traditionalHouse,
-      type: t('propertyMaison')
+      type: t('propertyMaison'),
+      description: `Charming traditional house with authentic Algerian architecture. Spacious rooms, courtyard, and modern updates while maintaining historical character. Perfect for large families.`
     },
     {
       id: 8,
@@ -145,7 +148,8 @@ const City = () => {
       baths: 2,
       area: "140 m²",
       image: modernApartment,
-      type: t('propertyAppartement')
+      type: t('propertyAppartement'),
+      description: `Contemporary apartment with sleek design and premium finishes. Located in a prime area of ${currentCity.name} with easy access to amenities and transportation.`
     }
   ];
 
@@ -159,7 +163,8 @@ const City = () => {
       baths: 1,
       area: "45 m²",
       image: shortStay,
-      type: t('propertyStudio')
+      type: t('propertyStudio'),
+      description: `Cozy studio apartment perfect for students or young professionals. Fully furnished with modern amenities and located in a convenient area of ${currentCity.name}.`
     },
     {
       id: 4,
@@ -170,7 +175,8 @@ const City = () => {
       baths: 2,
       area: "110 m²",
       image: luxuryApartment,
-      type: t('propertyAppartement')
+      type: t('propertyAppartement'),
+      description: `Spacious 3-bedroom apartment available for rent in ${currentCity.name}. Features modern kitchen, bright living spaces, and parking. Great for families.`
     }
   ];
 
@@ -185,7 +191,8 @@ const City = () => {
       area: "75 m²",
       image: shortStay,
       type: t('propertySuite'),
-      rating: 4.8
+      rating: 4.8,
+      description: `Comfortable suite in ${currentCity.name} perfect for short stays. Fully equipped with WiFi, kitchen, and modern amenities. Close to major attractions and business districts.`
     },
     {
       id: 6,
@@ -197,7 +204,8 @@ const City = () => {
       area: "95 m²",
       image: luxuryApartment,
       type: t('propertyAppartement'),
-      rating: 4.9
+      rating: 4.9,
+      description: `Stunning apartment with panoramic views of ${currentCity.name}. Luxuriously appointed with premium furnishings, full kitchen, and exceptional service. Ideal for business travelers and vacationers.`
     }
   ];
 
