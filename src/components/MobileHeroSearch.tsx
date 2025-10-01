@@ -64,12 +64,12 @@ const MobileHeroSearch = () => {
   return (
     <div className="px-4 space-y-3">
       {/* Tab Selector */}
-      <div className="flex bg-white rounded-2xl p-1.5 shadow-sm">
+      <div className="flex bg-white rounded-2xl p-1 shadow-sm">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all ${
+            className={`flex-1 py-2 px-3 rounded-xl font-medium text-sm transition-all ${
               selectedTab === tab.id
                 ? 'bg-primary text-white shadow-md'
                 : 'text-muted-foreground'
