@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Bed, Bath, Square, Clock, Users, Building } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
@@ -27,6 +28,7 @@ import { cn } from "@/lib/utils";
 const City = () => {
   const navigate = useNavigate();
   const { t, currentLang } = useLanguage();
+  const { formatPrice } = useCurrency();
   const { cityId } = useParams();
   const isMobile = useIsMobile();
   
@@ -107,7 +109,7 @@ const City = () => {
       id: 1,
       title: `${t('propertyVilla')} ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `2,500,000 ${t('currencyDA')}`,
+      price: 2500000, // Base price in DZD
       beds: 4,
       baths: 3,
       area: "280 m²",
@@ -119,7 +121,7 @@ const City = () => {
       id: 2,
       title: `${t('propertyAppartement')} ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `1,800,000 ${t('currencyDA')}`,
+      price: 1800000, // Base price in DZD
       beds: 3,
       baths: 2,
       area: "120 m²",
@@ -131,7 +133,7 @@ const City = () => {
       id: 7,
       title: `Maison Traditionnelle ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `3,200,000 ${t('currencyDA')}`,
+      price: 3200000, // Base price in DZD
       beds: 5,
       baths: 3,
       area: "350 m²",
@@ -143,7 +145,7 @@ const City = () => {
       id: 8,
       title: `Appartement Moderne ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `2,100,000 ${t('currencyDA')}`,
+      price: 2100000, // Base price in DZD
       beds: 3,
       baths: 2,
       area: "140 m²",
@@ -158,7 +160,8 @@ const City = () => {
       id: 3,
       title: `${t('propertyStudio')} ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `35,000 ${t('currencyPerMonth')}`,
+      price: 35000, // Base price in DZD (monthly)
+      priceType: 'monthly',
       beds: 1,
       baths: 1,
       area: "45 m²",
@@ -170,7 +173,8 @@ const City = () => {
       id: 4,
       title: `${t('propertyAppartement')} ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `55,000 ${t('currencyPerMonth')}`,
+      price: 55000, // Base price in DZD (monthly)
+      priceType: 'monthly',
       beds: 3,
       baths: 2,
       area: "110 m²",
@@ -185,7 +189,8 @@ const City = () => {
       id: 5,
       title: `${t('propertySuite')} ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `12,000 ${t('currencyPerNight')}`,
+      price: 12000, // Base price in DZD (per night)
+      priceType: 'daily',
       beds: 2,
       baths: 1,
       area: "75 m²",
@@ -198,7 +203,8 @@ const City = () => {
       id: 6,
       title: `${t('propertyAppartement')} Vue ${currentCity.name}`,
       location: `${currentCity.name}, ${t('algeria')}`,
-      price: `15,000 ${t('currencyPerNight')}`,
+      price: 15000, // Base price in DZD (per night)
+      priceType: 'daily',
       beds: 3,
       baths: 2,
       area: "95 m²",
@@ -233,7 +239,9 @@ const City = () => {
       </CardHeader>
       <CardContent className={cn(isMobile && "p-2 pt-0")}>
         <div className="flex justify-between items-center mb-2">
-          <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-base" : "text-2xl")}>{property.price}</span>
+          <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-base" : "text-2xl")}>
+            {formatPrice(property.price, property.priceType)}
+          </span>
         </div>
         <div className={cn("flex justify-between text-muted-foreground mb-2 font-inter", isMobile ? "text-xs gap-1" : "text-sm")}>
           <div className="flex items-center gap-0.5">

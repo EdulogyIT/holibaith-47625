@@ -26,14 +26,23 @@ const About = () => {
     <div className="min-h-screen bg-background">
       {isMobile ? <MobileHeader /> : <Navigation />}
       <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20")}>
-        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-6" : "py-8")}>
-          {/* Hero Section */}
-          <div className={cn("text-center", isMobile ? "mb-8" : "mb-16")}>
-            <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-4xl")}>{t('aboutBeitik')}</h1>
-            <p className={cn("text-muted-foreground max-w-3xl mx-auto font-inter", isMobile ? "text-base" : "text-xl")}>
-              {t('aboutDescription')}
-            </p>
+        {/* Hero Section with Background */}
+        <div className={cn(
+          "relative bg-gradient-to-br from-primary/10 via-background to-primary/5",
+          isMobile ? "py-8 mb-6" : "py-16 mb-12"
+        )}>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIxOTI4YyIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40"></div>
+          <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10")}>
+            <div className="text-center">
+              <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-5xl")}>{t('aboutBeitik')}</h1>
+              <p className={cn("text-muted-foreground max-w-3xl mx-auto font-inter", isMobile ? "text-base" : "text-xl")}>
+                {t('aboutDescription')}
+              </p>
+            </div>
           </div>
+        </div>
+
+        <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", isMobile ? "py-0" : "py-0")}>
 
           {/* Stats Section */}
           <div className={cn("grid gap-6", isMobile ? "grid-cols-2 gap-4 mb-8" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-16")}>

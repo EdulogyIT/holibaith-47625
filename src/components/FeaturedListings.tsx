@@ -2,11 +2,13 @@ import { Heart, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import propertyLuxury from "@/assets/property-luxury-apartment.jpg";
 import propertyModern from "@/assets/property-modern-apartment.jpg";
 
 const FeaturedListings = () => {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
 
   const listings = [
     {
@@ -16,7 +18,7 @@ const FeaturedListings = () => {
       verified: true,
       title: "Luxury Apartment",
       location: "Alger Centre",
-      price: "45,000,000 DZD",
+      price: 45000000, // Store price as number in DZD base
       beds: 3,
       baths: 2,
     },
@@ -27,7 +29,7 @@ const FeaturedListings = () => {
       verified: false,
       title: "Modern Penthouse",
       location: "Oran",
-      price: "65,000,000 DZD",
+      price: 65000000, // Store price as number in DZD base
       beds: 4,
       baths: 3,
     },
@@ -68,6 +70,10 @@ const FeaturedListings = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Handle wishlist toggle
+                }}
                 className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full h-8 w-8"
               >
                 <Heart className="h-4 w-4" />
@@ -80,7 +86,7 @@ const FeaturedListings = () => {
                 {listing.location}
               </div>
               <div className="flex justify-between items-center">
-                <div className="font-bold text-sm">{listing.price}</div>
+                <div className="font-bold text-sm">{formatPrice(listing.price)}</div>
                 <div className="text-[10px] text-muted-foreground">
                   {listing.beds} beds • {listing.baths} baths
                 </div>
