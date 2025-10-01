@@ -24,6 +24,7 @@ import { Loader2 } from "lucide-react";
 import ScheduleVisitModal from "@/components/ScheduleVisitModal";
 import MessageOwnerModal from "@/components/MessageOwnerModal";
 import { cn } from "@/lib/utils";
+import { getMockProperty } from "@/data/mockProperties";
 
 interface Property {
   id: string;
@@ -78,11 +79,25 @@ const Property = () => {
 
       if (error) {
         console.error('Error fetching property:', error);
+        // Fallback to mock data
+        const mockData = getMockProperty(id!);
+        if (mockData) {
+          setProperty(mockData);
+          setIsLoading(false);
+          return;
+        }
         setError('Property not found');
         return;
       }
 
       if (!data) {
+        // Fallback to mock data
+        const mockData = getMockProperty(id!);
+        if (mockData) {
+          setProperty(mockData);
+          setIsLoading(false);
+          return;
+        }
         setError('Property not found');
         return;
       }
@@ -104,6 +119,13 @@ const Property = () => {
       }
     } catch (error) {
       console.error('Error fetching property:', error);
+      // Fallback to mock data
+      const mockData = getMockProperty(id!);
+      if (mockData) {
+        setProperty(mockData);
+        setIsLoading(false);
+        return;
+      }
       setError('Failed to load property');
     } finally {
       setIsLoading(false);
