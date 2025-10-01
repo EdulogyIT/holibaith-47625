@@ -37,15 +37,30 @@ const Footer = () => {
             <div className="space-y-3">
               <h4 className="font-semibold text-foreground font-playfair text-sm">{t('followUs')}</h4>
               <div className="flex space-x-3">
-                <div className="p-2 rounded-lg bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer group">
+                <a 
+                  href="https://facebook.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer group"
+                >
                   <Facebook className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="p-2 rounded-lg bg-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300 cursor-pointer group">
+                </a>
+                <a 
+                  href="https://twitter.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-accent/10 hover:bg-accent hover:text-accent-foreground transition-all duration-300 cursor-pointer group"
+                >
                   <Twitter className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                </div>
-                <div className="p-2 rounded-lg bg-foreground/10 hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer group">
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-foreground/10 hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer group"
+                >
                   <Instagram className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                </div>
+                </a>
               </div>
             </div>
           </div>

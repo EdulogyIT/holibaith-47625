@@ -42,6 +42,9 @@ import PaymentCancelled from "./pages/PaymentCancelled";
 import BookingSuccess from "./pages/BookingSuccess";
 import BookingCancel from "./pages/BookingCancel";
 
+import TrendingAreas from "./pages/TrendingAreas";
+import FeaturedListingsPage from "./pages/FeaturedListingsPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -60,6 +63,8 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/cities" element={<Cities />} />
+              <Route path="/trending-areas" element={<TrendingAreas />} />
+              <Route path="/featured-listings" element={<FeaturedListingsPage />} />
               <Route path="/publish-property" element={
                 <ProtectedRoute requireAuth>
                   <PublishProperty />

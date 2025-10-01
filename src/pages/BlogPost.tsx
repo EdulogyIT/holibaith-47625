@@ -1,12 +1,17 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MobileHeader from "@/components/MobileHeader";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileFooter from "@/components/MobileFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useParams, Navigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, Clock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 // Import blog images
 import blogRealEstateFuture from "@/assets/blog-real-estate-future.jpg";
@@ -20,6 +25,7 @@ const BlogPost = () => {
   const { t, currentLang } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   useScrollToTop();
 
   const blogPosts = [
@@ -480,8 +486,8 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="pt-20">
+      {isMobile ? <MobileHeader /> : <Navigation />}
+      <main className={cn(isMobile ? "pt-14 pb-24" : "pt-20")}>
         {/* Back Button */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Button 
@@ -557,7 +563,14 @@ const BlogPost = () => {
           </div>
         </article>
       </main>
-      <Footer />
+      {isMobile ? (
+        <>
+          <MobileFooter />
+          <MobileBottomNav />
+        </>
+      ) : (
+        <Footer />
+      )}
     </div>
   );
 };

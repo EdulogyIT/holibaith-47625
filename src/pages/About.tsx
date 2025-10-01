@@ -38,7 +38,7 @@ const About = () => {
               backgroundImage: `url(${new URL('../assets/algeria-architecture-hero.jpg', import.meta.url).href})`
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/85 to-background/95"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-background/70 via-background/60 to-background/70"></div>
           </div>
           
           {/* Pattern Overlay */}
@@ -137,14 +137,16 @@ const About = () => {
           </div>
         </div>
       </main>
-      {isMobile ? (
-        <>
-          <MobileFooter />
-          <MobileBottomNav />
-        </>
-      ) : (
-        <Footer />
-      )}
+      <div className={cn(isMobile && "pb-6")}>
+        {isMobile ? (
+          <>
+            <MobileFooter />
+            <MobileBottomNav />
+          </>
+        ) : (
+          <Footer />
+        )}
+      </div>
     </div>
   );
 };

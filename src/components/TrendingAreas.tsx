@@ -16,7 +16,7 @@ const TrendingAreas = () => {
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xl font-bold">Trending Areas</h2>
         <button 
-          onClick={() => navigate('/cities')}
+          onClick={() => navigate('/trending-areas')}
           className="text-primary font-medium text-xs hover:underline"
         >
           See all
