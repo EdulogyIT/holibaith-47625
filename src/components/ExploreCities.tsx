@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import cityAlger from "@/assets/city-alger.jpg";
 import cityOran from "@/assets/city-oran.jpg";
+import cityConstantine from "@/assets/city-constantine.jpg";
+import cityAnnaba from "@/assets/city-annaba.jpg";
 
 const ExploreCities = () => {
   const navigate = useNavigate();
@@ -15,6 +17,16 @@ const ExploreCities = () => {
       name: "Oran",
       properties: "800+",
       image: cityOran,
+    },
+    {
+      name: "Constantine",
+      properties: "650+",
+      image: cityConstantine,
+    },
+    {
+      name: "Annaba",
+      properties: "450+",
+      image: cityAnnaba,
     },
   ];
 

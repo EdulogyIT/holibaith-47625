@@ -95,20 +95,20 @@ const MobileHeroSearch = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          className="pl-12 pr-16 h-14 rounded-2xl bg-white text-base"
+          className="pl-12 pr-16 h-12 rounded-2xl bg-white text-base"
         />
         <Button
           onClick={handleSearch}
           disabled={!location.trim()}
           size="icon"
           className={cn(
-            "absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full",
+            "absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full",
             location.trim()
               ? "bg-primary hover:bg-primary/90 text-white"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           )}
         >
-          <Search className="h-5 w-5" />
+          <Search className="h-4 w-4" />
         </Button>
       </div>
 

@@ -28,10 +28,22 @@ const About = () => {
       <main className={cn(isMobile ? "pt-16 pb-24" : "pt-20")}>
         {/* Hero Section with Background */}
         <div className={cn(
-          "relative bg-gradient-to-br from-primary/10 via-background to-primary/5",
+          "relative overflow-hidden",
           isMobile ? "py-8 mb-6" : "py-16 mb-12"
         )}>
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIxOTI4YyIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${new URL('../assets/algeria-architecture-hero.jpg', import.meta.url).href})`
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/85 to-background/95"></div>
+          </div>
+          
+          {/* Pattern Overlay */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIxOTI4YyIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30"></div>
+          
           <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10")}>
             <div className="text-center">
               <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-5xl")}>{t('aboutBeitik')}</h1>
