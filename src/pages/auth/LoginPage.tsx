@@ -53,14 +53,20 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     try {
+      // Get the proper redirect URL
+      const redirectUrl = `${window.location.origin}/`;
+      console.log('Google OAuth redirect URL:', redirectUrl);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: false,
         }
       });
       
       if (error) {
+        console.error('Google OAuth error:', error);
         toast({
           title: 'Error',
           description: error.message,
@@ -74,14 +80,20 @@ export default function LoginPage() {
 
   const handleFacebookSignIn = async () => {
     try {
+      // Get the proper redirect URL
+      const redirectUrl = `${window.location.origin}/`;
+      console.log('Facebook OAuth redirect URL:', redirectUrl);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: false,
         }
       });
       
       if (error) {
+        console.error('Facebook OAuth error:', error);
         toast({
           title: 'Error',
           description: error.message,

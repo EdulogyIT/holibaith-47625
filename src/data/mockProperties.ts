@@ -254,5 +254,14 @@ export const mockProperties: Record<string, any> = {
 };
 
 export const getMockProperty = (id: string) => {
-  return mockProperties[id] || null;
+  const property = mockProperties[id];
+  if (!property) return null;
+  
+  // Transform to match the format expected by components
+  return {
+    ...property,
+    image: property.images[0], // Use first image
+    beds: property.bedrooms,
+    baths: property.bathrooms,
+  };
 };
