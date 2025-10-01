@@ -1,5 +1,6 @@
 import { Heart, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -9,6 +10,7 @@ import propertyModern from "@/assets/property-modern-apartment.jpg";
 const FeaturedListings = () => {
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
+  const { t } = useLanguage();
 
   const listings = [
     {
@@ -38,12 +40,12 @@ const FeaturedListings = () => {
   return (
     <section className="px-4 py-4 bg-gray-50">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold">Featured Listings</h2>
+        <h2 className="text-xl font-bold">{t('featuredListings')}</h2>
         <button 
           onClick={() => navigate('/featured-listings')}
           className="text-primary font-medium text-xs hover:underline"
         >
-          See all
+          {t('seeAll')}
         </button>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
@@ -51,7 +53,7 @@ const FeaturedListings = () => {
           <div
             key={listing.id}
             onClick={() => navigate(`/property/${listing.id}`)}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer min-w-[240px] flex-shrink-0"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer w-64 flex-shrink-0"
           >
             <div className="relative">
               <img

@@ -1,10 +1,12 @@
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import blogRealEstate from "@/assets/blog-real-estate-future.jpg";
 import blogLocation from "@/assets/blog-property-location.jpg";
 
 const LatestInsights = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const insights = [
     {
@@ -32,12 +34,12 @@ const LatestInsights = () => {
   return (
     <section className="px-4 py-4 bg-white">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold">Latest Insights</h2>
+        <h2 className="text-xl font-bold">{t('latestInsights')}</h2>
         <button 
           onClick={() => navigate('/blog')}
           className="text-primary font-medium text-xs hover:underline"
         >
-          See all
+          {t('seeAll')}
         </button>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">

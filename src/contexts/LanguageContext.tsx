@@ -113,6 +113,19 @@ const allTranslations = {
     support247: 'Support 24/7',
     supportDesc: 'Une équipe dédiée à votre service',
     
+    // Home page sections
+    seeAll: 'Voir tout',
+    trendingAreas: 'Zones tendance',
+    exploreByCities: 'Explorer par Villes',
+    latestInsights: 'Dernières Actualités',
+    featuredListings: 'Annonces en Vedette',
+    findYourDreamHome: 'Trouvez Votre Maison de Rêve',
+    flexibleLiving: 'Vie Flexible',
+    exploreVerifiedProperties: 'Explorez les propriétés vérifiées',
+    qualityRentalOptions: 'Options de location de qualité',
+    holidayRentals: 'Locations de Vacances',
+    perfectVacationStays: 'Séjours de vacances parfaits',
+    
     // Hero placeholders and options
     cityNeighborhood: 'Ville, quartier ou adresse',
     whereToRent: 'Où cherchez-vous à louer ?',
@@ -733,6 +746,19 @@ const allTranslations = {
     qualityDesc: 'A rigorous selection for your satisfaction',
     support247: 'Support 24/7',
     supportDesc: 'A team dedicated to your service',
+    
+    // Home page sections
+    seeAll: 'See all',
+    trendingAreas: 'Trending Areas',
+    exploreByCities: 'Explore by Cities',
+    latestInsights: 'Latest Insights',
+    featuredListings: 'Featured Listings',
+    findYourDreamHome: 'Find Your Dream Home',
+    flexibleLiving: 'Flexible Living',
+    exploreVerifiedProperties: 'Explore verified properties',
+    qualityRentalOptions: 'Quality rental options',
+    holidayRentals: 'Holiday Rentals',
+    perfectVacationStays: 'Perfect vacation stays',
     
     // Hero placeholders and options
     cityNeighborhood: 'City, neighborhood or address',
@@ -1356,6 +1382,19 @@ const allTranslations = {
     qualityDesc: 'اختيار دقيق لرضاك',
     support247: 'دعم 24/7',
     supportDesc: 'فريق مخصص لخدمتك',
+    
+    // Home page sections
+    seeAll: 'عرض الكل',
+    trendingAreas: 'المناطق الرائجة',
+    exploreByCities: 'استكشف حسب المدن',
+    latestInsights: 'أحدث الأخبار',
+    featuredListings: 'القوائم المميزة',
+    findYourDreamHome: 'اعثر على منزل أحلامك',
+    flexibleLiving: 'حياة مرنة',
+    exploreVerifiedProperties: 'استكشف العقارات الموثقة',
+    qualityRentalOptions: 'خيارات إيجار عالية الجودة',
+    holidayRentals: 'إيجارات العطلات',
+    perfectVacationStays: 'إقامات عطلة مثالية',
     
     // Hero placeholders and options
     cityNeighborhood: 'المدينة، الحي أو العنوان',

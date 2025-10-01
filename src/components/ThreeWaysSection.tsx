@@ -1,38 +1,40 @@
 import { Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import propertyVilla from "@/assets/property-villa-mediterranean.jpg";
 import propertyPenthouse from "@/assets/property-penthouse.jpg";
 import propertyShortStay from "@/assets/property-short-stay.jpg";
 
 const ThreeWaysSection = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const ways = [
     {
       id: 1,
       icon: Home,
       image: propertyVilla,
-      title: "Buy",
-      subtitle: "Find Your Dream Home",
-      description: "Explore verified properties",
+      title: t('buy'),
+      subtitle: t('findYourDreamHome'),
+      description: t('exploreVerifiedProperties'),
       path: "/buy",
     },
     {
       id: 2,
       icon: Home,
       image: propertyPenthouse,
-      title: "Rent",
-      subtitle: "Flexible Living",
-      description: "Quality rental options",
+      title: t('rent'),
+      subtitle: t('flexibleLiving'),
+      description: t('qualityRentalOptions'),
       path: "/rent",
     },
     {
       id: 3,
       icon: Home,
       image: propertyShortStay,
-      title: "Short Stay",
-      subtitle: "Holiday Rentals",
-      description: "Perfect vacation stays",
+      title: t('shortStay'),
+      subtitle: t('holidayRentals'),
+      description: t('perfectVacationStays'),
       path: "/short-stay",
     },
   ];
@@ -40,7 +42,7 @@ const ThreeWaysSection = () => {
   return (
     <section className="px-4 py-4 bg-gray-50">
       <h2 className="text-xl font-bold text-center mb-3">
-        Three Ways to Live in Algeria
+        {t('threeWaysToLive')}
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {ways.map((way) => {
