@@ -242,13 +242,13 @@ const City = () => {
           </div>
         </div>
         <Button 
-          className={cn("w-full bg-primary hover:bg-primary/90 font-inter flex items-center justify-center", isMobile ? "h-8 text-xs" : "min-h-[44px]")} 
+          className={cn("w-full font-inter flex items-center justify-center", isMobile ? "h-8 text-xs" : "min-h-[44px]")} 
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/property/${property.id}`);
           }}
         >
-          {listingType === 'shortStay' ? t('reserve') : t('seeDetails')}
+          View Details
         </Button>
       </CardContent>
     </Card>

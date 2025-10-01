@@ -6,9 +6,9 @@ const TrendingAreas = () => {
   const navigate = useNavigate();
 
   const areas = [
-    { name: "Alger Centre", properties: 1250 },
-    { name: "Oran", properties: 890 },
-    { name: "Constantine", properties: 567 },
+    { name: "Alger", displayName: "Alger Centre", properties: 1250 },
+    { name: "Oran", displayName: "Oran", properties: 890 },
+    { name: "Constantine", displayName: "Constantine", properties: 567 },
   ];
 
   return (
@@ -25,7 +25,7 @@ const TrendingAreas = () => {
             className="flex-shrink-0 bg-white rounded-xl p-3 min-w-[140px] shadow-sm border border-border"
           >
             <div className="text-left">
-              <div className="font-semibold text-base mb-0.5">{area.name}</div>
+              <div className="font-semibold text-base mb-0.5">{area.displayName}</div>
               <div className="text-muted-foreground text-xs">
                 {area.properties} properties
               </div>

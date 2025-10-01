@@ -27,7 +27,10 @@ const MobileHeader = () => {
     <header className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50 safe-top">
       <div className="flex items-center justify-between px-4 h-16">
         {/* Logo and Brand Name */}
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform"
+          onClick={() => navigate('/')}
+        >
           <img 
             src={holibaytLogo} 
             alt="Holibayt Logo" 
