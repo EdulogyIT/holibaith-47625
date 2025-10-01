@@ -7,20 +7,34 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
 import holibaytLogo from "@/assets/holibayt-logo-new.png";
+import { useState } from "react";
 
 const MobileHeader = () => {
   const navigate = useNavigate();
   const { t, currentLang, setCurrentLang } = useLanguage();
   const { currentCurrency, setCurrency } = useCurrency();
   const { user, logout } = useAuth();
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const handleNavigation = (path: string) => {
     navigate(path);
+    setSheetOpen(false);
   };
 
   const handleLogout = async () => {
     await logout();
     navigate("/");
+    setSheetOpen(false);
+  };
+
+  const handleLanguageChange = (lang: 'EN' | 'FR' | 'AR') => {
+    setCurrentLang(lang);
+    setSheetOpen(false);
+  };
+
+  const handleCurrencyChange = (currency: 'USD' | 'EUR' | 'DZD') => {
+    setCurrency(currency);
+    setSheetOpen(false);
   };
 
   return (
@@ -39,7 +53,7 @@ const MobileHeader = () => {
           <span className="text-xl font-semibold text-foreground">Holibayt</span>
         </div>
 
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white rounded-xl">
               <Menu className="h-6 w-6 text-foreground" />
@@ -185,7 +199,7 @@ const MobileHeader = () => {
                       {(['EN', 'FR', 'AR'] as const).map((lang) => (
                         <button
                           key={lang}
-                          onClick={() => setCurrentLang(lang)}
+                          onClick={() => handleLanguageChange(lang)}
                           className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                             currentLang === lang
                               ? 'bg-primary text-primary-foreground'
@@ -208,7 +222,7 @@ const MobileHeader = () => {
                       {(['USD', 'EUR', 'DZD'] as const).map((currency) => (
                         <button
                           key={currency}
-                          onClick={() => setCurrency(currency)}
+                          onClick={() => handleCurrencyChange(currency)}
                           className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                             currentCurrency === currency
                               ? 'bg-primary text-primary-foreground'

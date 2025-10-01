@@ -37,7 +37,12 @@ const FeaturedListings = () => {
     <section className="px-4 py-4 bg-gray-50">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xl font-bold">Featured Listings</h2>
-        <button className="text-primary font-medium text-xs">See all</button>
+        <button 
+          onClick={() => navigate('/buy')}
+          className="text-primary font-medium text-xs hover:underline"
+        >
+          See all
+        </button>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {listings.map((listing) => (

@@ -33,7 +33,12 @@ const LatestInsights = () => {
     <section className="px-4 py-4 bg-white">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-xl font-bold">Latest Insights</h2>
-        <button className="text-primary font-medium text-xs">See all</button>
+        <button 
+          onClick={() => navigate('/blog')}
+          className="text-primary font-medium text-xs hover:underline"
+        >
+          See all
+        </button>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {insights.map((insight) => (
