@@ -45,6 +45,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { title: t('admin.properties'), url: '/admin/properties', icon: Building2 },
     { title: t('admin.hostsGuests'), url: '/admin/users', icon: Users },
     { title: t('admin.messages'), url: '/admin/messages', icon: MessageSquare },
+    { title: 'Blogs', url: '/admin/blogs', icon: Building2 },
     { title: t('admin.settings'), url: '/admin/settings', icon: Settings },
   ];
 
@@ -86,7 +87,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
               <DropdownMenuItem asChild>
                 <NavLink to="/">
                   <Home className="mr-2 h-4 w-4" />
-                  Back to App
+                  Back to Home
                 </NavLink>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} className="text-destructive">
@@ -163,7 +164,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                       <DropdownMenuItem asChild>
                         <NavLink to="/">
                           <Home className="mr-2 h-4 w-4" />
-                          Back to App
+                          Back to Home
                         </NavLink>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -178,11 +179,17 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             </Sidebar>
 
             <main className="flex-1">
-              <header className="h-16 border-b bg-background flex items-center px-4 md:px-6">
-                <SidebarTrigger />
-                <div className="ml-4">
-                  <h1 className="text-lg md:text-xl font-semibold">{t('admin.adminPanel')}</h1>
+              <header className="h-16 border-b bg-background flex items-center justify-between px-4 md:px-6">
+                <div className="flex items-center">
+                  <SidebarTrigger />
+                  <div className="ml-4">
+                    <h1 className="text-lg md:text-xl font-semibold">{t('admin.adminPanel')}</h1>
+                  </div>
                 </div>
+                <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+                  <Home className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
               </header>
               
               <div className="p-4 md:p-6">

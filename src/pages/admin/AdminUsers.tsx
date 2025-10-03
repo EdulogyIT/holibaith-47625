@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,9 +31,22 @@ import {
   Shield,
   Ban,
   CheckCircle,
-  Clock
+  Clock,
+  Trash2
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface AppUser {
   id: string;
@@ -91,18 +104,72 @@ const mockUsers: AppUser[] = [
 
 export default function AdminUsers() {
   const { t } = useLanguage();
-  const [users] = useState<AppUser[]>(mockUsers);
+  const { toast } = useToast();
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load users',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      const { error } = await supabase.auth.admin.deleteUser(deleteId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'User deleted successfully',
+      });
+      
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete user',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteId(null);
+    }
+  };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
     
-    return matchesSearch && matchesRole && matchesStatus;
+    return matchesSearch && matchesRole;
   });
 
   const getStatusColor = (status: string) => {
@@ -155,8 +222,8 @@ export default function AdminUsers() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,543</div>
-            <p className="text-xs text-muted-foreground">+18% {t('admin.thisMonth')}</p>
+            <div className="text-2xl font-bold">{loading ? '...' : users.length}</div>
+            <p className="text-xs text-muted-foreground">Total registered</p>
           </CardContent>
         </Card>
         
@@ -166,8 +233,8 @@ export default function AdminUsers() {
             <UserCheck className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">189</div>
-            <p className="text-xs text-muted-foreground">{t('admin.propertiesPublished')}</p>
+            <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'host').length}</div>
+            <p className="text-xs text-muted-foreground">Host accounts</p>
           </CardContent>
         </Card>
 
@@ -177,8 +244,8 @@ export default function AdminUsers() {
             <Shield className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,876</div>
-            <p className="text-xs text-muted-foreground">74% {t('admin.ofTotal')}</p>
+            <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'admin').length}</div>
+            <p className="text-xs text-muted-foreground">Admin accounts</p>
           </CardContent>
         </Card>
 
@@ -188,8 +255,8 @@ export default function AdminUsers() {
             <UserX className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">56</div>
-            <p className="text-xs text-muted-foreground">{t('admin.kycVerifications')}</p>
+            <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'user').length}</div>
+            <p className="text-xs text-muted-foreground">Regular users</p>
           </CardContent>
         </Card>
       </div>
@@ -220,17 +287,6 @@ export default function AdminUsers() {
               </SelectContent>
             </Select>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder={t('admin.status')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t('admin.allStatuses')}</SelectItem>
-                <SelectItem value="active">{t('admin.active')}</SelectItem>
-                <SelectItem value="pending">{t('admin.pending')}</SelectItem>
-                <SelectItem value="suspended">{t('admin.suspended')}</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
@@ -241,102 +297,89 @@ export default function AdminUsers() {
           <CardTitle>{t('admin.users')} ({filteredUsers.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('admin.user')}</TableHead>
-                <TableHead>{t('admin.contact')}</TableHead>
-                <TableHead>{t('admin.role')}</TableHead>
-                <TableHead>{t('admin.status')}</TableHead>
-                <TableHead>{t('admin.verification')}</TableHead>
-                <TableHead>{t('admin.activity')}</TableHead>
-                <TableHead>{t('admin.stats')}</TableHead>
-                <TableHead>{t('admin.actions')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarFallback>
-                          {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{user.name}</div>
-                        <div className="text-sm text-muted-foreground">ID: {user.id}</div>
+          {loading ? (
+            <p className="text-center py-4">Loading users...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('admin.user')}</TableHead>
+                  <TableHead>{t('admin.contact')}</TableHead>
+                  <TableHead>{t('admin.role')}</TableHead>
+                  <TableHead>Joined</TableHead>
+                  <TableHead>{t('admin.actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <Avatar>
+                          <AvatarFallback>
+                            {user.name?.slice(0, 2).toUpperCase() || user.email?.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{user.name || 'No name'}</div>
+                          <div className="text-sm text-muted-foreground">ID: {user.id.slice(0, 8)}...</div>
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
+                    </TableCell>
+                    <TableCell>
                       <div className="flex items-center text-sm">
                         <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
                         {user.email}
                       </div>
-                      {user.phone && (
-                        <div className="flex items-center text-sm">
-                          <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
-                          {user.phone}
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={getRoleColor(user.role)}>
-                      {user.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(user.status)}>
-                      {user.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      {getVerificationIcon(user.verificationStatus)}
-                      <span className="ml-2 text-sm">{user.verificationStatus}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                      <div className="space-y-1 text-sm">
-                      <div className="flex items-center">
-                        <Calendar className="h-3 w-3 mr-1 text-muted-foreground" />
-                        {t('admin.joined')}: {user.joinDate}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={getRoleColor(user.role)}>
+                        {user.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">{new Date(user.created_at).toLocaleDateString()}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button size="sm" variant="outline">
+                          {t('admin.view')}
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => setDeleteId(user.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <div className="text-muted-foreground">
-                        {t('admin.lastActivity')}: {user.lastActive}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1 text-sm">
-                      {user.propertyCount && (
-                        <div>{user.propertyCount} {t('admin.properties')}</div>
-                      )}
-                      {user.bookingCount !== undefined && (
-                        <div>{user.bookingCount} {t('admin.bookings')}</div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline">
-                        {t('admin.view')}
-                      </Button>
-                      <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
-                        <Ban className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this user and all their data. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

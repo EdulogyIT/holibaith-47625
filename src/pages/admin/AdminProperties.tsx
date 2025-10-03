@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,37 +30,80 @@ import {
   Plus,
   Download
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 
 export default function AdminProperties() {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const fetchProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProperties(data || []);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('properties')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setProperties(data || []);
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProperties();
   }, []);
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .delete()
+        .eq('id', deleteId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Property deleted successfully',
+      });
+      
+      fetchProperties();
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete property',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteId(null);
+    }
+  };
 
   const filteredProperties = properties.filter(property => {
     const matchesSearch = property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -243,13 +287,26 @@ export default function AdminProperties() {
                     <TableCell>{new Date(property.created_at).toLocaleDateString()}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost">
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => navigate(`/property/${property.id}`)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost">
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          onClick={() => navigate(`/edit-property/${property.id}`)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => setDeleteId(property.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -261,6 +318,24 @@ export default function AdminProperties() {
           )}
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this property. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
