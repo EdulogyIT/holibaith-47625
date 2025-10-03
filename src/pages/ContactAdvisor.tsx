@@ -78,48 +78,49 @@ const ContactAdvisor = () => {
       {isMobile ? (
         <div className="pt-16">
           {/* Header with Back Button and Background */}
-          <div className="relative px-4 py-6 border-b border-border bg-background overflow-hidden">
+          <div className="relative px-4 py-8 border-b border-border overflow-hidden">
             <div className="absolute inset-0 z-0">
               <img 
                 src={heroImage} 
                 alt="Contact advisor" 
-                className="w-full h-full object-cover opacity-20"
+                className="w-full h-full object-cover opacity-30"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/95 to-background"></div>
             </div>
             <div className="relative z-10">
               <button 
                 onClick={() => navigate('/')}
-                className="flex items-center text-foreground mb-3 active:scale-95 transition-transform"
+                className="flex items-center text-foreground mb-4 active:scale-95 transition-transform"
               >
                 <ChevronLeft className="w-5 h-5 mr-1" />
-                <span className="text-sm font-inter">{t('back')}</span>
+                <span className="text-sm font-inter font-medium">{t('back')}</span>
               </button>
-              <h1 className="text-2xl font-playfair font-bold text-foreground">
+              <h1 className="text-3xl font-playfair font-bold text-foreground mb-2">
                 {t('speakToAdvisor')}
               </h1>
-              <p className="text-sm text-muted-foreground font-inter mt-1">
-                Get personalized guidance from experts
+              <p className="text-base text-muted-foreground font-inter">
+                {t('getPersonalizedGuidance') || 'Get personalized guidance from experts'}
               </p>
             </div>
           </div>
 
-          {/* Stats Grid */}
-          <div className="px-4 py-4 bg-muted/30">
-            <div className="grid grid-cols-2 gap-3">
+          {/* Stats Grid with Background */}
+          <div className="relative px-4 py-6 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-muted/50 to-background z-0"></div>
+            <div className="relative z-10 grid grid-cols-2 gap-3">
               {advisorStats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
-                  <div key={index} className="bg-background rounded-xl p-3 border border-border">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <IconComponent className="h-4 w-4 text-primary" />
+                  <div key={index} className="bg-background/80 backdrop-blur-sm rounded-xl p-4 border border-border shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                        <IconComponent className="h-5 w-5 text-primary" />
                       </div>
-                      <div className="text-xl font-playfair font-bold text-foreground">
+                      <div className="text-2xl font-playfair font-bold text-foreground">
                         {stat.number}
                       </div>
                     </div>
-                    <div className="text-xs text-muted-foreground font-inter">
+                    <div className="text-xs text-muted-foreground font-inter font-medium">
                       {stat.label}
                     </div>
                   </div>
@@ -129,30 +130,35 @@ const ContactAdvisor = () => {
           </div>
 
           {/* Quick Contact Methods */}
-          <div className="px-4 py-4">
-            <h2 className="text-lg font-semibold font-playfair mb-3">{t('chooseContactMethod')}</h2>
-            <div className="space-y-2">
-              {contactMethods.map((method, index) => {
-                const IconComponent = method.icon;
-                return (
-                  <button
-                    key={index}
-                    onClick={method.action}
-                    className="w-full flex items-center justify-between p-4 bg-background border border-border rounded-xl active:scale-[0.98] transition-transform"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <IconComponent className="h-5 w-5 text-primary" />
+          <div className="relative px-4 py-6 overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-xl font-semibold font-playfair mb-4">{t('chooseContactMethod')}</h2>
+              <div className="space-y-3">
+                {contactMethods.map((method, index) => {
+                  const IconComponent = method.icon;
+                  return (
+                    <button
+                      key={index}
+                      onClick={method.action}
+                      className="w-full flex items-center justify-between p-4 bg-background/90 backdrop-blur-sm border border-border rounded-xl shadow-sm hover:shadow-md active:scale-[0.98] transition-all"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                          <IconComponent className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="text-left">
+                          <div className="font-semibold font-inter text-sm">{method.title}</div>
+                          <div className="text-xs text-muted-foreground font-inter">{method.details}</div>
+                        </div>
                       </div>
-                      <div className="text-left">
-                        <div className="font-medium font-inter text-sm">{method.title}</div>
-                        <div className="text-xs text-muted-foreground font-inter">{method.details}</div>
-                      </div>
-                    </div>
-                    <ChevronLeft className="w-5 h-5 text-muted-foreground rotate-180" />
-                  </button>
-                );
-              })}
+                      <ChevronLeft className="w-5 h-5 text-muted-foreground rotate-180" />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
@@ -229,47 +235,56 @@ const ContactAdvisor = () => {
           </div>
 
           {/* Office Info */}
-          <div className="px-4 py-4 space-y-3 pb-24">
-            <div className="bg-muted/50 rounded-xl p-4 border border-border">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-sm font-inter mb-1">{t('ourOffice')}</h3>
-                  <p className="text-xs text-muted-foreground font-inter">
-                    123 Boulevard des Martyrs<br />
-                    Alger Centre, 16000<br />
-                    Algiers, Algeria
-                  </p>
-                </div>
-              </div>
+          <div className="relative px-4 py-6 space-y-3 pb-24 overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <div className="absolute inset-0 bg-gradient-to-t from-muted/30 via-background to-transparent"></div>
             </div>
-
-            <div className="bg-muted/50 rounded-xl p-4 border border-border">
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-sm font-inter mb-1">{t('businessHours')}</h3>
-                  <div className="text-xs text-muted-foreground font-inter space-y-0.5">
-                    <p>{t('mondayFriday')}</p>
-                    <p>{t('saturday')}</p>
-                    <p>{t('sunday')}</p>
+            <div className="relative z-10 space-y-3">
+              <div className="bg-background/80 backdrop-blur-sm rounded-xl p-4 border border-border shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-sm font-inter mb-1">{t('ourOffice')}</h3>
+                    <p className="text-xs text-muted-foreground font-inter">
+                      123 Boulevard des Martyrs<br />
+                      Alger Centre, 16000<br />
+                      Algiers, Algeria
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-gradient-primary rounded-xl p-4 text-primary-foreground">
-              <h3 className="font-semibold text-sm font-inter mb-2 text-center">{t('needImmediateHelp')}</h3>
-              <p className="text-xs mb-3 opacity-90 text-center">{t('call247Hotline')}</p>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="w-full font-inter text-sm h-9"
-                onClick={() => window.open('tel:+213021999999')}
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                +213 (0) 21 999 999
-              </Button>
+              <div className="bg-background/80 backdrop-blur-sm rounded-xl p-4 border border-border shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Clock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-sm font-inter mb-1">{t('businessHours')}</h3>
+                    <div className="text-xs text-muted-foreground font-inter space-y-0.5">
+                      <p>{t('mondayFriday')}</p>
+                      <p>{t('saturday')}</p>
+                      <p>{t('sunday')}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-primary to-primary/80 rounded-xl p-5 text-primary-foreground shadow-lg">
+                <h3 className="font-semibold text-base font-inter mb-2 text-center">{t('needImmediateHelp')}</h3>
+                <p className="text-xs mb-3 opacity-90 text-center">{t('call247Hotline')}</p>
+                <Button 
+                  variant="secondary" 
+                  size="sm" 
+                  className="w-full font-inter text-sm h-10 font-semibold"
+                  onClick={() => window.open('tel:+213021999999')}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  +213 (0) 21 999 999
+                </Button>
+              </div>
             </div>
           </div>
         </div>

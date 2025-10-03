@@ -564,6 +564,7 @@ const allTranslations = {
       listings: 'Mes Annonces',
       manageProperties: 'Gérez vos propriétés et leurs performances',
       newListing: 'Nouvelle Annonce',
+      postProperty: 'Publier une Propriété',
       activeListings: 'Annonces Actives',
       totalMessages: 'Total Messages',
       totalViews: 'Total Vues',
@@ -574,6 +575,7 @@ const allTranslations = {
       noListingsYet: 'Aucune annonce encore',
       createFirstListing: 'Créez votre première annonce pour commencer à recevoir des demandes',
       createMyFirstListing: 'Créer ma première annonce',
+      confirmDelete: 'Êtes-vous sûr de vouloir supprimer cette propriété?',
       // Messages page
       messagesPage: 'Messages',
       manageContactRequests: 'Gérez les demandes de contact pour vos propriétés',
@@ -592,6 +594,10 @@ const allTranslations = {
       loadingMessages: 'Chargement des messages...',
       calendar: 'Calendrier des Propriétés'
     },
+    
+    satisfactionRate: 'Taux de satisfaction',
+    back: 'Retour',
+    selectCurrency: 'Choisir la devise',
 
     // Admin translations
     admin: {
@@ -1200,6 +1206,7 @@ const allTranslations = {
       listings: 'My Listings',
       manageProperties: 'Manage your properties and their performance',
       newListing: 'New Listing',
+      postProperty: 'Post Property',
       activeListings: 'Active Listings',
       totalMessages: 'Total Messages',
       totalViews: 'Total Views',
@@ -1210,6 +1217,7 @@ const allTranslations = {
       noListingsYet: 'No listings yet',
       createFirstListing: 'Create your first listing to start receiving inquiries',
       createMyFirstListing: 'Create my first listing',
+      confirmDelete: 'Are you sure you want to delete this property?',
       // Messages page
       messagesPage: 'Messages',
       manageContactRequests: 'Manage contact requests for your properties',
@@ -1228,6 +1236,17 @@ const allTranslations = {
       loadingMessages: 'Loading messages...',
       calendar: 'Property Calendar'
     },
+    
+    satisfactionRate: 'Satisfaction Rate',
+    back: 'Back',
+    selectCurrency: 'Select Currency',
+    preferences: 'Preferences',
+    language: 'Language',
+    currency: 'Currency',
+    wishlist: 'Wishlist',
+    settings: 'Settings',
+    messages: 'Messages',
+    getPersonalizedGuidance: 'Get personalized guidance from experts',
 
     // Admin translations
     admin: {
@@ -1849,6 +1868,7 @@ const allTranslations = {
       listings: 'قوائمي',
       manageProperties: 'إدارة عقاراتك وأدائها',
       newListing: 'قائمة جديدة',
+      postProperty: 'نشر عقار',
       activeListings: 'القوائم النشطة',
       totalMessages: 'إجمالي الرسائل',
       totalViews: 'إجمالي المشاهدات',
@@ -1859,6 +1879,7 @@ const allTranslations = {
       noListingsYet: 'لا توجد قوائم بعد',
       createFirstListing: 'أنشئ قائمتك الأولى لبدء استقبال الاستفسارات',
       createMyFirstListing: 'إنشاء قائمتي الأولى',
+      confirmDelete: 'هل أنت متأكد من حذف هذا العقار؟',
       // Messages page
       messagesPage: 'الرسائل',
       manageContactRequests: 'إدارة طلبات التواصل لعقاراتك',
@@ -1876,7 +1897,18 @@ const allTranslations = {
       noContactRequests: 'لم تتلق أي طلبات تواصل حتى الآن.',
       loadingMessages: 'جاري تحميل الرسائل...',
       calendar: 'تقويم العقارات'
-    }
+    },
+    
+    satisfactionRate: 'معدل الرضا',
+    back: 'رجوع',
+    selectCurrency: 'اختيار العملة',
+    preferences: 'التفضيلات',
+    language: 'اللغة',
+    currency: 'العملة',
+    wishlist: 'المفضلة',
+    settings: 'الإعدادات',
+    messages: 'الرسائل',
+    getPersonalizedGuidance: 'احصل على إرشادات مخصصة من الخبراء',
   }
 };
 

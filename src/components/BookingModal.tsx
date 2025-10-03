@@ -35,17 +35,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
   const { isAuthenticated } = useAuth();
 
   // ---- Stripe constraints ----
-  const MIN_EUR = 1; // Reduced minimum to allow small payments
+  const MIN_EUR = 1; // Minimum EUR amount for Stripe
+  const { currentCurrency } = useCurrency();
 
-  // Calculate booking details - treat property price as EUR only
-  const basePrice = Number(property.price) || 0;
+  // Calculate booking details 
+  // Property prices are stored in DZD, convert to EUR for payment
+  const basePriceDZD = Number(property.price) || 0;
+  
+  // Exchange rate: 1 EUR = ~135 DZD (approximate)
+  const DZD_TO_EUR = 1 / 135;
+  const basePriceEUR = basePriceDZD * DZD_TO_EUR;
 
   // Convert monthly/weekly price to nightly when short-stay
-  let dailyPrice = basePrice;
+  let dailyPriceEUR = basePriceEUR;
   if (property.price_type === 'monthly' && property.category === 'short-stay') {
-    dailyPrice = basePrice / 30.44;
+    dailyPriceEUR = basePriceEUR / 30.44;
   } else if (property.price_type === 'weekly' && property.category === 'short-stay') {
-    dailyPrice = basePrice / 7;
+    dailyPriceEUR = basePriceEUR / 7;
   }
 
   const nights =
@@ -54,23 +60,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
       : 0;
 
   console.log('BookingModal Debug:', {
-    propertyPrice: property.price,
+    propertyPriceDZD: property.price,
     priceType: property.price_type,
     category: property.category,
-    basePrice,
-    dailyPrice,
+    basePriceEUR,
+    dailyPriceEUR,
     nights,
-    subtotal: dailyPrice * nights
+    subtotal: dailyPriceEUR * nights
   });
 
-  const subtotal = dailyPrice * nights;
-  const bookingFee = Math.round(subtotal * 0.05 * 100) / 100; // 5% booking fee
-  const securityDeposit = Math.round(subtotal * 0.2 * 100) / 100; // 20% security deposit
-  let totalAmount = subtotal + bookingFee;
+  const subtotalEUR = dailyPriceEUR * nights;
+  const bookingFeeEUR = Math.round(subtotalEUR * 0.05 * 100) / 100; // 5% booking fee
+  const securityDepositEUR = Math.round(subtotalEUR * 0.2 * 100) / 100; // 20% security deposit
+  let totalAmountEUR = subtotalEUR + bookingFeeEUR;
 
   // Apply minimum EUR constraint and round to 2 decimals
-  const finalTotalAmount = Math.max(MIN_EUR, Math.round(totalAmount * 100) / 100);
-  const finalSecurityDeposit = Math.max(MIN_EUR, Math.round(securityDeposit * 100) / 100);
+  const finalTotalAmount = Math.max(MIN_EUR, Math.round(totalAmountEUR * 100) / 100);
+  const finalSecurityDeposit = Math.max(MIN_EUR, Math.round(securityDepositEUR * 100) / 100);
 
   const isFormValid = Boolean(checkInDate && checkOutDate && nights > 0 && guestsCount > 0);
   const canPayBooking = isFormValid && finalTotalAmount >= MIN_EUR;
@@ -261,24 +267,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                 <>
                   <div className="flex justify-between text-sm">
                     <span>
-                      {formatPrice(dailyPrice)} × {nights} night{nights !== 1 ? 's' : ''}
+                      €{dailyPriceEUR.toFixed(2)} × {nights} night{nights !== 1 ? 's' : ''}
                     </span>
-                    <span>{formatPrice(subtotal)}</span>
+                    <span>€{subtotalEUR.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Booking fee</span>
-                    <span>{formatPrice(bookingFee)}</span>
+                    <span>Booking fee (5%)</span>
+                    <span>€{bookingFeeEUR.toFixed(2)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>{formatPrice(finalTotalAmount)}</span>
+                    <span>Total (EUR)</span>
+                    <span>€{finalTotalAmount.toFixed(2)}</span>
                   </div>
                   <div className="text-xs text-gray-600">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      Security deposit: {formatPrice(finalSecurityDeposit)} (refundable)
+                      Security deposit: €{finalSecurityDeposit.toFixed(2)} (refundable)
                     </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    Displayed in {currentCurrency}, charged in EUR
                   </div>
                 </>
               )}
@@ -301,7 +310,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                     disabled={!canPayBooking}
                   >
                     <CreditCard className="w-4 h-4 mr-2" />
-                    Pay {formatPrice(finalTotalAmount)}
+                    Pay €{finalTotalAmount.toFixed(2)}
                   </Button>
                   {!canPayBooking && (
                     <div className="text-xs text-muted-foreground">
@@ -309,7 +318,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                     </div>
                   )}
 
-                  {securityDeposit > 0 && (
+                  {securityDepositEUR > 0 && (
                     <>
                       <Button
                         onClick={handlePayDeposit}
@@ -318,7 +327,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                         size="lg"
                         disabled={!canPayDeposit}
                       >
-                        Pay Security Deposit: {formatPrice(finalSecurityDeposit)}
+                        Pay Security Deposit: €{finalSecurityDeposit.toFixed(2)}
                       </Button>
                       {!canPayDeposit && (
                         <div className="text-xs text-muted-foreground">

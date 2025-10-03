@@ -81,7 +81,7 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <Home className="h-5 w-5" />
-                    <span className="text-base font-medium">Home</span>
+                    <span className="text-base font-medium">{t('home')}</span>
                   </button>
                   
                   <button
@@ -89,7 +89,7 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <Building2 className="h-5 w-5" />
-                    <span className="text-base font-medium">Buy</span>
+                    <span className="text-base font-medium">{t('buy')}</span>
                   </button>
                   
                   <button
@@ -97,7 +97,7 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <Building2 className="h-5 w-5" />
-                    <span className="text-base font-medium">Rent</span>
+                    <span className="text-base font-medium">{t('rent')}</span>
                   </button>
                   
                   <button
@@ -105,7 +105,7 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <Building2 className="h-5 w-5" />
-                    <span className="text-base font-medium">Short Stay</span>
+                    <span className="text-base font-medium">{t('shortStay')}</span>
                   </button>
 
                   <button
@@ -113,7 +113,7 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <MapPin className="h-5 w-5" />
-                    <span className="text-base font-medium">About</span>
+                    <span className="text-base font-medium">{t('about')}</span>
                   </button>
 
                   <button
@@ -121,79 +121,91 @@ const MobileHeader = () => {
                     className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                   >
                     <MapPin className="h-5 w-5" />
-                    <span className="text-base font-medium">Blog</span>
+                    <span className="text-base font-medium">{t('blog')}</span>
                   </button>
 
                   {user && (
-                    <button
-                      onClick={() => handleNavigation("/host/dashboard")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <Building2 className="h-5 w-5" />
-                      <span className="text-base font-medium">Host Dashboard</span>
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleNavigation("/host/dashboard")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <Building2 className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('host.dashboard')}</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => handleNavigation("/publish-property")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <Building2 className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('publishProperty')}</span>
+                      </button>
+                    </>
                   )}
                 </div>
 
                 <Separator className="my-4" />
 
                 {/* Your Account Section */}
-                <div className="px-4">
-                  <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">Your Account</h3>
-                  <div className="space-y-1">
-                    <button
-                      onClick={() => handleNavigation("/wishlist")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="text-base font-medium">Wishlist</span>
-                    </button>
+                {user && (
+                  <div className="px-4">
+                    <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">{t('myProfile')}</h3>
+                    <div className="space-y-1">
+                      <button
+                        onClick={() => handleNavigation("/wishlist")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <Home className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('wishlist') || 'Wishlist'}</span>
+                      </button>
 
-                    <button
-                      onClick={() => handleNavigation("/bookings")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <Calendar className="h-5 w-5" />
-                      <span className="text-base font-medium">My Trips</span>
-                    </button>
+                      <button
+                        onClick={() => handleNavigation("/bookings")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <Calendar className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('myBookings')}</span>
+                      </button>
 
-                    <button
-                      onClick={() => handleNavigation("/messages")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <MessageCircle className="h-5 w-5" />
-                      <span className="text-base font-medium">Messages</span>
-                    </button>
+                      <button
+                        onClick={() => handleNavigation("/messages")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('messages') || 'Messages'}</span>
+                      </button>
 
-                    <button
-                      onClick={() => handleNavigation("/profile")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <User className="h-5 w-5" />
-                      <span className="text-base font-medium">Profile</span>
-                    </button>
+                      <button
+                        onClick={() => handleNavigation("/profile")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <User className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('myProfile')}</span>
+                      </button>
 
-                    <button
-                      onClick={() => handleNavigation("/profile")}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <Settings className="h-5 w-5" />
-                      <span className="text-base font-medium">Settings</span>
-                    </button>
+                      <button
+                        onClick={() => handleNavigation("/profile")}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                      >
+                        <Settings className="h-5 w-5" />
+                        <span className="text-base font-medium">{t('settings') || 'Settings'}</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <Separator className="my-4" />
 
                 {/* Preferences Section */}
                 <div className="px-4 pb-4">
-                  <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">Preferences</h3>
+                  <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">{t('preferences') || 'Preferences'}</h3>
                   
                   {/* Language Selection */}
                   <div className="px-4 py-3">
                     <div className="flex items-center gap-2 mb-3">
                       <Globe className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-sm font-medium">Language</span>
+                      <span className="text-sm font-medium">{t('language') || 'Language'}</span>
                     </div>
                     <div className="flex gap-2">
                       {(['EN', 'FR', 'AR'] as const).map((lang) => (
@@ -216,7 +228,7 @@ const MobileHeader = () => {
                   <div className="px-4 py-3">
                     <div className="flex items-center gap-2 mb-3">
                       <DollarSign className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-sm font-medium">Currency</span>
+                      <span className="text-sm font-medium">{t('currency') || 'Currency'}</span>
                     </div>
                     <div className="flex gap-2">
                       {(['USD', 'EUR', 'DZD'] as const).map((currency) => (
@@ -245,7 +257,7 @@ const MobileHeader = () => {
                         className="w-full flex items-center gap-3 px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
                       >
                         <LogOut className="h-5 w-5" />
-                        <span className="text-base font-medium">Logout ({user.email?.split('@')[0]})</span>
+                        <span className="text-base font-medium">{t('logout')} ({user.email?.split('@')[0]})</span>
                       </button>
                     </div>
                   </>

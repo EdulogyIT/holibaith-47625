@@ -101,14 +101,19 @@ export default function HostListings() {
 
   return (
     <div className="space-y-6">
-      <div className={isMobile ? "space-y-2" : "flex items-center justify-between"}>
+      <div className={isMobile ? "space-y-3" : "flex items-center justify-between"}>
         <div>
           <h1 className={`font-bold text-foreground ${isMobile ? 'text-2xl' : 'text-3xl'}`}>{t('host.listings')}</h1>
           <p className={`text-muted-foreground ${isMobile ? 'text-sm' : 'mt-2'}`}>
             {t('host.manageProperties')}
           </p>
         </div>
-        {!isMobile && (
+        {isMobile ? (
+          <Button onClick={() => navigate('/publish-property')} className="w-full" size="lg">
+            <Plus className="h-4 w-4 mr-2" />
+            {t('host.postProperty')}
+          </Button>
+        ) : (
           <Button onClick={() => navigate('/publish-property')}>
             <Plus className="h-4 w-4 mr-2" />
             {t('host.newListing')}
