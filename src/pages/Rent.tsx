@@ -143,7 +143,7 @@ const Rent = () => {
         </div>
       </div>
       <CardHeader className={cn(isMobile ? "p-2 pb-1" : "pb-2")}>
-        <CardTitle className={cn("font-semibold text-foreground line-clamp-2", isMobile ? "text-xs" : "text-lg")}>
+        <CardTitle className={cn("font-semibold text-foreground line-clamp-2 capitalize", isMobile ? "text-xs" : "text-lg")}>
           {property.title}
         </CardTitle>
         <div className="flex items-center text-muted-foreground">

@@ -43,6 +43,7 @@ const MessageOwnerModal = ({ isOpen, onClose, ownerName, ownerEmail, propertyTit
     setIsSubmitting(true);
 
     try {
+      // First, insert the contact request
       const { error } = await supabase
         .from('contact_requests')
         .insert({
@@ -56,6 +57,58 @@ const MessageOwnerModal = ({ isOpen, onClose, ownerName, ownerEmail, propertyTit
 
       if (error) {
         throw error;
+      }
+
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // If user is logged in, create/find conversation and send message
+      if (user) {
+        // Get property owner's user_id
+        const { data: property } = await supabase
+          .from('properties')
+          .select('user_id')
+          .eq('id', propertyId)
+          .single();
+
+        if (property?.user_id) {
+          // Check if conversation already exists between user and property owner
+          const { data: existingConv } = await supabase
+            .from('conversations')
+            .select('id')
+            .eq('user_id', user.id)
+            .limit(1)
+            .maybeSingle();
+
+          let conversationId = existingConv?.id;
+
+          // Create conversation if it doesn't exist
+          if (!conversationId) {
+            const { data: newConv, error: convError } = await supabase
+              .from('conversations')
+              .insert({
+                user_id: user.id,
+                subject: `Inquiry about: ${propertyTitle}`
+              })
+              .select('id')
+              .single();
+
+            if (convError) throw convError;
+            conversationId = newConv.id;
+          }
+
+          // Send the message in the conversation
+          if (conversationId) {
+            await supabase
+              .from('messages')
+              .insert({
+                conversation_id: conversationId,
+                sender_id: user.id,
+                content: message,
+                message_type: 'text'
+              });
+          }
+        }
       }
 
       toast({

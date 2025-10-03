@@ -144,7 +144,7 @@ const ShortStay = () => {
         </div>
       </div>
       <CardHeader className={cn(isMobile ? "p-2 pb-1" : "pb-2")}>
-        <CardTitle className={cn("font-semibold text-foreground line-clamp-2", isMobile ? "text-xs" : "text-lg")}>
+        <CardTitle className={cn("font-semibold text-foreground line-clamp-2 capitalize", isMobile ? "text-xs" : "text-lg")}>
           {property.title}
         </CardTitle>
         <div className="flex items-center text-muted-foreground">
@@ -243,7 +243,7 @@ const ShortStay = () => {
                     <Calendar className="h-4 w-4 text-gray-400" />
                     <input
                       type="date"
-                      placeholder="Check-in"
+                      placeholder={t("checkIn")}
                       className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
                       value={new URLSearchParams(routerLocation.search).get("checkIn") || ""}
                       onChange={(e) => {
@@ -252,6 +252,28 @@ const ShortStay = () => {
                           newParams.set("checkIn", e.target.value);
                         } else {
                           newParams.delete("checkIn");
+                      }
+                      navigate({ search: newParams.toString() });
+                    }}
+                  />
+                  </div>
+                </div>
+                
+                {/* Check-out */}
+                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <input
+                      type="date"
+                      placeholder={t("checkOut")}
+                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
+                      value={new URLSearchParams(routerLocation.search).get("checkOut") || ""}
+                      onChange={(e) => {
+                        const newParams = new URLSearchParams(routerLocation.search);
+                        if (e.target.value) {
+                          newParams.set("checkOut", e.target.value);
+                        } else {
+                          newParams.delete("checkOut");
                         }
                         navigate({ search: newParams.toString() });
                       }}
@@ -259,12 +281,13 @@ const ShortStay = () => {
                   </div>
                 </div>
                 
+                {/* Travelers */}
                 <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4 text-gray-400" />
                     <input
                       type="number"
-                      placeholder="Guests"
+                      placeholder={t("travelers")}
                       className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
                       value={new URLSearchParams(routerLocation.search).get("travelers") || ""}
                       onChange={(e) => {

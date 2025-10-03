@@ -485,13 +485,13 @@ const Property = () => {
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div>
-                        <CardTitle className="text-3xl font-playfair mb-2">{property.title}</CardTitle>
+                        <CardTitle className="text-3xl font-playfair mb-2 capitalize">{property.title}</CardTitle>
                         <div className="flex items-center text-muted-foreground mb-2">
                           <MapPin className="w-5 h-5 mr-2" />
-                          <span className="text-lg font-inter">{property.city}, {property.location}</span>
+                          <span className="text-lg font-inter capitalize">{property.city}, {property.location}</span>
                         </div>
                       </div>
-                      <Badge variant="secondary" className="text-lg px-3 py-1 font-inter">{t(property.property_type) || property.property_type}</Badge>
+                      <Badge variant="secondary" className="text-lg px-3 py-1 font-inter capitalize">{t(property.property_type) || property.property_type}</Badge>
                     </div>
                     <div className="text-4xl font-bold text-primary font-playfair">{formatPrice(property.price, property.price_type)}</div>
                   </CardHeader>
@@ -532,7 +532,7 @@ const Property = () => {
 
                     <div className="space-y-4">
                       <h3 className="text-xl font-semibold font-playfair">{t('description')}</h3>
-                      <p className="text-base text-muted-foreground leading-relaxed font-inter">{property.description}</p>
+                      <p className="text-base text-muted-foreground leading-relaxed font-inter capitalize">{property.description}</p>
                     </div>
                   </CardContent>
                 </Card>
