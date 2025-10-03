@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import buyHeroBg from "@/assets/buy-hero-bg.jpg";
+import { searchAlgerianCities } from "@/data/algerianCities";
 
 type SearchVals = {
   location?: string;
@@ -20,9 +21,12 @@ type BuyHeroSearchProps = {
 };
 
 const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
-  const { t } = useLanguage();
+  const { t, currentLang } = useLanguage();
   const navigate = useNavigate();
   const routerLocation = useRouterLocation();
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
     location: "",
@@ -42,7 +46,32 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
 
   const updateFormField = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    
+    // Show city suggestions when typing in location field
+    if (field === 'location' && value.length > 0) {
+      const results = searchAlgerianCities(value, currentLang);
+      setSuggestions(results);
+      setShowSuggestions(true);
+    } else if (field === 'location') {
+      setShowSuggestions(false);
+    }
   };
+
+  const selectCity = (cityName: string) => {
+    setFormData((prev) => ({ ...prev, location: cityName }));
+    setShowSuggestions(false);
+  };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const isFormValid = () => formData.location.trim() !== "";
 
@@ -98,15 +127,37 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
         <Card className="max-w-5xl mx-auto p-6 md:p-8 bg-card/95 backdrop-blur-md border-border/30 shadow-elegant rounded-2xl">
           <form onSubmit={onSubmit} className="flex flex-col lg:flex-row gap-4">
             {/* Location Input */}
-            <div className="flex-[2] relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <div className="flex-[2] relative" ref={suggestionsRef}>
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
               <Input
                 type="text"
                 placeholder={t("cityNeighborhood")}
                 value={formData.location}
                 onChange={(e) => updateFormField("location", e.target.value)}
+                onFocus={() => {
+                  if (formData.location) {
+                    setSuggestions(searchAlgerianCities(formData.location, currentLang));
+                    setShowSuggestions(true);
+                  }
+                }}
                 className="h-14 pl-12 text-base font-inter bg-background border border-input"
+                autoComplete="off"
               />
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+                  {suggestions.map((city, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => selectCity(currentLang === 'AR' ? city.nameAr : city.nameFr)}
+                      className="w-full px-4 py-3 text-left hover:bg-accent hover:text-accent-foreground transition-colors border-b border-border last:border-b-0 flex items-center gap-2"
+                    >
+                      <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-sm">{currentLang === 'AR' ? city.nameAr : city.nameFr}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Property Type */}

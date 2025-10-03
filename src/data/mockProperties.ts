@@ -35,7 +35,8 @@ export const mockProperties: Record<string, any> = {
     contact_phone: "+213 555 123 456",
     contact_email: "ahmed.benali@example.com",
     created_at: new Date().toISOString(),
-    user_id: "mock-user-1"
+    user_id: "mock-user-1",
+    status: 'active'
   },
   "2": {
     id: "2",

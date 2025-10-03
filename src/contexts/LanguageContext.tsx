@@ -92,7 +92,7 @@ const allTranslations = {
     speakToAdvisor: 'Parler à un conseiller',
     
     // Services Section
-    threeWaysToLive: 'Trois façons de',
+    threeWaysToLive: 'Trois façons de vivre en Algérie',
     liveAlgeria: 'vivre l\'Algérie',
     platformDesc: 'Une plateforme unique pour tous vos besoins immobiliers. Que vous cherchiez à acheter, louer ou séjourner, nous vous accompagnons avec confiance et transparence.',
     buyTitle: 'Acheter',
@@ -732,7 +732,7 @@ const allTranslations = {
     speakToAdvisor: 'Speak to an advisor',
     
     // Services Section
-    threeWaysToLive: 'Three ways to',
+    threeWaysToLive: 'Three ways to live in Algeria',
     liveAlgeria: 'live Algeria',
     platformDesc: 'A unique platform for all your real estate needs. Whether you\'re looking to buy, rent or stay, we support you with confidence and transparency.',
     buyTitle: 'Buy',
@@ -1381,8 +1381,8 @@ const allTranslations = {
     speakToAdvisor: 'تحدث إلى مستشار',
     
     // Services Section
-    threeWaysToLive: 'ثلاث طرق لـ',
-    liveAlgeria: 'عيش الجزائر',
+    threeWaysToLive: 'ثلاث طرق للعيش في الجزائر',
+    liveAlgeria: 'للعيش في الجزائر',
     platformDesc: 'منصة فريدة لجميع احتياجاتك العقارية. سواء كنت تبحث عن الشراء أو الإيجار أو الإقامة، نحن ندعمك بثقة وشفافية.',
     buyTitle: 'شراء',
     buySubtitle: 'اعثر على منزل المستقبل',

@@ -40,8 +40,8 @@ const ThreeWaysSection = () => {
   ];
 
   return (
-    <section className="px-4 py-4 bg-gray-50">
-      <h2 className="text-xl font-bold text-center mb-3">
+    <section className="px-4 py-8 bg-gray-50">
+      <h2 className="text-2xl font-bold text-center mb-6 font-playfair">
         {t('threeWaysToLive')}
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Search, MapPin, DollarSign, Users, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,13 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { cn } from "@/lib/utils";
+import { searchAlgerianCities } from "@/data/algerianCities";
 
 type DateRange = { from?: Date; to?: Date };
 
 const MobileHeroSearch = () => {
-  const { t } = useLanguage();
+  const { t, currentLang } = useLanguage();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<'buy' | 'stay' | 'rent'>('stay');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
   
   // Form state
   const [location, setLocation] = useState("");
@@ -22,6 +26,32 @@ const MobileHeroSearch = () => {
   const [budget, setBudget] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [travelers, setTravelers] = useState("");
+
+  const handleLocationChange = (value: string) => {
+    setLocation(value);
+    if (value.length > 0) {
+      const results = searchAlgerianCities(value, currentLang);
+      setSuggestions(results);
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  const selectCity = (cityName: string) => {
+    setLocation(cityName);
+    setShowSuggestions(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const tabs = [
     { id: 'buy' as const, label: t('buy') || 'Buy' },
@@ -81,7 +111,7 @@ const MobileHeroSearch = () => {
       </div>
 
       {/* Search Bar with Integrated Button */}
-      <div className="relative">
+      <div className="relative" ref={suggestionsRef}>
         <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
         <Input
           type="text"
@@ -93,9 +123,16 @@ const MobileHeroSearch = () => {
               : t('stayDestination') || 'Destination...'
           }
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={(e) => handleLocationChange(e.target.value)}
+          onFocus={() => {
+            if (location) {
+              setSuggestions(searchAlgerianCities(location, currentLang));
+              setShowSuggestions(true);
+            }
+          }}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           className="pl-12 pr-16 h-12 rounded-2xl bg-white text-base"
+          autoComplete="off"
         />
         <Button
           onClick={handleSearch}
@@ -110,6 +147,21 @@ const MobileHeroSearch = () => {
         >
           <Search className="h-4 w-4" />
         </Button>
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-[200] max-h-60 overflow-y-auto">
+            {suggestions.map((city, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => selectCity(currentLang === 'AR' ? city.nameAr : city.nameFr)}
+                className="w-full px-4 py-3 text-left hover:bg-accent hover:text-accent-foreground transition-colors border-b border-border last:border-b-0 flex items-center gap-2"
+              >
+                <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-sm">{currentLang === 'AR' ? city.nameAr : city.nameFr}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Filter Options Based on Tab */}
