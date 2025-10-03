@@ -236,15 +236,15 @@ const ShortStay = () => {
                 </div>
               </div>
 
-              {/* Filters Row */}
-              <div className="flex gap-2">
-                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+              {/* Date Filters Row */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="relative bg-white rounded-xl p-3 shadow-lg">
+                  <label className="text-xs text-gray-500 mb-1 block">{t("checkIn")}</label>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
                     <input
                       type="date"
-                      placeholder={t("checkIn")}
-                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
+                      className="flex-1 text-gray-700 outline-none text-sm min-w-0"
                       value={new URLSearchParams(routerLocation.search).get("checkIn") || ""}
                       onChange={(e) => {
                         const newParams = new URLSearchParams(routerLocation.search);
@@ -252,21 +252,20 @@ const ShortStay = () => {
                           newParams.set("checkIn", e.target.value);
                         } else {
                           newParams.delete("checkIn");
-                      }
-                      navigate({ search: newParams.toString() });
-                    }}
-                  />
+                        }
+                        navigate({ search: newParams.toString() });
+                      }}
+                    />
                   </div>
                 </div>
                 
-                {/* Check-out */}
-                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+                <div className="relative bg-white rounded-xl p-3 shadow-lg">
+                  <label className="text-xs text-gray-500 mb-1 block">{t("checkOut")}</label>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
                     <input
                       type="date"
-                      placeholder={t("checkOut")}
-                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
+                      className="flex-1 text-gray-700 outline-none text-sm min-w-0"
                       value={new URLSearchParams(routerLocation.search).get("checkOut") || ""}
                       onChange={(e) => {
                         const newParams = new URLSearchParams(routerLocation.search);
@@ -280,27 +279,29 @@ const ShortStay = () => {
                     />
                   </div>
                 </div>
-                
-                {/* Travelers */}
-                <div className="flex-1 relative bg-white rounded-xl p-3 shadow-lg">
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4 text-gray-400" />
-                    <input
-                      type="number"
-                      placeholder={t("travelers")}
-                      className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
-                      value={new URLSearchParams(routerLocation.search).get("travelers") || ""}
-                      onChange={(e) => {
-                        const newParams = new URLSearchParams(routerLocation.search);
-                        if (e.target.value) {
-                          newParams.set("travelers", e.target.value);
-                        } else {
-                          newParams.delete("travelers");
-                        }
-                        navigate({ search: newParams.toString() });
-                      }}
-                    />
-                  </div>
+              </div>
+
+              {/* Travelers Filter */}
+              <div className="relative bg-white rounded-xl p-3 shadow-lg">
+                <label className="text-xs text-gray-500 mb-1 block">{t("travelers")}</label>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Number of guests"
+                    className="flex-1 text-gray-700 placeholder:text-gray-400 outline-none text-sm"
+                    value={new URLSearchParams(routerLocation.search).get("travelers") || ""}
+                    onChange={(e) => {
+                      const newParams = new URLSearchParams(routerLocation.search);
+                      if (e.target.value) {
+                        newParams.set("travelers", e.target.value);
+                      } else {
+                        newParams.delete("travelers");
+                      }
+                      navigate({ search: newParams.toString() });
+                    }}
+                  />
                 </div>
               </div>
             </div>

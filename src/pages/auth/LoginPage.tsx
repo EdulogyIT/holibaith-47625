@@ -35,7 +35,21 @@ export default function LoginPage() {
         title: t('loginSuccess'),
         description: t('loginSuccessDesc'),
       });
-      navigate(from, { replace: true });
+      
+      // Check if user is admin and redirect accordingly
+      setTimeout(async () => {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('email', formData.email)
+          .single();
+        
+        if (profile?.role === 'admin') {
+          navigate('/admin', { replace: true });
+        } else {
+          navigate(from, { replace: true });
+        }
+      }, 100);
     } else {
       toast({
         title: 'Login Failed',
