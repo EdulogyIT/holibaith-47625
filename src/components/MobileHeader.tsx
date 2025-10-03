@@ -126,13 +126,25 @@ const MobileHeader = () => {
 
                   {user && (
                     <>
-                      <button
-                        onClick={() => handleNavigation("/host/dashboard")}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
-                      >
-                        <Building2 className="h-5 w-5" />
-                        <span className="text-base font-medium">{t('host.dashboard')}</span>
-                      </button>
+                      {user.role === 'admin' && (
+                        <button
+                          onClick={() => handleNavigation("/admin")}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                        >
+                          <Settings className="h-5 w-5" />
+                          <span className="text-base font-medium">Admin Dashboard</span>
+                        </button>
+                      )}
+                      
+                      {user.role === 'host' && (
+                        <button
+                          onClick={() => handleNavigation("/host/dashboard")}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
+                        >
+                          <Building2 className="h-5 w-5" />
+                          <span className="text-base font-medium">{t('host.dashboard')}</span>
+                        </button>
+                      )}
                       
                       <button
                         onClick={() => handleNavigation("/publish-property")}
