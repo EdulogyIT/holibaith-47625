@@ -161,7 +161,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                       setShowSuggestions(true);
                     }
                   }}
-                  className="h-14 pl-12 text-base font-inter bg-background border border-input"
+                  className="h-10 pl-12 text-sm font-inter bg-background border border-input"
                   autoComplete="off"
                 />
                 {showSuggestions && suggestions.length > 0 && (
@@ -187,7 +187,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                 <Input
                   type="text"
                   placeholder={t("travelers")}
-                  className="h-14 pl-12 text-base font-inter"
+                  className="h-10 pl-12 text-sm font-inter"
                   value={formData.travelers}
                   onChange={(e) => updateFormField("travelers", e.target.value)}
                 />
@@ -203,11 +203,11 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                       type="button"
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-inter text-base h-14 bg-background border border-input",
+                        "w-full justify-start text-left font-inter text-sm h-10 bg-background border border-input",
                         !formData.dateRange?.from && "text-muted-foreground"
                       )}
                     >
-                      <CalendarIcon className="mr-3 h-5 w-5" />
+                      <CalendarIcon className="mr-2 h-4 w-4" />
                       <span>
                         {formData.dateRange?.from
                           ? format(formData.dateRange.from, "dd/MM/yyyy")
@@ -233,12 +233,12 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                       type="button"
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-inter text-base h-14 bg-background border border-input",
+                        "w-full justify-start text-left font-inter text-sm h-10 bg-background border border-input",
                         !formData.dateRange?.to && "text-muted-foreground"
                       )}
                       disabled={!formData.dateRange?.from}
                     >
-                      <CalendarIcon className="mr-3 h-5 w-5" />
+                      <CalendarIcon className="mr-2 h-4 w-4" />
                       <span>
                         {formData.dateRange?.to
                           ? format(formData.dateRange.to, "dd/MM/yyyy")
@@ -261,7 +261,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                 type="submit"
                 disabled={!isFormValid()}
                 className={cn(
-                  "h-14 px-8 font-inter font-semibold text-base transition-all duration-300 min-w-[140px]",
+                  "h-10 px-6 font-inter font-semibold text-sm transition-all duration-300 min-w-[120px]",
                   isFormValid()
                     ? "bg-gradient-primary hover:shadow-elegant text-white"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"

@@ -140,7 +140,7 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
                     setShowSuggestions(true);
                   }
                 }}
-                className="h-14 pl-12 text-base font-inter bg-background border border-input"
+                className="h-10 pl-12 text-sm font-inter bg-background border border-input"
                 autoComplete="off"
               />
               {showSuggestions && suggestions.length > 0 && (
@@ -163,7 +163,7 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
             {/* Property Type */}
             <div className="flex-1">
               <select
-                className="w-full h-14 px-4 py-3 bg-background border border-input rounded-md text-base font-inter text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ring-offset-background"
+                className="w-full h-10 px-4 py-2 bg-background border border-input rounded-md text-sm font-inter text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ring-offset-background"
                 value={formData.propertyType}
                 onChange={(e) => updateFormField("propertyType", e.target.value)}
               >
@@ -181,7 +181,7 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
               <Input
                 type="text"
                 placeholder={t("maxBudget")}
-                className="h-14 pl-12 text-base font-inter"
+                className="h-10 pl-12 text-sm font-inter"
                 value={formData.budget}
                 onChange={(e) => updateFormField("budget", e.target.value)}
               />
@@ -192,7 +192,7 @@ const BuyHeroSearch: React.FC<BuyHeroSearchProps> = ({ onSearch }) => {
               type="submit"
               disabled={!isFormValid()}
               className={cn(
-                "h-14 px-8 font-inter font-semibold text-base transition-all duration-300 min-w-[140px] flex items-center justify-center",
+                "h-10 px-6 font-inter font-semibold text-sm transition-all duration-300 min-w-[120px] flex items-center justify-center",
                 isFormValid()
                   ? "bg-gradient-primary hover:shadow-elegant text-white"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
