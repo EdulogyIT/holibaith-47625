@@ -1,34 +1,27 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   SidebarProvider, 
   Sidebar, 
-  SidebarContent, 
-  SidebarGroup, 
-  SidebarGroupContent, 
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger
+  SidebarContent
 } from '@/components/ui/sidebar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   LayoutDashboard, 
-  Calendar, 
   Building2, 
   Users, 
   MessageSquare, 
   Settings,
   LogOut,
   Home,
-  User
+  Menu,
+  FileText
 } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -38,15 +31,17 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useIsMobile();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const adminMenuItems = [
     { title: t('admin.dashboard'), url: '/admin', icon: LayoutDashboard },
     { title: t('admin.properties'), url: '/admin/properties', icon: Building2 },
     { title: t('admin.hostsGuests'), url: '/admin/users', icon: Users },
     { title: t('admin.messages'), url: '/admin/messages', icon: MessageSquare },
-    { title: 'Blogs', url: '/admin/blogs', icon: Building2 },
-    { title: t('admin.settings'), url: '/admin/settings', icon: Settings },
+    { title: 'Blogs', url: '/admin/blogs', icon: FileText },
+    { title: t('admin.settings'), url: '/admin/profile', icon: Settings },
   ];
 
   const handleLogout = () => {
@@ -54,160 +49,181 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     navigate('/');
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Header */}
-      {isMobile ? (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-card border-b h-14 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
+  // Mobile Layout
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile Header */}
+        <header className="fixed top-0 left-0 right-0 h-16 bg-background border-b border-border flex items-center justify-between px-4 z-50">
+          <div className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png" 
               alt="Holibayt" 
               className="h-8 w-auto"
             />
-            <span className="font-semibold text-base">Admin</span>
+            <h1 className="text-xl font-bold text-foreground">Admin</h1>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                    {user?.name?.slice(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
+                <Menu className="h-6 w-6" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <div className="px-2 py-1.5">
-                <div className="text-sm font-medium">{user?.name}</div>
-                <div className="text-xs text-muted-foreground">{user?.role}</div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <NavLink to="/">
-                  <Home className="mr-2 h-4 w-4" />
-                  Back to Home
-                </NavLink>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-      ) : (
-        <SidebarProvider>
-          <div className="min-h-screen flex w-full">
-            <Sidebar 
-              variant="sidebar"
-              className="w-64"
-              collapsible="none"
-            >
-              <SidebarContent>
-                <div className="p-6 border-b">
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] p-0">
+              <div className="flex flex-col h-full">
+                {/* Drawer Header */}
+                <div className="p-6 border-b border-border">
                   <div className="flex items-center gap-2">
                     <img 
                       src="/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png" 
                       alt="Holibayt" 
                       className="h-8 w-auto"
                     />
-                    <span className="font-semibold text-lg">Admin</span>
+                    <span className="font-semibold text-lg">Admin Panel</span>
                   </div>
                 </div>
 
-                <div className="p-4">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-3">{t('admin.administration')}</h3>
+                {/* Admin Dashboard Section */}
+                <div className="px-4 pt-6 flex-1">
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                    {t('admin.administration')}
+                  </h3>
                   <nav className="space-y-1">
                     {adminMenuItems.map((item) => (
-                      <NavLink 
+                      <Button
                         key={item.title}
-                        to={item.url} 
-                        end={item.url === '/admin'}
-                        className={({ isActive }) => 
-                          `flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
-                            isActive ? "bg-primary text-primary-foreground font-medium" : "hover:bg-muted"
-                          }`
-                        }
+                        variant="ghost"
+                        onClick={() => {
+                          navigate(item.url);
+                          setIsSheetOpen(false);
+                        }}
+                        className={cn(
+                          "w-full justify-start",
+                          location.pathname === item.url && "bg-primary text-primary-foreground"
+                        )}
                       >
-                        <item.icon className="mr-2 h-4 w-4" />
-                        <span>{item.title}</span>
-                      </NavLink>
+                        <item.icon className="h-4 w-4 mr-3" />
+                        {item.title}
+                      </Button>
                     ))}
                   </nav>
                 </div>
 
-                <div className="mt-auto p-4 border-t">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start p-2 h-auto">
-                        <Avatar className="h-8 w-8 mr-3">
-                          <AvatarImage src="" />
-                          <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                            {user?.name?.slice(0, 2).toUpperCase() || 'AD'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="text-left flex-1">
-                          <div className="text-sm font-medium">{user?.name}</div>
-                          <div className="text-xs text-muted-foreground">{user?.role}</div>
-                        </div>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem asChild>
-                        <NavLink to="/admin">
-                          <LayoutDashboard className="mr-2 h-4 w-4" />
-                          {t('admin.adminConsole')}
-                        </NavLink>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <NavLink to="/">
-                          <Home className="mr-2 h-4 w-4" />
-                          Back to Home
-                        </NavLink>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        {t('admin.logout')}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </SidebarContent>
-            </Sidebar>
-
-            <main className="flex-1">
-              <header className="h-16 border-b bg-background flex items-center justify-between px-4 md:px-6">
-                <div className="flex items-center">
-                  <SidebarTrigger />
-                  <div className="ml-4">
-                    <h1 className="text-lg md:text-xl font-semibold">{t('admin.adminPanel')}</h1>
+                {/* Bottom Actions */}
+                <div className="p-4 border-t border-border">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start mb-2"
+                    onClick={() => {
+                      navigate('/');
+                      setIsSheetOpen(false);
+                    }}
+                  >
+                    <Home className="h-4 w-4 mr-3" />
+                    Back to Home
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-destructive hover:text-destructive mb-2"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-3" />
+                    Logout
+                  </Button>
+                  <div className="text-xs text-muted-foreground px-3">
+                    Logged in as {user?.name}
                   </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => navigate('/')}>
-                  <Home className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </header>
-              
-              <div className="p-4 md:p-6">
-                {children}
               </div>
-            </main>
-          </div>
-        </SidebarProvider>
-      )}
+            </SheetContent>
+          </Sheet>
+        </header>
 
-      {/* Mobile Content */}
-      {isMobile && (
-        <main className="pt-14 pb-20">
-          <div className="p-4">
+        {/* Mobile Content */}
+        <main className="pt-16 pb-6 px-4 min-h-screen bg-background">
+          <div className="py-6">
             {children}
           </div>
         </main>
-      )}
-    </div>
+      </>
+    );
+  }
+
+  // Desktop Layout
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <Sidebar 
+          variant="sidebar"
+          className="w-64"
+          collapsible="none"
+        >
+          <SidebarContent>
+            <div className="p-6 border-b">
+              <div className="flex items-center gap-2">
+                <img 
+                  src="/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png" 
+                  alt="Holibayt" 
+                  className="h-8 w-auto"
+                />
+                <span className="font-semibold text-lg">Admin</span>
+              </div>
+            </div>
+
+            <div className="p-4">
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">{t('admin.administration')}</h3>
+              <nav className="space-y-1">
+                {adminMenuItems.map((item) => (
+                  <NavLink 
+                    key={item.title}
+                    to={item.url} 
+                    end={item.url === '/admin'}
+                    className={({ isActive }) => 
+                      `flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
+                        isActive ? "bg-primary text-primary-foreground font-medium" : "hover:bg-muted"
+                      }`
+                    }
+                  >
+                    <item.icon className="mr-2 h-4 w-4" />
+                    <span>{item.title}</span>
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
+
+            <div className="mt-auto p-4 border-t">
+              <div className="space-y-2">
+                <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/')}>
+                  <Home className="mr-2 h-4 w-4" />
+                  Back to Home
+                </Button>
+                <Button variant="ghost" className="w-full justify-start text-destructive hover:text-destructive" onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                Logged in as {user?.name}
+              </div>
+            </div>
+          </SidebarContent>
+        </Sidebar>
+
+        <main className="flex-1">
+          <header className="h-16 border-b bg-background flex items-center justify-between px-4 md:px-6">
+            <div className="flex items-center">
+              <div className="ml-4">
+                <h1 className="text-lg md:text-xl font-semibold">{t('admin.adminPanel')}</h1>
+              </div>
+            </div>
+          </header>
+          
+          <div className="p-4 md:p-6">
+            {children}
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };

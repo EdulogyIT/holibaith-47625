@@ -5,10 +5,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Badge } from '@/components/ui/badge';
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [properties, setProperties] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<any[]>([]);
   const [conversations, setConversations] = useState<any[]>([]);
@@ -98,6 +101,153 @@ export default function AdminDashboard() {
     },
   ];
 
+  // Mobile Loading State
+  if (loading && isMobile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-lg text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div className="space-y-6">
+        {/* Hero Section */}
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold text-foreground">Dashboard</h2>
+          <p className="text-lg text-muted-foreground">
+            {t('admin.overviewPlatform')}
+          </p>
+        </div>
+
+        {/* Stats Cards - 2 per row */}
+        <div className="grid grid-cols-2 gap-3">
+          <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/properties')}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">Total properties</p>
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+              </div>
+              {loading ? (
+                <Skeleton className="h-9 w-12" />
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-foreground">{properties.length}</p>
+                  <p className={`text-xs mt-1 ${weeklyGrowth.properties >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% this week
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/properties')}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">Active properties</p>
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+              </div>
+              {loading ? (
+                <Skeleton className="h-9 w-12" />
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-foreground">{activeProperties}</p>
+                  <p className={`text-xs mt-1 ${weeklyGrowth.properties >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% this week
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/users')}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">Total users</p>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </div>
+              {loading ? (
+                <Skeleton className="h-9 w-12" />
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-foreground">{profiles.length}</p>
+                  <p className={`text-xs mt-1 ${weeklyGrowth.users >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {weeklyGrowth.users >= 0 ? '+' : ''}{weeklyGrowth.users}% this week
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/messages')}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">Messages</p>
+                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              </div>
+              {loading ? (
+                <Skeleton className="h-9 w-12" />
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-foreground">{conversations.length}</p>
+                  <p className={`text-xs mt-1 ${weeklyGrowth.messages >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {weeklyGrowth.messages >= 0 ? '+' : ''}{weeklyGrowth.messages}% this week
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Properties */}
+        {properties.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-foreground">Recent Properties</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {recentProperties.slice(0, 4).map((property) => {
+                const propertyImages = Array.isArray(property.images) ? property.images : [];
+                const imageUrl = propertyImages.length > 0 ? propertyImages[0] : '/placeholder.svg';
+                
+                return (
+                  <Card key={property.id} className="bg-card overflow-hidden cursor-pointer" onClick={() => navigate(`/property/${property.id}`)}>
+                    <CardContent className="p-0">
+                      <div className="aspect-square relative">
+                        <img 
+                          src={imageUrl}
+                          alt={property.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <p className="text-white text-sm font-medium line-clamp-2 mb-1">{property.title}</p>
+                          <p className="text-white/80 text-xs">{property.city}</p>
+                        </div>
+                        <Badge 
+                          variant={property.status === 'active' ? 'default' : 'secondary'}
+                          className="absolute top-2 right-2 text-xs"
+                        >
+                          {property.status === 'active' ? 'Active' : 'Pending'}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="space-y-6">
       <div>
