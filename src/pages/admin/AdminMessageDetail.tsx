@@ -56,23 +56,41 @@ export default function AdminMessageDetail() {
 
   const fetchConversation = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: convData, error: convError } = await supabase
         .from('conversations')
-        .select(`
-          *,
-          user:user_id(email),
-          recipient:recipient_id(email)
-        `)
+        .select('*')
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (convError) throw convError;
+
+      // Fetch user email separately
+      let userEmail = '';
+      let recipientEmail = '';
+
+      if (convData.user_id) {
+        const { data: userData } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('id', convData.user_id)
+          .maybeSingle();
+        userEmail = userData?.email || '';
+      }
+
+      if ((convData as any).recipient_id) {
+        const { data: recipientData } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('id', (convData as any).recipient_id)
+          .maybeSingle();
+        recipientEmail = recipientData?.email || '';
+      }
 
       setConversation({
-        ...data,
-        user_email: (data.user as any)?.email,
-        recipient_email: (data.recipient as any)?.email,
-      });
+        ...convData,
+        user_email: userEmail,
+        recipient_email: recipientEmail,
+      } as Conversation);
     } catch (error) {
       console.error('Error fetching conversation:', error);
       toast({
@@ -86,20 +104,32 @@ export default function AdminMessageDetail() {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data: messagesData, error } = await supabase
         .from('messages')
-        .select(`
-          *,
-          sender:sender_id(email)
-        `)
+        .select('*')
         .eq('conversation_id', id)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
 
-      setMessages((data || []).map(msg => ({
+      // Fetch sender emails for all unique sender IDs
+      const senderIds = [...new Set(messagesData?.map(m => m.sender_id) || [])];
+      const senderEmailMap: Record<string, string> = {};
+
+      for (const senderId of senderIds) {
+        const { data: senderData } = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('id', senderId)
+          .single();
+        if (senderData) {
+          senderEmailMap[senderId] = senderData.email;
+        }
+      }
+
+      setMessages((messagesData || []).map(msg => ({
         ...msg,
-        sender_email: (msg.sender as any)?.email,
+        sender_email: senderEmailMap[msg.sender_id] || 'Unknown',
       })));
     } catch (error) {
       console.error('Error fetching messages:', error);
