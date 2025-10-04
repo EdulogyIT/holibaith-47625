@@ -35,8 +35,8 @@ const currencyConfig = {
 // Default rates (will be updated from API) - EUR as base
 const DEFAULT_RATES = {
   EUR: 1,
-  USD: 1.17,      // 1 EUR = 1.17 USD
-  DZD: 151.44     // 1 EUR = 151.44 DZD
+  USD: 1.08,      // 1 EUR = 1.08 USD
+  DZD: 145        // 1 EUR = 145 DZD
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);

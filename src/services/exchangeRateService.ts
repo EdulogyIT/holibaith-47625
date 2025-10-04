@@ -3,13 +3,15 @@
 
 const CACHE_KEY = 'exchange_rates_cache';
 const CACHE_TIMESTAMP_KEY = 'exchange_rates_timestamp';
+const CACHE_VERSION_KEY = 'exchange_rates_version';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_VERSION = 'v3'; // Increment when rate structure changes
 
 // Fallback rates (October 2025) - EUR as base
 const FALLBACK_RATES = {
   EUR: 1,
-  USD: 1.17,      // 1 EUR = 1.17 USD
-  DZD: 151.44     // 1 EUR = 151.44 DZD
+  USD: 1.08,      // 1 EUR = 1.08 USD
+  DZD: 145        // 1 EUR = 145 DZD
 };
 
 interface ExchangeRates {
@@ -20,11 +22,19 @@ interface ExchangeRates {
 
 export const getExchangeRates = async (): Promise<ExchangeRates> => {
   try {
-    // Check cache first
+    // Check cache version first
+    const cachedVersion = localStorage.getItem(CACHE_VERSION_KEY);
+    
+    // If version doesn't match, clear old cache
+    if (cachedVersion !== CACHE_VERSION) {
+      clearCache();
+    }
+    
+    // Check cache
     const cachedRates = localStorage.getItem(CACHE_KEY);
     const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
     
-    if (cachedRates && cachedTimestamp) {
+    if (cachedRates && cachedTimestamp && cachedVersion === CACHE_VERSION) {
       const timestamp = parseInt(cachedTimestamp, 10);
       const now = Date.now();
       
@@ -50,9 +60,10 @@ export const getExchangeRates = async (): Promise<ExchangeRates> => {
       DZD: data.rates.DZD || FALLBACK_RATES.DZD
     };
 
-    // Cache the rates
+    // Cache the rates with version
     localStorage.setItem(CACHE_KEY, JSON.stringify(rates));
     localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
+    localStorage.setItem(CACHE_VERSION_KEY, CACHE_VERSION);
 
     return rates;
   } catch (error) {
@@ -71,4 +82,5 @@ export const getCachedTimestamp = (): number | null => {
 export const clearCache = (): void => {
   localStorage.removeItem(CACHE_KEY);
   localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+  localStorage.removeItem(CACHE_VERSION_KEY);
 };
