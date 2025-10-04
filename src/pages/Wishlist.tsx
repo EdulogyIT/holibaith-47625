@@ -147,7 +147,7 @@ const Wishlist = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="font-bold text-lg">
-                        {formatPrice(Number(property.price), property.price_type)}
+                        {formatPrice(Number(property.price), property.price_type, (property.price_currency as any) || 'DZD')}
                       </div>
                       <div className="text-sm text-muted-foreground">
                         {property.bedrooms} beds • {property.bathrooms} baths

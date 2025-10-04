@@ -77,6 +77,7 @@ const PublishProperty = () => {
           floor_number: formData.floor || null,
           price: formData.price,
           price_type: formData.priceType,
+          price_currency: formData.priceCurrency,
           features: formData.features,
           description: formData.description || null,
           contact_name: formData.fullName,

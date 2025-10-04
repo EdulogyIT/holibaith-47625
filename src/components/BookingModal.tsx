@@ -19,6 +19,7 @@ interface BookingModalProps {
     title: string;
     price: string;
     price_type: string;
+    price_currency?: string;
     category: string;
   };
   trigger?: React.ReactNode;
@@ -39,11 +40,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
   const { currentCurrency, exchangeRates } = useCurrency();
 
   // Calculate booking details 
-  // Property prices are stored in DZD, convert to EUR for payment
-  const basePriceDZD = Number(property.price) || 0;
+  // Property prices are stored in their original currency, convert to EUR for payment
+  const basePriceOriginal = Number(property.price) || 0;
+  const sourceCurrency = (property.price_currency as any) || 'DZD';
   
-  // Use real-time exchange rate from context
-  const basePriceEUR = basePriceDZD * exchangeRates.EUR;
+  // Convert to EUR for Stripe payment
+  // First convert to DZD if not already, then to EUR
+  let basePriceEUR = basePriceOriginal;
+  if (sourceCurrency !== 'DZD') {
+    // Convert source to DZD first
+    basePriceEUR = basePriceOriginal / exchangeRates[sourceCurrency as 'USD' | 'EUR'];
+  }
+  // Then convert DZD to EUR
+  basePriceEUR = basePriceEUR * exchangeRates.EUR;
 
   // Convert monthly/weekly price to nightly when short-stay
   let dailyPriceEUR = basePriceEUR;

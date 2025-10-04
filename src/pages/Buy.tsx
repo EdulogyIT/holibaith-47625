@@ -27,11 +27,12 @@ interface Property {
   title: string;
   location: string;
   city: string;
-  price: string | number; // ⬅️ allow number too
+  price: string | number;
   price_type: string;
+  price_currency?: string;
   bedrooms?: string;
   bathrooms?: string;
-  area: string | number;   // ⬅️ allow number too
+  area: string | number;
   images: string[];
   property_type: string;
   features?: any;
@@ -174,7 +175,7 @@ const Buy = () => {
       <CardContent className={cn(isMobile ? "p-2 pt-0" : "pt-0")}>
         <div className={cn("flex items-center justify-between", isMobile ? "mb-1" : "mb-3")}>
           <div className={cn("font-bold text-primary", isMobile ? "text-sm" : "text-2xl")}>
-            {formatPrice(num(property.price), property.price_type)}
+            {formatPrice(num(property.price), property.price_type, (property.price_currency as any) || 'DZD')}
           </div>
         </div>
 

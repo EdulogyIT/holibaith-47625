@@ -5,7 +5,7 @@ export type Currency = 'USD' | 'DZD' | 'EUR';
 
 interface CurrencyContextType {
   currentCurrency: Currency;
-  formatPrice: (amount: string | number, priceType?: string) => string;
+  formatPrice: (amount: string | number, priceType?: string, sourceCurrency?: Currency) => string;
   getCurrencySymbol: () => string;
   setCurrency: (currency: Currency) => void;
   exchangeRates: { DZD: number; USD: number; EUR: number };
@@ -81,17 +81,23 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
     }
   };
 
-  const formatPrice = (amount: string | number, priceType?: string): string => {
+  const formatPrice = (amount: string | number, priceType?: string, sourceCurrency: Currency = 'DZD'): string => {
     let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     
     if (isNaN(numAmount)) return '0';
 
-    // Assume property prices are stored in DZD (base currency)
-    // Convert to target currency if different
+    // Convert from source currency to target currency
     let convertedAmount = numAmount;
+    
+    // First convert to DZD if source is not DZD
+    if (sourceCurrency !== 'DZD') {
+      // Convert source to DZD first (divide by the rate to get DZD)
+      convertedAmount = numAmount / exchangeRates[sourceCurrency];
+    }
+    
+    // Then convert from DZD to target currency
     if (currentCurrency !== 'DZD') {
-      // Convert from DZD to target currency
-      convertedAmount = numAmount * exchangeRates[currentCurrency];
+      convertedAmount = convertedAmount * exchangeRates[currentCurrency];
     }
 
     const config = currencyConfig[currentCurrency];

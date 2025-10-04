@@ -32,6 +32,7 @@ interface FormData {
   floor: string;
   price: string;
   priceType: string;
+  priceCurrency: string;
   features: {
     parking: boolean;
     swimmingPool: boolean;
@@ -77,6 +78,7 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
     floor: "",
     price: "",
     priceType: "",
+    priceCurrency: "DZD",
     features: {
       parking: false,
       swimmingPool: false,
@@ -132,7 +134,8 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
   const isStep3Valid = () => 
     formData.area !== "" && 
     formData.price !== "" && 
-    formData.priceType !== "";
+    formData.priceType !== "" &&
+    formData.priceCurrency !== "";
   
   const isStep4Valid = () => 
     formData.fullName !== "" && 
@@ -368,11 +371,25 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (EUR) *</Label>
+                  <Label htmlFor="priceCurrency">{t('currency') || 'Currency'} *</Label>
+                  <Select value={formData.priceCurrency} onValueChange={(value) => handleInputChange("priceCurrency", value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DZD">DZD (DA)</SelectItem>
+                      <SelectItem value="EUR">EUR (€)</SelectItem>
+                      <SelectItem value="USD">USD ($)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="price">{t('price')} *</Label>
                   <Input
                     id="price"
+                    type="number"
                     placeholder="e.g., 150000"
                     value={formData.price}
                     onChange={(e) => handleInputChange("price", e.target.value)}
