@@ -8,7 +8,7 @@ interface CurrencyContextType {
   formatPrice: (amount: string | number, priceType?: string, sourceCurrency?: Currency) => string;
   getCurrencySymbol: () => string;
   setCurrency: (currency: Currency) => void;
-  exchangeRates: { DZD: number; USD: number; EUR: number };
+  exchangeRates: { EUR: number; USD: number; DZD: number };
 }
 
 const currencyConfig = {
@@ -32,11 +32,11 @@ const currencyConfig = {
   }
 };
 
-// Default rates (will be updated from API)
+// Default rates (will be updated from API) - EUR as base
 const DEFAULT_RATES = {
-  DZD: 1,
-  USD: 1 / 129.43, // 1 DZD = 0.00773 USD (1 USD = 129.43 DZD)
-  EUR: 1 / 145     // 1 DZD = 0.00690 EUR (1 EUR = 145 DZD)
+  EUR: 1,
+  USD: 1.17,      // 1 EUR = 1.17 USD
+  DZD: 151.44     // 1 EUR = 151.44 DZD
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -46,13 +46,13 @@ interface CurrencyProviderProps {
 }
 
 export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
-  // Default to DZD as the base currency
+  // Default to EUR as the base currency for accurate conversions
   const [currentCurrency, setCurrentCurrency] = useState<Currency>(() => {
     try {
       const saved = localStorage.getItem('selectedCurrency');
-      return (saved as Currency) || 'DZD';
+      return (saved as Currency) || 'EUR';
     } catch {
-      return 'DZD';
+      return 'EUR';
     }
   });
 
@@ -81,7 +81,7 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
     }
   };
 
-  const formatPrice = (amount: string | number, priceType?: string, sourceCurrency: Currency = 'DZD'): string => {
+  const formatPrice = (amount: string | number, priceType?: string, sourceCurrency: Currency = 'EUR'): string => {
     let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     
     if (isNaN(numAmount)) return '0';
@@ -89,14 +89,14 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
     // Convert from source currency to target currency
     let convertedAmount = numAmount;
     
-    // First convert to DZD if source is not DZD
-    if (sourceCurrency !== 'DZD') {
-      // Convert source to DZD first (divide by the rate to get DZD)
+    // First convert to EUR if source is not EUR
+    if (sourceCurrency !== 'EUR') {
+      // Convert source to EUR first (divide by the rate to get EUR)
       convertedAmount = numAmount / exchangeRates[sourceCurrency];
     }
     
-    // Then convert from DZD to target currency
-    if (currentCurrency !== 'DZD') {
+    // Then convert from EUR to target currency
+    if (currentCurrency !== 'EUR') {
       convertedAmount = convertedAmount * exchangeRates[currentCurrency];
     }
 

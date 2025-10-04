@@ -5,17 +5,17 @@ const CACHE_KEY = 'exchange_rates_cache';
 const CACHE_TIMESTAMP_KEY = 'exchange_rates_timestamp';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-// Fallback rates (October 2025) - DZD as base
+// Fallback rates (October 2025) - EUR as base
 const FALLBACK_RATES = {
-  DZD: 1,
-  USD: 1 / 129.43,  // 1 DZD = 0.00773 USD
-  EUR: 1 / 145      // 1 DZD = 0.00690 EUR
+  EUR: 1,
+  USD: 1.17,      // 1 EUR = 1.17 USD
+  DZD: 151.44     // 1 EUR = 151.44 DZD
 };
 
 interface ExchangeRates {
-  DZD: number;
-  USD: number;
   EUR: number;
+  USD: number;
+  DZD: number;
 }
 
 export const getExchangeRates = async (): Promise<ExchangeRates> => {
@@ -34,8 +34,8 @@ export const getExchangeRates = async (): Promise<ExchangeRates> => {
       }
     }
 
-    // Fetch fresh rates from API
-    const response = await fetch('https://api.exchangerate-api.com/v4/latest/DZD');
+    // Fetch fresh rates from API (using EUR as base)
+    const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
     
     if (!response.ok) {
       throw new Error('Failed to fetch exchange rates');
@@ -45,9 +45,9 @@ export const getExchangeRates = async (): Promise<ExchangeRates> => {
     
     // Extract rates we need
     const rates: ExchangeRates = {
-      DZD: 1,
+      EUR: 1,
       USD: data.rates.USD || FALLBACK_RATES.USD,
-      EUR: data.rates.EUR || FALLBACK_RATES.EUR
+      DZD: data.rates.DZD || FALLBACK_RATES.DZD
     };
 
     // Cache the rates
