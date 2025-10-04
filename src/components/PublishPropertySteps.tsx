@@ -384,6 +384,9 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
                       <SelectItem value="USD">USD ($)</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {t('currencyHelper') || 'Select the currency in which you\'re entering the price'}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="price">{t('price')} *</Label>
@@ -394,6 +397,16 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
                     value={formData.price}
                     onChange={(e) => handleInputChange("price", e.target.value)}
                   />
+                  {formData.priceCurrency === 'DZD' && formData.price && parseFloat(formData.price) < 1000 && (
+                    <p className="text-xs text-amber-500">
+                      ⚠️ {t('priceLowDZD') || 'This seems low for DZD. Are you sure this isn\'t in EUR or USD?'}
+                    </p>
+                  )}
+                  {(formData.priceCurrency === 'EUR' || formData.priceCurrency === 'USD') && formData.price && parseFloat(formData.price) > 100000 && (
+                    <p className="text-xs text-amber-500">
+                      ⚠️ {t('priceHighForeign') || `This seems very high for ${formData.priceCurrency}. Are you sure this isn't in DZD?`}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="priceType">{t('priceTypeField')} *</Label>

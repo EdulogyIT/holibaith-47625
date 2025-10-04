@@ -30,6 +30,7 @@ interface PropertyData {
   floor_number: string;
   price: string;
   price_type: string;
+  price_currency: string;
   contact_name: string;
   contact_phone: string;
   contact_email: string;
@@ -344,7 +345,26 @@ export default function EditProperty() {
                 <CardTitle>Pricing</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="price_currency">Currency</Label>
+                    <Select 
+                      value={property.price_currency || 'DZD'} 
+                      onValueChange={(value) => updateField('price_currency', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="DZD">DZD (DA)</SelectItem>
+                        <SelectItem value="EUR">EUR (€)</SelectItem>
+                        <SelectItem value="USD">USD ($)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      Select the currency in which the price is entered
+                    </p>
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="price">Price</Label>
                     <Input
@@ -352,6 +372,16 @@ export default function EditProperty() {
                       value={property.price}
                       onChange={(e) => updateField('price', e.target.value)}
                     />
+                    {property.price_currency === 'DZD' && property.price && parseFloat(property.price) < 1000 && (
+                      <p className="text-xs text-amber-500">
+                        ⚠️ This seems low for DZD. Are you sure this isn't in EUR or USD?
+                      </p>
+                    )}
+                    {(property.price_currency === 'EUR' || property.price_currency === 'USD') && property.price && parseFloat(property.price) > 100000 && (
+                      <p className="text-xs text-amber-500">
+                        ⚠️ This seems very high for {property.price_currency}. Are you sure this isn't in DZD?
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="price_type">Price Type</Label>
