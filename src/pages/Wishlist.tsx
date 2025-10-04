@@ -35,9 +35,39 @@ const Wishlist = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { formatPrice } = useCurrency();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [properties, setProperties] = useState<any[]>([]);
 
-  const wishlistProperties = wishlist.map(id => getMockProperty(id)).filter(Boolean);
+  useEffect(() => {
+    if (isAuthenticated && wishlist.length > 0) {
+      fetchWishlistProperties();
+    } else {
+      setLoading(false);
+    }
+  }, [wishlist, isAuthenticated]);
+
+  const fetchWishlistProperties = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .in('id', wishlist);
+
+      if (error) throw error;
+
+      setProperties(data || []);
+    } catch (error) {
+      console.error('Error fetching wishlist properties:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load wishlist properties',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!isAuthenticated) {
     return (
@@ -73,7 +103,7 @@ const Wishlist = () => {
           
           {loading ? (
             <div className="text-center py-12">Loading...</div>
-          ) : wishlistProperties.length === 0 ? (
+          ) : properties.length === 0 ? (
             <Card className="text-center py-12">
               <CardContent>
                 <Heart className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -88,59 +118,50 @@ const Wishlist = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {wishlistProperties.map((property) => {
-                if (!property) return null;
-                return (
-                  <div
-                    key={property.id}
-                    className="bg-white rounded-3xl overflow-hidden shadow-sm border border-border"
-                  >
-                    <div className="relative">
-                      <img
-                        src={property.image}
-                        alt={property.title}
-                        className="w-full h-48 object-cover cursor-pointer"
-                        onClick={() => navigate(`/property/${property.id}`)}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full"
-                        onClick={() => {
-                          toggleWishlist(String(property.id));
-                          toast({
-                            title: "Removed from wishlist",
-                            description: "Property removed from your wishlist"
-                          });
-                        }}
-                      >
-                        <Heart className="h-5 w-5 fill-red-500 text-red-500" />
-                      </Button>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-lg mb-1">{property.title}</h3>
-                      <div className="flex items-center text-muted-foreground text-sm mb-2">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {property.location}
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="font-bold text-lg">
-                          {formatPrice(property.price)}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          {property.beds} beds • {property.baths} baths
-                        </div>
-                      </div>
-                      <Button 
-                        className="w-full mt-3"
-                        onClick={() => navigate(`/property/${property.id}`)}
-                      >
-                        View Details
-                      </Button>
-                    </div>
+              {properties.map((property) => (
+                <div
+                  key={property.id}
+                  className="bg-white rounded-3xl overflow-hidden shadow-sm border border-border"
+                >
+                  <div className="relative">
+                    <img
+                      src={property.images?.[0] || '/placeholder-property.jpg'}
+                      alt={property.title}
+                      className="w-full h-48 object-cover cursor-pointer"
+                      onClick={() => navigate(`/property/${property.id}`)}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full"
+                      onClick={() => toggleWishlist(property.id)}
+                    >
+                      <Heart className="h-5 w-5 fill-red-500 text-red-500" />
+                    </Button>
                   </div>
-                );
-              })}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg mb-1">{property.title}</h3>
+                    <div className="flex items-center text-muted-foreground text-sm mb-2">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {property.city}, {property.location}
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="font-bold text-lg">
+                        {formatPrice(Number(property.price), property.price_type)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {property.bedrooms} beds • {property.bathrooms} baths
+                      </div>
+                    </div>
+                    <Button 
+                      className="w-full mt-3"
+                      onClick={() => navigate(`/property/${property.id}`)}
+                    >
+                      View Details
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
