@@ -12,10 +12,17 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { MessageSquare, Search, Eye } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MessageSquare, Search, Eye, MoreVertical } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Conversation {
   id: string;
@@ -35,6 +42,7 @@ interface Conversation {
 export default function AdminMessages() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -107,6 +115,120 @@ export default function AdminMessages() {
     return status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
   };
 
+  // Mobile Loading
+  if (loading && isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading messages...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Messages</h2>
+          <p className="text-sm text-muted-foreground">All user conversations</p>
+        </div>
+
+        {/* Stats - Grid */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <MessageSquare className="h-4 w-4 text-muted-foreground mb-1" />
+                <p className="text-xl font-bold">{conversations.length}</p>
+                <p className="text-xs text-muted-foreground">Total</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <MessageSquare className="h-4 w-4 text-green-600 mb-1" />
+                <p className="text-xl font-bold">{conversations.filter(c => c.status === 'active').length}</p>
+                <p className="text-xs text-muted-foreground">Active</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <MessageSquare className="h-4 w-4 text-blue-600 mb-1" />
+                <p className="text-xl font-bold">{conversations.reduce((sum, c) => sum + (c.message_count || 0), 0)}</p>
+                <p className="text-xs text-muted-foreground">Messages</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search conversations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        {/* Conversations List */}
+        <div className="space-y-3">
+          {filteredConversations.map((conv) => (
+            <Card key={conv.id}>
+              <CardContent className="p-3">
+                <div className="flex gap-3">
+                  <Avatar className="h-10 w-10 flex-shrink-0">
+                    <AvatarFallback className="text-xs">
+                      {conv.user_email?.slice(0, 2).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm line-clamp-1">{conv.user_email || 'Unknown'}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-1">{conv.subject || 'No subject'}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge variant="outline" className="text-xs">{conv.conversation_type || 'support'}</Badge>
+                          <Badge className={`${getStatusColor(conv.status)} text-xs`}>
+                            {conv.status}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{conv.message_count} msgs</span>
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="space-y-6">
       <div>
@@ -117,13 +239,13 @@ export default function AdminMessages() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Conversations</CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : conversations.length}</div>
             <p className="text-xs text-muted-foreground">All time</p>
           </CardContent>
@@ -134,7 +256,7 @@ export default function AdminMessages() {
             <CardTitle className="text-sm font-medium">Active</CardTitle>
             <MessageSquare className="h-4 w-4 text-green-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">
               {loading ? '...' : conversations.filter(c => c.status === 'active').length}
             </div>
@@ -147,7 +269,7 @@ export default function AdminMessages() {
             <CardTitle className="text-sm font-medium">Total Messages</CardTitle>
             <MessageSquare className="h-4 w-4 text-blue-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">
               {loading ? '...' : conversations.reduce((sum, c) => sum + (c.message_count || 0), 0)}
             </div>

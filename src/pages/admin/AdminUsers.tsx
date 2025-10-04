@@ -19,6 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   Users, 
   User, 
@@ -32,7 +38,9 @@ import {
   Ban,
   CheckCircle,
   Clock,
-  Trash2
+  Trash2,
+  MoreVertical,
+  Eye
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -47,6 +55,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AppUser {
   id: string;
@@ -105,6 +114,7 @@ const mockUsers: AppUser[] = [
 export default function AdminUsers() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -199,6 +209,148 @@ export default function AdminUsers() {
     }
   };
 
+  // Mobile Loading
+  if (loading && isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading users...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">{t('admin.userManagement')}</h2>
+          <p className="text-sm text-muted-foreground">{t('admin.manageUsersHosts')}</p>
+        </div>
+
+        {/* Stats - 2x2 Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs text-muted-foreground">{t('admin.totalUsers')}</p>
+                <Users className="h-3 w-3 text-muted-foreground" />
+              </div>
+              <p className="text-2xl font-bold">{users.length}</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs text-muted-foreground">Hosts</p>
+                <UserCheck className="h-3 w-3 text-blue-600" />
+              </div>
+              <p className="text-2xl font-bold">{users.filter(u => u.role === 'host').length}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs text-muted-foreground">Admins</p>
+                <Shield className="h-3 w-3 text-green-600" />
+              </div>
+              <p className="text-2xl font-bold">{users.filter(u => u.role === 'admin').length}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs text-muted-foreground">Regular</p>
+                <User className="h-3 w-3 text-gray-600" />
+              </div>
+              <p className="text-2xl font-bold">{users.filter(u => u.role === 'user').length}</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search & Filter */}
+        <div className="space-y-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('admin.searchByNameEmail')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder={t('admin.role')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('admin.allRoles')}</SelectItem>
+              <SelectItem value="user">{t('admin.users')}</SelectItem>
+              <SelectItem value="host">{t('admin.hosts')}</SelectItem>
+              <SelectItem value="admin">{t('admin.admins')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Users List */}
+        <div className="space-y-3">
+          {filteredUsers.map((user) => (
+            <Card key={user.id}>
+              <CardContent className="p-3">
+                <div className="flex gap-3">
+                  <Avatar className="h-12 w-12 flex-shrink-0">
+                    <AvatarFallback className="text-sm">
+                      {user.name?.slice(0, 2).toUpperCase() || user.email?.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm line-clamp-1">{user.name || 'No name'}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-1">{user.email}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge className={`${getRoleColor(user.role)} text-xs`}>
+                            {user.role}
+                          </Badge>
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => setDeleteId(user.id)}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -215,13 +367,13 @@ export default function AdminUsers() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('admin.totalUsers')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : users.length}</div>
             <p className="text-xs text-muted-foreground">Total registered</p>
           </CardContent>
@@ -232,7 +384,7 @@ export default function AdminUsers() {
             <CardTitle className="text-sm font-medium">{t('admin.activeHosts')}</CardTitle>
             <UserCheck className="h-4 w-4 text-blue-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'host').length}</div>
             <p className="text-xs text-muted-foreground">Host accounts</p>
           </CardContent>
@@ -243,7 +395,7 @@ export default function AdminUsers() {
             <CardTitle className="text-sm font-medium">{t('admin.verifiedAccounts')}</CardTitle>
             <Shield className="h-4 w-4 text-green-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'admin').length}</div>
             <p className="text-xs text-muted-foreground">Admin accounts</p>
           </CardContent>
@@ -254,7 +406,7 @@ export default function AdminUsers() {
             <CardTitle className="text-sm font-medium">{t('admin.pending')}</CardTitle>
             <UserX className="h-4 w-4 text-yellow-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : users.filter(u => u.role === 'user').length}</div>
             <p className="text-xs text-muted-foreground">Regular users</p>
           </CardContent>

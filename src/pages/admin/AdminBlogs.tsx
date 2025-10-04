@@ -12,6 +12,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -21,10 +27,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { FileText, Search, Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { FileText, Search, Eye, Edit, Trash2, Plus, MoreVertical } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BlogPost {
   id: string;
@@ -39,6 +46,7 @@ interface BlogPost {
 export default function AdminBlogs() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -116,6 +124,126 @@ export default function AdminBlogs() {
       : 'bg-yellow-100 text-yellow-800';
   };
 
+  // Mobile Loading
+  if (loading && isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading blog posts...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Blog Management</h2>
+          <p className="text-sm text-muted-foreground">Manage all blog posts</p>
+        </div>
+
+        <Button size="sm" className="w-full">
+          <Plus className="h-4 w-4 mr-2" />
+          New Post
+        </Button>
+
+        {/* Stats - Grid */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <FileText className="h-4 w-4 text-muted-foreground mb-1" />
+                <p className="text-xl font-bold">{posts.length}</p>
+                <p className="text-xs text-muted-foreground">Total</p>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <FileText className="h-4 w-4 text-green-600 mb-1" />
+                <p className="text-xl font-bold">{posts.filter((p) => p.status === 'published').length}</p>
+                <p className="text-xs text-muted-foreground">Published</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-3">
+              <div className="flex flex-col items-center text-center">
+                <FileText className="h-4 w-4 text-yellow-600 mb-1" />
+                <p className="text-xl font-bold">{posts.filter((p) => p.status === 'draft').length}</p>
+                <p className="text-xs text-muted-foreground">Drafts</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search blog posts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        {/* Posts List */}
+        <div className="space-y-3">
+          {filteredPosts.map((post) => (
+            <Card key={post.id}>
+              <CardContent className="p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm line-clamp-2">{post.title}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{post.author_name}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="outline" className="text-xs">{post.category}</Badge>
+                      <Badge className={`${getStatusColor(post.status)} text-xs`}>
+                        {post.status}
+                      </Badge>
+                    </div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setDeleteId(post.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -132,13 +260,13 @@ export default function AdminBlogs() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">{loading ? '...' : posts.length}</div>
             <p className="text-xs text-muted-foreground">All blog posts</p>
           </CardContent>
@@ -149,7 +277,7 @@ export default function AdminBlogs() {
             <CardTitle className="text-sm font-medium">Published</CardTitle>
             <FileText className="h-4 w-4 text-green-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">
               {loading ? '...' : posts.filter((p) => p.status === 'published').length}
             </div>
@@ -162,7 +290,7 @@ export default function AdminBlogs() {
             <CardTitle className="text-sm font-medium">Drafts</CardTitle>
             <FileText className="h-4 w-4 text-yellow-600" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             <div className="text-2xl font-bold">
               {loading ? '...' : posts.filter((p) => p.status === 'draft').length}
             </div>
