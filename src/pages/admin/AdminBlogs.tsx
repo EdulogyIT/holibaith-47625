@@ -219,7 +219,7 @@ export default function AdminBlogs() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => navigate(`/admin/blogs/${post.id}`)}>
+                      <DropdownMenuItem onClick={() => navigate(`/admin/blogs/view/${post.id}`)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </DropdownMenuItem>
@@ -360,7 +360,7 @@ export default function AdminBlogs() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/blogs/${post.id}`)}>
+                        <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/blogs/view/${post.id}`)}>
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/blogs/edit/${post.id}`)}>

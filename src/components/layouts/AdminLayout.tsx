@@ -41,7 +41,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { title: t('admin.hostsGuests'), url: '/admin/users', icon: Users },
     { title: t('admin.messages'), url: '/admin/messages', icon: MessageSquare },
     { title: 'Blogs', url: '/admin/blogs', icon: FileText },
-    { title: t('admin.settings'), url: '/admin/profile', icon: Settings },
+    { title: t('admin.settings'), url: '/admin/settings', icon: Settings },
   ];
 
   const handleLogout = () => {

@@ -35,6 +35,8 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminMessageDetail from "./pages/admin/AdminMessageDetail";
 import AdminBlogs from "./pages/admin/AdminBlogs";
 import AdminBlogForm from "./pages/admin/AdminBlogForm";
+import AdminBlogView from "./pages/admin/AdminBlogView";
+import AdminSettings from "./pages/admin/AdminSettings";
 import HostDashboard from "./pages/host/HostDashboard";
 import HostOnboarding from "./pages/host/HostOnboarding";
 import HostListings from "./pages/host/HostListings";
@@ -126,8 +128,8 @@ const App = () => (
                       <Route path="blogs" element={<AdminBlogs />} />
                       <Route path="blogs/new" element={<AdminBlogForm />} />
                       <Route path="blogs/edit/:id" element={<AdminBlogForm />} />
-                      <Route path="blogs/:id" element={<BlogPost />} />
-                      <Route path="settings" element={<div>Admin Settings - Coming Soon</div>} />
+                      <Route path="blogs/view/:id" element={<AdminBlogView />} />
+                      <Route path="settings" element={<AdminSettings />} />
                     </Routes>
                   </AdminLayout>
                 </ProtectedRoute>

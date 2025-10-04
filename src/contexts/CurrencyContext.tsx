@@ -48,9 +48,9 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
   const [currentCurrency, setCurrentCurrency] = useState<Currency>(() => {
     try {
       const saved = localStorage.getItem('selectedCurrency');
-      return (saved as Currency) || 'EUR';
+      return (saved as Currency) || 'DZD';
     } catch {
-      return 'EUR';
+      return 'DZD';
     }
   });
 
