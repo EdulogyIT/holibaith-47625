@@ -14,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   User, 
   Mail, 
@@ -353,10 +354,36 @@ export default function AdminProfile() {
   const { user } = useAuth();
   const { currentLang } = useLanguage();
   const t = adminProfileStrings[currentLang.toLowerCase() as keyof typeof adminProfileStrings];
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
-  // Form states
+  // Fetch real user profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+          
+        if (error) throw error;
+        setProfile(data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProfile();
+  }, [user]);
+  
+  // Form states - use real data when available
   const [contactForm, setContactForm] = useState({
-    primaryEmail: mockAdminData.emails.primary,
+    primaryEmail: profile?.email || mockAdminData.emails.primary,
     backupEmail: mockAdminData.emails.backup,
     phone: mockAdminData.phone
   });
@@ -375,6 +402,16 @@ export default function AdminProfile() {
   const [editingContact, setEditingContact] = useState(false);
   const [editingLocale, setEditingLocale] = useState(false);
   const [editingSignature, setEditingSignature] = useState(false);
+  
+  // Update form when profile loads
+  useEffect(() => {
+    if (profile) {
+      setContactForm(prev => ({
+        ...prev,
+        primaryEmail: profile.email
+      }));
+    }
+  }, [profile]);
 
   // Handlers
   const handleContactSave = () => {
@@ -462,13 +499,13 @@ export default function AdminProfile() {
               </Avatar>
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h2 className="text-xl font-semibold">{mockAdminData.displayName}</h2>
+                  <h2 className="text-xl font-semibold">{loading ? '...' : (profile?.name || 'Admin User')}</h2>
                   <Badge variant="outline" className="bg-primary/10 border-primary/30">
                     <Shield className="w-3 h-3 mr-1" />
-                    {mockAdminData.role}
+                    {loading ? '...' : (profile?.role || 'admin')}
                   </Badge>
                   <Badge variant="secondary" className="text-xs">
-                    {t.identity.staffId}: {mockAdminData.staffId}
+                    {t.identity.staffId}: {loading ? '...' : profile?.id.slice(0, 8)}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">{t.identity.subtitle}</p>

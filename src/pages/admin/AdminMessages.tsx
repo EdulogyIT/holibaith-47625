@@ -211,9 +211,9 @@ export default function AdminMessages() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => window.location.href = `/admin/messages/${conv.id}`}>
                             <Eye className="h-4 w-4 mr-2" />
-                            View
+                            View & Reply
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -351,7 +351,7 @@ export default function AdminMessages() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Button size="sm" variant="ghost">
+                      <Button size="sm" variant="ghost" onClick={() => window.location.href = `/admin/messages/${conv.id}`}>
                         <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>

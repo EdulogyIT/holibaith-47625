@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { FileText, Search, Eye, Edit, Trash2, Plus, MoreVertical } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -46,6 +47,7 @@ interface BlogPost {
 export default function AdminBlogs() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -145,7 +147,7 @@ export default function AdminBlogs() {
           <p className="text-sm text-muted-foreground">Manage all blog posts</p>
         </div>
 
-        <Button size="sm" className="w-full">
+        <Button size="sm" className="w-full" onClick={() => navigate('/blog/new')}>
           <Plus className="h-4 w-4 mr-2" />
           New Post
         </Button>
@@ -217,11 +219,11 @@ export default function AdminBlogs() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate(`/blog/${post.id}`)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate(`/blog/edit/${post.id}`)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
@@ -253,7 +255,7 @@ export default function AdminBlogs() {
             Manage all blog posts and articles
           </p>
         </div>
-        <Button>
+        <Button onClick={() => navigate('/blog/new')}>
           <Plus className="h-4 w-4 mr-2" />
           New Post
         </Button>
@@ -358,10 +360,10 @@ export default function AdminBlogs() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost">
+                        <Button size="sm" variant="ghost" onClick={() => navigate(`/blog/${post.id}`)}>
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost">
+                        <Button size="sm" variant="ghost" onClick={() => navigate(`/blog/edit/${post.id}`)}>
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button

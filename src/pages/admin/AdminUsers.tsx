@@ -152,7 +152,11 @@ export default function AdminUsers() {
     if (!deleteId) return;
 
     try {
-      const { error } = await supabase.auth.admin.deleteUser(deleteId);
+      // Delete from profiles table (will cascade to auth.users if set up properly)
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', deleteId);
 
       if (error) throw error;
 
@@ -166,7 +170,7 @@ export default function AdminUsers() {
       console.error('Error deleting user:', error);
       toast({
         title: 'Error',
-        description: 'Failed to delete user',
+        description: 'Failed to delete user. Only admins can delete users.',
         variant: 'destructive',
       });
     } finally {
@@ -326,9 +330,9 @@ export default function AdminUsers() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => window.open(`mailto:${user.email}`)}>
                             <Eye className="h-4 w-4 mr-2" />
-                            View
+                            View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => setDeleteId(user.id)}
@@ -494,7 +498,7 @@ export default function AdminUsers() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => window.open(`mailto:${user.email}`)}>
                           {t('admin.view')}
                         </Button>
                         <Button 

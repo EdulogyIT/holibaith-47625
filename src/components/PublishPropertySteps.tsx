@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,7 @@ interface PublishPropertyStepsProps {
 const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropertyStepsProps) => {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [images, setImages] = useState<File[]>([]);
   
@@ -533,7 +535,7 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
         </Button>
         
         <div className="flex space-x-4">
-          <Button type="button" variant="outline">{t('cancel')}</Button>
+          <Button type="button" variant="outline" onClick={() => navigate(-1)}>{t('cancel')}</Button>
           
           {currentStep < 4 ? (
             <Button 
