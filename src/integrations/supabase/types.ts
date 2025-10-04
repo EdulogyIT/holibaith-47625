@@ -14,6 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_comments: {
+        Row: {
+          blog_post_id: string
+          content: string
+          created_at: string
+          id: string
+          parent_comment_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blog_post_id: string
+          content: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blog_post_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          parent_comment_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_comments_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "blog_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          author_name: string
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          image_url: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          author_name: string
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          author_name?: string
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_fee: number
@@ -199,8 +283,11 @@ export type Database = {
       conversations: {
         Row: {
           admin_id: string | null
+          conversation_type: string | null
           created_at: string
           id: string
+          property_id: string | null
+          recipient_id: string | null
           status: string
           subject: string | null
           updated_at: string
@@ -208,8 +295,11 @@ export type Database = {
         }
         Insert: {
           admin_id?: string | null
+          conversation_type?: string | null
           created_at?: string
           id?: string
+          property_id?: string | null
+          recipient_id?: string | null
           status?: string
           subject?: string | null
           updated_at?: string
@@ -217,14 +307,25 @@ export type Database = {
         }
         Update: {
           admin_id?: string | null
+          conversation_type?: string | null
           created_at?: string
           id?: string
+          property_id?: string | null
+          recipient_id?: string | null
           status?: string
           subject?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "conversations_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       host_payment_accounts: {
         Row: {
@@ -321,6 +422,47 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          related_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          related_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          related_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -385,27 +527,36 @@ export type Database = {
       }
       profiles: {
         Row: {
+          average_rating: number | null
           created_at: string
           email: string
           id: string
+          is_superhost: boolean | null
           name: string | null
           role: Database["public"]["Enums"]["app_role"]
+          total_reviews: number | null
           updated_at: string
         }
         Insert: {
+          average_rating?: number | null
           created_at?: string
           email: string
           id: string
+          is_superhost?: boolean | null
           name?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          total_reviews?: number | null
           updated_at?: string
         }
         Update: {
+          average_rating?: number | null
           created_at?: string
           email?: string
           id?: string
+          is_superhost?: boolean | null
           name?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          total_reviews?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -429,8 +580,12 @@ export type Database = {
           full_address: string | null
           id: string
           images: string[] | null
+          is_hot_deal: boolean | null
+          is_new: boolean | null
+          is_verified: boolean | null
           location: string
           owner_account_id: string | null
+          pets_allowed: boolean | null
           price: string
           price_type: string
           property_type: string
@@ -457,8 +612,12 @@ export type Database = {
           full_address?: string | null
           id?: string
           images?: string[] | null
+          is_hot_deal?: boolean | null
+          is_new?: boolean | null
+          is_verified?: boolean | null
           location: string
           owner_account_id?: string | null
+          pets_allowed?: boolean | null
           price: string
           price_type: string
           property_type: string
@@ -485,8 +644,12 @@ export type Database = {
           full_address?: string | null
           id?: string
           images?: string[] | null
+          is_hot_deal?: boolean | null
+          is_new?: boolean | null
+          is_verified?: boolean | null
           location?: string
           owner_account_id?: string | null
+          pets_allowed?: boolean | null
           price?: string
           price_type?: string
           property_type?: string
@@ -497,12 +660,130 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          accuracy_rating: number | null
+          booking_id: string | null
+          checkin_rating: number | null
+          cleanliness_rating: number | null
+          comment: string | null
+          communication_rating: number | null
+          created_at: string | null
+          id: string
+          location_rating: number | null
+          property_id: string
+          rating: number
+          updated_at: string | null
+          user_id: string
+          value_rating: number | null
+        }
+        Insert: {
+          accuracy_rating?: number | null
+          booking_id?: string | null
+          checkin_rating?: number | null
+          cleanliness_rating?: number | null
+          comment?: string | null
+          communication_rating?: number | null
+          created_at?: string | null
+          id?: string
+          location_rating?: number | null
+          property_id: string
+          rating: number
+          updated_at?: string | null
+          user_id: string
+          value_rating?: number | null
+        }
+        Update: {
+          accuracy_rating?: number | null
+          booking_id?: string | null
+          checkin_rating?: number | null
+          cleanliness_rating?: number | null
+          comment?: string | null
+          communication_rating?: number | null
+          created_at?: string | null
+          id?: string
+          location_rating?: number | null
+          property_id?: string
+          rating?: number
+          updated_at?: string | null
+          user_id?: string
+          value_rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wishlists: {
+        Row: {
+          created_at: string
+          id: string
+          property_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          property_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          property_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_host: {
+        Args: { user_uuid: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "user" | "host" | "admin"

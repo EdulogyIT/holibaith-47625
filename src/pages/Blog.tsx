@@ -11,83 +11,37 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, User, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-// Import blog images
-import blogRealEstateFuture from "@/assets/blog-real-estate-future.jpg";
-import blogPropertyLocation from "@/assets/blog-property-location.jpg";
-import blogShortStayRental from "@/assets/blog-short-stay-rental.jpg";
-import blogPropertyValuation from "@/assets/blog-property-valuation.jpg";
-import blogRenovationTips from "@/assets/blog-renovation-tips.jpg";
-import blogLegalConsiderations from "@/assets/blog-legal-considerations.jpg";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Blog = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   useScrollToTop();
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: t('blogTitle1'),
-      excerpt: t('blogExcerpt1'),
-      author: t('author1'),
-      date: t('march15'),
-      readTime: t('readTime5'),
-      category: t('marketTrends'),
-      image: blogRealEstateFuture
-    },
-    {
-      id: 2,
-      title: t('blogTitle2'),
-      excerpt: t('blogExcerpt2'),
-      author: t('author2'),
-      date: t('march10'),
-      readTime: t('readTime7'),
-      category: t('buyingGuide'),
-      image: blogPropertyLocation
-    },
-    {
-      id: 3,
-      title: t('blogTitle3'),
-      excerpt: t('blogExcerpt3'),
-      author: t('author3'),
-      date: t('march5'),
-      readTime: t('readTime6'),
-      category: t('investment'),
-      image: blogShortStayRental
-    },
-    {
-      id: 4,
-      title: t('blogTitle4'),
-      excerpt: t('blogExcerpt4'),
-      author: t('author4'),
-      date: t('february28'),
-      readTime: t('readTime8'),
-      category: t('finance'),
-      image: blogPropertyValuation
-    },
-    {
-      id: 5,
-      title: t('blogTitle5'),
-      excerpt: t('blogExcerpt5'),
-      author: t('author5'),
-      date: t('february20'),
-      readTime: t('readTime9'),
-      category: t('renovation'),
-      image: blogRenovationTips
-    },
-    {
-      id: 6,
-      title: t('blogTitle6'),
-      excerpt: t('blogExcerpt6'),
-      author: t('author6'),
-      date: t('february15'),
-      readTime: t('readTime10'),
-      category: t('legal'),
-      image: blogLegalConsiderations
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts' as any)
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setBlogPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const categories = [t('allCategories'), t('marketTrends'), t('buyingGuide'), t('investment'), t('finance'), t('renovation'), t('legal')];
 
@@ -127,50 +81,57 @@ const Blog = () => {
         {/* Blog Posts Grid */}
         <section className={cn(isMobile ? "py-6" : "py-12")}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3")}>
-              {blogPosts.map((post) => (
-                <Card 
-                  key={post.id} 
-                  className="group cursor-pointer hover:shadow-elegant transition-all duration-300 hover:-translate-y-2"
-                  onClick={() => navigate(`/blog/${post.id}`)}
-                >
-                  <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-48" : "aspect-video")}>
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <CardHeader className={cn(isMobile && "p-4")}>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="secondary" className={cn(isMobile && "text-xs")}>{post.category}</Badge>
-                      <div className={cn("flex items-center text-muted-foreground", isMobile ? "text-[10px]" : "text-xs")}>
-                        <Clock className={cn(isMobile ? "w-3 h-3 mr-0.5" : "w-3 h-3 mr-1")} />
-                        {post.readTime}
-                      </div>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-4 text-muted-foreground">Loading posts...</p>
+              </div>
+            ) : (
+              <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3")}>
+                {blogPosts.map((post) => (
+                  <Card 
+                    key={post.id} 
+                    className="group cursor-pointer hover:shadow-elegant transition-all duration-300 hover:-translate-y-2"
+                    onClick={() => navigate(`/blog/${post.id}`)}
+                  >
+                    <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-48" : "aspect-video")}>
+                      <img 
+                        src={post.image_url || '/placeholder.jpg'}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                     </div>
-                    <CardTitle className={cn("font-playfair group-hover:text-primary transition-colors", isMobile ? "text-lg" : "text-xl")}>
-                      {post.title}
-                    </CardTitle>
-                    <CardDescription className={cn("font-inter", isMobile && "text-sm")}>
-                      {post.excerpt}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className={cn(isMobile && "p-4 pt-0")}>
-                    <div className={cn("flex items-center justify-between text-muted-foreground", isMobile ? "text-xs" : "text-sm")}>
-                      <div className="flex items-center">
-                        <User className={cn(isMobile ? "w-3 h-3 mr-1" : "w-4 h-4 mr-1")} />
-                        {post.author}
+                    <CardHeader className={cn(isMobile && "p-4")}>
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge variant="secondary" className={cn(isMobile && "text-xs")}>{post.category}</Badge>
+                        <div className={cn("flex items-center text-muted-foreground", isMobile ? "text-[10px]" : "text-xs")}>
+                          <Clock className={cn(isMobile ? "w-3 h-3 mr-0.5" : "w-3 h-3 mr-1")} />
+                          5 min read
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <Calendar className={cn(isMobile ? "w-3 h-3 mr-1" : "w-4 h-4 mr-1")} />
-                        {post.date}
+                      <CardTitle className={cn("font-playfair group-hover:text-primary transition-colors", isMobile ? "text-lg" : "text-xl")}>
+                        {post.title}
+                      </CardTitle>
+                      <CardDescription className={cn("font-inter line-clamp-2", isMobile && "text-sm")}>
+                        {post.content.replace(/<[^>]*>/g, '').slice(0, 150)}...
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className={cn(isMobile && "p-4 pt-0")}>
+                      <div className={cn("flex items-center justify-between text-muted-foreground", isMobile ? "text-xs" : "text-sm")}>
+                        <div className="flex items-center">
+                          <User className={cn(isMobile ? "w-3 h-3 mr-1" : "w-4 h-4 mr-1")} />
+                          {post.author_name}
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className={cn(isMobile ? "w-3 h-3 mr-1" : "w-4 h-4 mr-1")} />
+                          {new Date(post.created_at).toLocaleDateString()}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
