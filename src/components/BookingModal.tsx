@@ -36,15 +36,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
 
   // ---- Stripe constraints ----
   const MIN_EUR = 1; // Minimum EUR amount for Stripe
-  const { currentCurrency } = useCurrency();
+  const { currentCurrency, exchangeRates } = useCurrency();
 
   // Calculate booking details 
   // Property prices are stored in DZD, convert to EUR for payment
   const basePriceDZD = Number(property.price) || 0;
   
-  // Exchange rate: 1 EUR = ~135 DZD (approximate)
-  const DZD_TO_EUR = 1 / 135;
-  const basePriceEUR = basePriceDZD * DZD_TO_EUR;
+  // Use real-time exchange rate from context
+  const basePriceEUR = basePriceDZD * exchangeRates.EUR;
 
   // Convert monthly/weekly price to nightly when short-stay
   let dailyPriceEUR = basePriceEUR;

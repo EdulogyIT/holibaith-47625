@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getExchangeRates } from '@/services/exchangeRateService';
 
 export type Currency = 'USD' | 'DZD' | 'EUR';
 
@@ -7,6 +8,7 @@ interface CurrencyContextType {
   formatPrice: (amount: string | number, priceType?: string) => string;
   getCurrencySymbol: () => string;
   setCurrency: (currency: Currency) => void;
+  exchangeRates: { DZD: number; USD: number; EUR: number };
 }
 
 const currencyConfig = {
@@ -30,11 +32,11 @@ const currencyConfig = {
   }
 };
 
-// Exchange rates (base: DZD)
-const exchangeRates = {
+// Default rates (will be updated from API)
+const DEFAULT_RATES = {
   DZD: 1,
-  USD: 0.0074, // 1 DZD = 0.0074 USD (approximate)
-  EUR: 0.0069  // 1 DZD = 0.0069 EUR (approximate)
+  USD: 1 / 129.43, // 1 DZD = 0.00773 USD (1 USD = 129.43 DZD)
+  EUR: 1 / 145     // 1 DZD = 0.00690 EUR (1 EUR = 145 DZD)
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -44,7 +46,7 @@ interface CurrencyProviderProps {
 }
 
 export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
-  // Independent currency selection - not tied to language
+  // Default to DZD as the base currency
   const [currentCurrency, setCurrentCurrency] = useState<Currency>(() => {
     try {
       const saved = localStorage.getItem('selectedCurrency');
@@ -53,6 +55,22 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
       return 'DZD';
     }
   });
+
+  const [exchangeRates, setExchangeRates] = useState(DEFAULT_RATES);
+
+  // Fetch exchange rates on mount
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const rates = await getExchangeRates();
+        setExchangeRates(rates);
+      } catch (error) {
+        console.warn('Using default exchange rates');
+      }
+    };
+    
+    fetchRates();
+  }, []);
 
   const setCurrency = (currency: Currency) => {
     setCurrentCurrency(currency);
@@ -109,7 +127,8 @@ export const CurrencyProvider = ({ children }: CurrencyProviderProps) => {
     currentCurrency,
     formatPrice,
     getCurrencySymbol,
-    setCurrency
+    setCurrency,
+    exchangeRates
   };
 
   return (
