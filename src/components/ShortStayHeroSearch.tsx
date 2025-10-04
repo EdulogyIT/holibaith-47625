@@ -4,11 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { Search, MapPin, Calendar as CalendarIcon, Users, Bed } from "lucide-react";
+import { Search, MapPin, Calendar as CalendarIcon, Bed } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { DateRangePicker } from "@/components/DateRangePicker";
+import { GuestsSelector } from "@/components/GuestsSelector";
 import shortStayHeroBg from "@/assets/short-stay-hero-bg.jpg";
 import { searchAlgerianCities } from "@/data/algerianCities";
 
@@ -182,14 +183,11 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
               </div>
 
               {/* Travelers */}
-              <div className="flex-1 relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                <Input
-                  type="text"
-                  placeholder={t("travelers")}
-                  className="h-10 pl-12 text-sm font-inter"
+              <div className="flex-1">
+                <GuestsSelector
                   value={formData.travelers}
-                  onChange={(e) => updateFormField("travelers", e.target.value)}
+                  onChange={(value) => updateFormField("travelers", value)}
+                  className="h-10 w-full text-sm"
                 />
               </div>
             </div>

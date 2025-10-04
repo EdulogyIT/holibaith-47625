@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, MapPin, DollarSign, Users, Calendar as CalendarIcon } from "lucide-react";
+import { Search, MapPin, DollarSign, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DateRangePicker } from "@/components/DateRangePicker";
+import { GuestsSelector } from "@/components/GuestsSelector";
 import { cn } from "@/lib/utils";
 import { searchAlgerianCities } from "@/data/algerianCities";
 
@@ -247,14 +248,11 @@ const MobileHeroSearch = () => {
               </PopoverContent>
             </Popover>
 
-            <div className="flex-shrink-0 w-[30%] relative">
-              <Users className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground h-3 w-3 z-10" />
-              <Input
-                type="text"
-                placeholder={t('travelers')}
-                className="h-12 pl-7 pr-2 rounded-full text-xs bg-white border border-input"
+            <div className="flex-shrink-0 w-[30%]">
+              <GuestsSelector
                 value={travelers}
-                onChange={(e) => setTravelers(e.target.value)}
+                onChange={(value) => setTravelers(value)}
+                className="h-12 rounded-full text-xs px-2"
               />
             </div>
           </>

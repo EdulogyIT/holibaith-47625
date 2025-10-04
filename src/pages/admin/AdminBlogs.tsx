@@ -147,7 +147,7 @@ export default function AdminBlogs() {
           <p className="text-sm text-muted-foreground">Manage all blog posts</p>
         </div>
 
-        <Button size="sm" className="w-full" onClick={() => navigate('/blog/new')}>
+        <Button size="sm" className="w-full" onClick={() => navigate('/admin/blogs/new')}>
           <Plus className="h-4 w-4 mr-2" />
           New Post
         </Button>
@@ -219,11 +219,11 @@ export default function AdminBlogs() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => navigate(`/blog/${post.id}`)}>
+                      <DropdownMenuItem onClick={() => navigate(`/admin/blogs/${post.id}`)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(`/blog/edit/${post.id}`)}>
+                      <DropdownMenuItem onClick={() => navigate(`/admin/blogs/edit/${post.id}`)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
@@ -255,7 +255,7 @@ export default function AdminBlogs() {
             Manage all blog posts and articles
           </p>
         </div>
-        <Button onClick={() => navigate('/blog/new')}>
+        <Button onClick={() => navigate('/admin/blogs/new')}>
           <Plus className="h-4 w-4 mr-2" />
           New Post
         </Button>
@@ -360,10 +360,10 @@ export default function AdminBlogs() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="ghost" onClick={() => navigate(`/blog/${post.id}`)}>
+                        <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/blogs/${post.id}`)}>
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => navigate(`/blog/edit/${post.id}`)}>
+                        <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/blogs/edit/${post.id}`)}>
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button

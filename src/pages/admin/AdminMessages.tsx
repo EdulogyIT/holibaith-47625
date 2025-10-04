@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +43,7 @@ interface Conversation {
 export default function AdminMessages() {
   const { t } = useLanguage();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -351,7 +353,7 @@ export default function AdminMessages() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Button size="sm" variant="ghost" onClick={() => window.location.href = `/admin/messages/${conv.id}`}>
+                      <Button size="sm" variant="ghost" onClick={() => navigate(`/admin/messages/${conv.id}`)}>
                         <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>

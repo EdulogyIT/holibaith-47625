@@ -32,7 +32,9 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import AdminProperties from "./pages/admin/AdminProperties";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminMessages from "./pages/admin/AdminMessages";
+import AdminMessageDetail from "./pages/admin/AdminMessageDetail";
 import AdminBlogs from "./pages/admin/AdminBlogs";
+import AdminBlogForm from "./pages/admin/AdminBlogForm";
 import HostDashboard from "./pages/host/HostDashboard";
 import HostOnboarding from "./pages/host/HostOnboarding";
 import HostListings from "./pages/host/HostListings";
@@ -120,7 +122,11 @@ const App = () => (
                       <Route path="properties" element={<AdminProperties />} />
                       <Route path="users" element={<AdminUsers />} />
                       <Route path="messages" element={<AdminMessages />} />
+                      <Route path="messages/:id" element={<AdminMessageDetail />} />
                       <Route path="blogs" element={<AdminBlogs />} />
+                      <Route path="blogs/new" element={<AdminBlogForm />} />
+                      <Route path="blogs/edit/:id" element={<AdminBlogForm />} />
+                      <Route path="blogs/:id" element={<BlogPost />} />
                       <Route path="settings" element={<div>Admin Settings - Coming Soon</div>} />
                     </Routes>
                   </AdminLayout>
