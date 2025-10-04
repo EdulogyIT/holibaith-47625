@@ -213,7 +213,7 @@ export default function AdminMessages() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => window.location.href = `/admin/messages/${conv.id}`}>
+                          <DropdownMenuItem onClick={() => navigate(`/admin/messages/${conv.id}`)}>
                             <Eye className="h-4 w-4 mr-2" />
                             View & Reply
                           </DropdownMenuItem>
