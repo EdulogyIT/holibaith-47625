@@ -30,35 +30,11 @@ export const getExchangeRates = async (): Promise<ExchangeRates> => {
       clearCache();
     }
     
-    // Check cache
-    const cachedRates = localStorage.getItem(CACHE_KEY);
-    const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-    
-    if (cachedRates && cachedTimestamp && cachedVersion === CACHE_VERSION) {
-      const timestamp = parseInt(cachedTimestamp, 10);
-      const now = Date.now();
-      
-      // If cache is still valid, return cached rates
-      if (now - timestamp < CACHE_DURATION) {
-        return JSON.parse(cachedRates);
-      }
-    }
-
-    // Fetch fresh rates from API (using EUR as base)
-    const response = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch exchange rates');
-    }
-
-    const data = await response.json();
-    
-    // Extract rates we need
-    const rates: ExchangeRates = {
-      EUR: 1,
-      USD: data.rates.USD || FALLBACK_RATES.USD,
-      DZD: data.rates.DZD || FALLBACK_RATES.DZD
-    };
+    // Always use hardcoded rates (no API fetch)
+    // This ensures consistent conversions as per business requirements:
+    // 1 EUR = 1.08 USD
+    // 1 EUR = 145 DZD
+    const rates: ExchangeRates = FALLBACK_RATES;
 
     // Cache the rates with version
     localStorage.setItem(CACHE_KEY, JSON.stringify(rates));
@@ -67,9 +43,9 @@ export const getExchangeRates = async (): Promise<ExchangeRates> => {
 
     return rates;
   } catch (error) {
-    console.warn('Failed to fetch exchange rates, using fallback:', error);
+    console.warn('Error setting exchange rates, using fallback:', error);
     
-    // Return fallback rates if API fails
+    // Return fallback rates if anything fails
     return FALLBACK_RATES;
   }
 };
