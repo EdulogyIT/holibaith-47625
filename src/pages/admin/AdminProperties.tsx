@@ -86,6 +86,31 @@ export default function AdminProperties() {
     fetchProperties();
   }, []);
 
+  const handleStatusChange = async (propertyId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .update({ status: newStatus })
+        .eq('id', propertyId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: `Property ${newStatus === 'active' ? 'approved' : newStatus} successfully`,
+      });
+      
+      fetchProperties();
+    } catch (error) {
+      console.error('Error updating property status:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update property status',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleDelete = async () => {
     if (!deleteId) return;
 
@@ -519,9 +544,19 @@ export default function AdminProperties() {
                     <TableCell>{property.contact_name}</TableCell>
                     <TableCell>{property.price} DA</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(property.status || 'active')}>
-                        {property.status || 'active'}
-                      </Badge>
+                      <Select
+                        value={property.status || 'pending'}
+                        onValueChange={(value) => handleStatusChange(property.id, value)}
+                      >
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="active">Approved</SelectItem>
+                          <SelectItem value="suspended">Suspended</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                     <TableCell>{new Date(property.created_at).toLocaleDateString()}</TableCell>
                     <TableCell>

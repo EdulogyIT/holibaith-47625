@@ -1,4 +1,4 @@
-import { Menu, Home, Building2, MapPin, User, MessageCircle, Calendar, Settings, LogOut, Globe, DollarSign } from "lucide-react";
+import { Menu, Home, Building2, MapPin, User, MessageCircle, Calendar, Settings, LogOut, Globe, DollarSign, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,8 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
 import holibaytLogo from "@/assets/holibayt-logo-new.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const MobileHeader = () => {
   const navigate = useNavigate();
@@ -15,6 +16,19 @@ const MobileHeader = () => {
   const { currentCurrency, setCurrency } = useCurrency();
   const { user, logout } = useAuth();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch unread notifications count
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from('notifications')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user.id)
+        .eq('is_read', false)
+        .then(({ count }) => setUnreadCount(count || 0));
+    }
+  }, [user]);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -53,7 +67,24 @@ const MobileHeader = () => {
           <span className="text-lg font-semibold text-foreground">Holibayt</span>
         </div>
 
-        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        <div className="flex items-center gap-2">
+          {user && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative bg-white/90 hover:bg-white rounded-xl"
+              onClick={() => navigate('/notifications')}
+            >
+              <Bell className="h-5 w-5 text-foreground" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </Button>
+          )}
+          
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white rounded-xl">
               <Menu className="h-6 w-6 text-foreground" />
@@ -277,7 +308,8 @@ const MobileHeader = () => {
               </nav>
             </div>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

@@ -27,6 +27,7 @@ import Bookings from "./pages/Bookings";
 import Profile from "./pages/Profile";
 import Messages from "./pages/Messages";
 import Wishlist from "./pages/Wishlist";
+import Notifications from "./pages/Notifications";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AdminProperties from "./pages/admin/AdminProperties";
@@ -93,6 +94,11 @@ const App = () => (
               } />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/messages" element={<Messages />} />
+              <Route path="/notifications" element={
+                <ProtectedRoute requireAuth>
+                  <Notifications />
+                </ProtectedRoute>
+              } />
               <Route path="/property/:id" element={<Property />} />
               <Route path="/city/:cityId" element={<City />} />
               <Route path="/contact-advisor" element={<ContactAdvisor />} />
