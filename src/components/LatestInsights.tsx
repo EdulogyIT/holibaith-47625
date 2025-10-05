@@ -1,35 +1,53 @@
+import { useState, useEffect } from "react";
 import { Clock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import blogRealEstate from "@/assets/blog-real-estate-future.jpg";
-import blogLocation from "@/assets/blog-property-location.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 const LatestInsights = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [insights, setInsights] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const insights = [
-    {
-      id: 1,
-      image: blogRealEstate,
-      category: "Market Trends",
-      title: "The Future of Real Estate in Algeria",
-      description: "Discover the emerging trends shaping Algeria's property market",
-      author: "Sarah Benali",
-      readTime: "5 min read",
-      slug: "future-real-estate-algeria",
-    },
-    {
-      id: 2,
-      image: blogLocation,
-      category: "Buying Guide",
-      title: "Choosing the Right Location",
-      description: "Essential factors when selecting your next property",
-      author: "Karim Mansouri",
-      readTime: "4 min read",
-      slug: "property-location-guide",
-    },
-  ];
+  useEffect(() => {
+    fetchInsights();
+  }, []);
+
+  const fetchInsights = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts' as any)
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      setInsights(data || []);
+    } catch (error) {
+      console.error('Error fetching insights:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="px-4 py-4 bg-white">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-bold">{t('latestInsights')}</h2>
+        </div>
+        <div className="text-center text-muted-foreground py-4">
+          Loading...
+        </div>
+      </section>
+    );
+  }
+
+  if (insights.length === 0) {
+    return null;
+  }
 
   return (
     <section className="px-4 py-4 bg-white">
@@ -46,34 +64,34 @@ const LatestInsights = () => {
         {insights.map((insight) => (
           <div
             key={insight.id}
-            onClick={() => navigate(`/blog/${insight.slug}`)}
-            className="flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer"
+            onClick={() => navigate(`/blog/${insight.id}`)}
+            className="flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden shadow-sm border border-border cursor-pointer hover:shadow-md transition-shadow"
           >
             <div className="relative">
               <img
-                src={insight.image}
+                src={insight.image_url || '/placeholder.jpg'}
                 alt={insight.title}
                 className="w-full h-36 object-cover"
               />
               <div className="absolute top-2 left-2">
                 <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-                  {insight.category}
+                  {insight.category || 'Article'}
                 </span>
               </div>
             </div>
             <div className="p-3">
               <h3 className="font-bold text-sm mb-1 line-clamp-2">{insight.title}</h3>
               <p className="text-muted-foreground text-xs mb-2 line-clamp-2">
-                {insight.description}
+                {insight.content.replace(/<[^>]*>/g, '').slice(0, 100)}...
               </p>
               <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                 <div className="flex items-center">
                   <User className="h-3 w-3 mr-0.5" />
-                  {insight.author}
+                  {insight.author_name}
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-3 w-3 mr-0.5" />
-                  {insight.readTime}
+                  5 min read
                 </div>
               </div>
             </div>

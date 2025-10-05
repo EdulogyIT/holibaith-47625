@@ -60,7 +60,11 @@ const MobileHeroSearch = () => {
     { id: 'rent' as const, label: t('rent') || 'Rent' },
   ];
 
-  const handleSearch = () => {
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
     if (!location.trim()) return;
     
     const route = selectedTab === 'stay' ? 'short-stay' : selectedTab;
@@ -113,41 +117,42 @@ const MobileHeroSearch = () => {
 
       {/* Search Bar with Integrated Button */}
       <div className="relative" ref={suggestionsRef}>
-        <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
-        <Input
-          type="text"
-          placeholder={
-            selectedTab === 'buy' 
-              ? t('cityNeighborhood') || 'City, neighborhood...' 
-              : selectedTab === 'rent'
-              ? t('whereToRent') || 'Where to rent?'
-              : t('stayDestination') || 'Destination...'
-          }
-          value={location}
-          onChange={(e) => handleLocationChange(e.target.value)}
-          onFocus={() => {
-            if (location) {
-              setSuggestions(searchAlgerianCities(location, currentLang));
-              setShowSuggestions(true);
+        <form onSubmit={handleSearch}>
+          <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
+          <Input
+            type="text"
+            placeholder={
+              selectedTab === 'buy' 
+                ? t('cityNeighborhood') || 'City, neighborhood...' 
+                : selectedTab === 'rent'
+                ? t('whereToRent') || 'Where to rent?'
+                : t('stayDestination') || 'Destination...'
             }
-          }}
-          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          className="pl-12 pr-16 h-12 rounded-2xl bg-white text-base"
-          autoComplete="off"
-        />
-        <Button
-          onClick={handleSearch}
-          disabled={!location.trim()}
-          size="icon"
-          className={cn(
-            "absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full",
-            location.trim()
-              ? "bg-primary hover:bg-primary/90 text-white"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          )}
-        >
-          <Search className="h-4 w-4" />
-        </Button>
+            value={location}
+            onChange={(e) => handleLocationChange(e.target.value)}
+            onFocus={() => {
+              if (location) {
+                setSuggestions(searchAlgerianCities(location, currentLang));
+                setShowSuggestions(true);
+              }
+            }}
+            className="pl-12 pr-16 h-12 rounded-2xl bg-white text-base"
+            autoComplete="off"
+          />
+          <Button
+            type="submit"
+            disabled={!location.trim()}
+            size="icon"
+            className={cn(
+              "absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full",
+              location.trim()
+                ? "bg-primary hover:bg-primary/90 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            )}
+          >
+            <Search className="h-4 w-4" />
+          </Button>
+        </form>
         {showSuggestions && suggestions.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-border rounded-lg shadow-lg z-[200] max-h-60 overflow-y-auto">
             {suggestions.map((city, index) => (

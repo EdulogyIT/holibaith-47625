@@ -165,16 +165,18 @@ const BlogPost = () => {
           />
 
           {/* Tags */}
-          <div className="mt-12 pt-8 border-t border-border">
-            <h3 className="text-lg font-semibold mb-4 font-playfair">Tags</h3>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="font-inter">
-                  {tag}
-                </Badge>
-              ))}
+          {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-border">
+              <h3 className="text-lg font-semibold mb-4 font-playfair">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag: string) => (
+                  <Badge key={tag} variant="outline" className="font-inter">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Social Sharing */}
           <div className="mt-8 pt-8 border-t border-border">
