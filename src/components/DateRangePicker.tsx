@@ -52,9 +52,6 @@ export function DateRangePicker({
         locale={locale}
         weekStartsOn={0}
         showOutsideDays
-        captionLayout="dropdown-buttons"
-        fromYear={1900}
-        toYear={2100}
         disabled={allowPast ? undefined : { before: today }}
         className="pointer-events-auto"
         classNames={{

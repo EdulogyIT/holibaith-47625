@@ -13,7 +13,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import algerImage from "@/assets/city-alger.jpg";
 import oranImage from "@/assets/city-oran.jpg";
 import constantineImage from "@/assets/city-constantine.jpg";
@@ -31,13 +32,59 @@ const City = () => {
   const { formatPrice } = useCurrency();
   const { cityId } = useParams();
   const isMobile = useIsMobile();
+  const [buyProperties, setBuyProperties] = useState<any[]>([]);
+  const [rentProperties, setRentProperties] = useState<any[]>([]);
+  const [shortStayProperties, setShortStayProperties] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   useScrollToTop();
 
-  // Re-render when language changes
+  // Fetch properties from Supabase when city changes
   useEffect(() => {
-    // Component will re-render when currentLang changes
-  }, [currentLang]);
+    fetchPropertiesByCity();
+  }, [cityId]);
+
+  const fetchPropertiesByCity = async () => {
+    if (!cityId || !currentCity) return;
+    
+    setIsLoading(true);
+    try {
+      // Fetch buy properties
+      const { data: buyData } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('category', 'buy')
+        .eq('status', 'active')
+        .ilike('city', `%${currentCity.name}%`)
+        .order('created_at', { ascending: false });
+      
+      // Fetch rent properties
+      const { data: rentData } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('category', 'rent')
+        .eq('status', 'active')
+        .ilike('city', `%${currentCity.name}%`)
+        .order('created_at', { ascending: false });
+      
+      // Fetch short stay properties
+      const { data: shortStayData } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('category', 'short-stay')
+        .eq('status', 'active')
+        .ilike('city', `%${currentCity.name}%`)
+        .order('created_at', { ascending: false });
+
+      setBuyProperties(buyData || []);
+      setRentProperties(rentData || []);
+      setShortStayProperties(shortStayData || []);
+    } catch (error) {
+      console.error('Error fetching city properties:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const cityData = {
     alger: {
@@ -103,126 +150,19 @@ const City = () => {
     );
   }
 
-  // Sample properties for each city - add more for Alger Centre
-  const buyProperties = [
-    {
-      id: 1,
-      title: `${t('propertyVilla')} ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 2500000, // Base price in DZD
-      beds: 4,
-      baths: 3,
-      area: "280 m²",
-      image: villaMediterranean,
-      type: t('propertyVilla'),
-      description: `Beautiful Mediterranean-style villa in ${currentCity.name} featuring spacious living areas, modern amenities, and stunning views. Perfect for families looking for luxury and comfort.`
-    },
-    {
-      id: 2,
-      title: `${t('propertyAppartement')} ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 1800000, // Base price in DZD
-      beds: 3,
-      baths: 2,
-      area: "120 m²",
-      image: luxuryApartment,
-      type: t('propertyAppartement'),
-      description: `Modern luxury apartment in the heart of ${currentCity.name}. Features include high-end finishes, natural lighting, and access to premium facilities. Ideal for urban living.`
-    },
-    {
-      id: 7,
-      title: `Maison Traditionnelle ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 3200000, // Base price in DZD
-      beds: 5,
-      baths: 3,
-      area: "350 m²",
-      image: traditionalHouse,
-      type: t('propertyMaison'),
-      description: `Charming traditional house with authentic Algerian architecture. Spacious rooms, courtyard, and modern updates while maintaining historical character. Perfect for large families.`
-    },
-    {
-      id: 8,
-      title: `Appartement Moderne ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 2100000, // Base price in DZD
-      beds: 3,
-      baths: 2,
-      area: "140 m²",
-      image: modernApartment,
-      type: t('propertyAppartement'),
-      description: `Contemporary apartment with sleek design and premium finishes. Located in a prime area of ${currentCity.name} with easy access to amenities and transportation.`
-    }
-  ];
 
-  const rentProperties = [
-    {
-      id: 3,
-      title: `${t('propertyStudio')} ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 35000, // Base price in DZD (monthly)
-      priceType: 'monthly',
-      beds: 1,
-      baths: 1,
-      area: "45 m²",
-      image: shortStay,
-      type: t('propertyStudio'),
-      description: `Cozy studio apartment perfect for students or young professionals. Fully furnished with modern amenities and located in a convenient area of ${currentCity.name}.`
-    },
-    {
-      id: 4,
-      title: `${t('propertyAppartement')} ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 55000, // Base price in DZD (monthly)
-      priceType: 'monthly',
-      beds: 3,
-      baths: 2,
-      area: "110 m²",
-      image: luxuryApartment,
-      type: t('propertyAppartement'),
-      description: `Spacious 3-bedroom apartment available for rent in ${currentCity.name}. Features modern kitchen, bright living spaces, and parking. Great for families.`
-    }
-  ];
-
-  const shortStayProperties = [
-    {
-      id: 5,
-      title: `${t('propertySuite')} ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 12000, // Base price in DZD (per night)
-      priceType: 'daily',
-      beds: 2,
-      baths: 1,
-      area: "75 m²",
-      image: shortStay,
-      type: t('propertySuite'),
-      rating: 4.8,
-      description: `Comfortable suite in ${currentCity.name} perfect for short stays. Fully equipped with WiFi, kitchen, and modern amenities. Close to major attractions and business districts.`
-    },
-    {
-      id: 6,
-      title: `${t('propertyAppartement')} Vue ${currentCity.name}`,
-      location: `${currentCity.name}, ${t('algeria')}`,
-      price: 15000, // Base price in DZD (per night)
-      priceType: 'daily',
-      beds: 3,
-      baths: 2,
-      area: "95 m²",
-      image: luxuryApartment,
-      type: t('propertyAppartement'),
-      rating: 4.9,
-      description: `Stunning apartment with panoramic views of ${currentCity.name}. Luxuriously appointed with premium furnishings, full kitchen, and exceptional service. Ideal for business travelers and vacationers.`
-    }
-  ];
-
-  const PropertyCard = ({ property, listingType }: { property: any, listingType: string }) => (
+  const PropertyCard = ({ property, listingType }: { property: any, listingType: string }) => {
+    const priceValue = typeof property.price === 'string' ? parseFloat(property.price) : property.price;
+    const priceCurrency = property.price_currency || 'DZD';
+    
+    return (
     <Card 
       className="cursor-pointer hover:shadow-lg transition-shadow overflow-hidden"
       onClick={() => navigate(`/property/${property.id}`)}
     >
       <div className={cn("bg-muted rounded-t-lg overflow-hidden", isMobile ? "h-32" : "aspect-video")}>
         <img 
-          src={property.image} 
+          src={property.images?.[0] || '/placeholder.jpg'} 
           alt={property.title}
           className="w-full h-full object-cover"
         />
@@ -230,31 +170,37 @@ const City = () => {
       <CardHeader className={cn(isMobile && "p-2 pb-1")}>
         <div className="flex justify-between items-start gap-1">
           <CardTitle className={cn("font-playfair", isMobile ? "text-sm leading-tight" : "text-xl")}>{property.title}</CardTitle>
-          <Badge variant="secondary" className={cn("font-inter shrink-0", isMobile && "text-[10px] px-1.5 py-0")}>{property.type}</Badge>
+          <Badge variant="secondary" className={cn("font-inter shrink-0", isMobile && "text-[10px] px-1.5 py-0")}>{property.property_type}</Badge>
         </div>
         <div className="flex items-center text-muted-foreground mt-0.5">
           <MapPin className={cn(isMobile ? "w-3 h-3 mr-0.5" : "w-4 h-4 mr-1")} />
-          <span className={cn("font-inter", isMobile ? "text-xs" : "text-sm")}>{property.location}</span>
+          <span className={cn("font-inter", isMobile ? "text-xs" : "text-sm")}>
+            {property.city}{property.city && property.location ? ', ' : ''}{property.location}
+          </span>
         </div>
       </CardHeader>
       <CardContent className={cn(isMobile && "p-2 pt-0")}>
         <div className="flex justify-between items-center mb-2">
           <span className={cn("font-bold text-primary font-playfair", isMobile ? "text-base" : "text-2xl")}>
-            {formatPrice(property.price, property.priceType)}
+            {formatPrice(priceValue, property.price_type, priceCurrency)}
           </span>
         </div>
         <div className={cn("flex justify-between text-muted-foreground mb-2 font-inter", isMobile ? "text-xs gap-1" : "text-sm")}>
-          <div className="flex items-center gap-0.5">
-            <Bed className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
-            {property.beds}
-          </div>
-          <div className="flex items-center gap-0.5">
-            <Bath className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
-            {property.baths}
-          </div>
+          {property.bedrooms && (
+            <div className="flex items-center gap-0.5">
+              <Bed className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
+              {property.bedrooms}
+            </div>
+          )}
+          {property.bathrooms && (
+            <div className="flex items-center gap-0.5">
+              <Bath className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
+              {property.bathrooms}
+            </div>
+          )}
           <div className="flex items-center gap-0.5">
             <Square className={cn(isMobile ? "w-3 h-3" : "w-4 h-4")} />
-            {property.area}
+            {property.area} m²
           </div>
         </div>
         <Button 
@@ -268,7 +214,8 @@ const City = () => {
         </Button>
       </CardContent>
     </Card>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -355,11 +302,22 @@ const City = () => {
               </TabsList>
               
               <TabsContent value="buy" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
-                  {buyProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} listingType="buy" />
-                  ))}
-                </div>
+                {isLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-4 text-muted-foreground">Loading properties...</p>
+                  </div>
+                ) : buyProperties.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No properties available for sale in {currentCity.name}</p>
+                  </div>
+                ) : (
+                  <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                    {buyProperties.map((property) => (
+                      <PropertyCard key={property.id} property={property} listingType="buy" />
+                    ))}
+                  </div>
+                )}
                 <div className="text-center">
                   <Button 
                     variant="outline" 
@@ -373,11 +331,22 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="rent" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
-                  {rentProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} listingType="rent" />
-                  ))}
-                </div>
+                {isLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-4 text-muted-foreground">Loading properties...</p>
+                  </div>
+                ) : rentProperties.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No properties available for rent in {currentCity.name}</p>
+                  </div>
+                ) : (
+                  <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                    {rentProperties.map((property) => (
+                      <PropertyCard key={property.id} property={property} listingType="rent" />
+                    ))}
+                  </div>
+                )}
                 <div className="text-center">
                   <Button 
                     variant="outline" 
@@ -391,11 +360,22 @@ const City = () => {
               </TabsContent>
               
               <TabsContent value="shortStay" className="space-y-6">
-                <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
-                  {shortStayProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} listingType="shortStay" />
-                  ))}
-                </div>
+                {isLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="mt-4 text-muted-foreground">Loading properties...</p>
+                  </div>
+                ) : shortStayProperties.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">No short stay properties available in {currentCity.name}</p>
+                  </div>
+                ) : (
+                  <div className={cn("grid gap-4", isMobile ? "grid-cols-2 gap-3" : "md:grid-cols-2 lg:grid-cols-3 gap-6")}>
+                    {shortStayProperties.map((property) => (
+                      <PropertyCard key={property.id} property={property} listingType="shortStay" />
+                    ))}
+                  </div>
+                )}
                 <div className="text-center">
                   <Button 
                     variant="outline" 
