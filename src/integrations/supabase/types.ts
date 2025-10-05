@@ -554,6 +554,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           average_rating: number | null
           created_at: string
           email: string
@@ -565,6 +566,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          avatar_url?: string | null
           average_rating?: number | null
           created_at?: string
           email: string
@@ -576,6 +578,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          avatar_url?: string | null
           average_rating?: number | null
           created_at?: string
           email?: string
@@ -594,6 +597,8 @@ export type Database = {
           bathrooms: string | null
           bedrooms: string | null
           category: string
+          check_in_time: string | null
+          check_out_time: string | null
           city: string
           commission_rate: number | null
           contact_email: string
@@ -627,6 +632,8 @@ export type Database = {
           bathrooms?: string | null
           bedrooms?: string | null
           category: string
+          check_in_time?: string | null
+          check_out_time?: string | null
           city: string
           commission_rate?: number | null
           contact_email: string
@@ -660,6 +667,8 @@ export type Database = {
           bathrooms?: string | null
           bedrooms?: string | null
           category?: string
+          check_in_time?: string | null
+          check_out_time?: string | null
           city?: string
           commission_rate?: number | null
           contact_email?: string

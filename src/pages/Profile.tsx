@@ -61,8 +61,8 @@ const Profile = () => {
       .eq('id', user.id)
       .single();
     
-    if (profile?.avatar_url) {
-      setAvatarUrl(profile.avatar_url);
+    if (profile && (profile as any).avatar_url) {
+      setAvatarUrl((profile as any).avatar_url);
     }
   };
 
@@ -96,7 +96,7 @@ const Profile = () => {
 
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: publicUrl } as any)
         .eq('id', user?.id);
 
       if (updateError) throw updateError;
