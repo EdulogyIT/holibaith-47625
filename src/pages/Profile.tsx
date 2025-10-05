@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
 import MobileHeader from '@/components/MobileHeader';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import FloatingMapButton from '@/components/FloatingMapButton';
@@ -38,7 +40,75 @@ import {
 const Profile = () => {
   const { user, logout, hasRole } = useAuth();
   const { t, currentLang } = useLanguage();
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchProfile();
+    }
+  }, [user?.id]);
+
+  const fetchProfile = async () => {
+    if (!user?.id) return;
+    
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', user.id)
+      .single();
+    
+    if (profile?.avatar_url) {
+      setAvatarUrl(profile.avatar_url);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files || event.target.files.length === 0) {
+        return;
+      }
+
+      const file = event.target.files[0];
+      setUploading(true);
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user?.id}/${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user?.id);
+
+      if (updateError) throw updateError;
+
+      setAvatarUrl(publicUrl);
+      toast.success(currentLang === 'AR' ? 'تم تحديث الصورة' : currentLang === 'FR' ? 'Photo mise à jour' : 'Photo updated');
+    } catch (error) {
+      toast.error(currentLang === 'AR' ? 'خطأ في تحميل الصورة' : currentLang === 'FR' ? 'Erreur de téléchargement' : 'Upload error');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const translations = {
     en: {
@@ -231,7 +301,7 @@ const Profile = () => {
           <div className="mb-4">
             <div className="flex items-center gap-3 mb-3">
               <Avatar className="h-14 w-14 ring-2 ring-primary/20">
-                <AvatarImage src="" alt={user.name} />
+                <AvatarImage src={avatarUrl} alt={user.name} />
                 <AvatarFallback className="text-lg bg-primary text-white">
                   {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </AvatarFallback>
@@ -261,7 +331,7 @@ const Profile = () => {
               variant="outline" 
               size="sm" 
               className="text-xs h-8 px-3"
-              onClick={() => window.location.href = '/bookings'}
+              onClick={() => navigate('/bookings')}
             >
               <BookOpen className="h-3 w-3 mr-1" />
               {currentTranslations.myBookings}
@@ -271,7 +341,7 @@ const Profile = () => {
                 variant="outline" 
                 size="sm" 
                 className="text-xs h-8 px-3"
-                onClick={() => window.location.href = '/publish-property'}
+                onClick={() => navigate('/publish-property')}
               >
                 <Home className="h-3 w-3 mr-1" />
                 {currentTranslations.publishProperty}
@@ -345,14 +415,27 @@ const Profile = () => {
                       <Label htmlFor="profilePhoto" className="text-xs font-medium">{currentTranslations.profilePhoto}</Label>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-16 w-16">
-                          <AvatarImage src="" alt={user.name} />
+                          <AvatarImage src={avatarUrl} alt={user.name} />
                           <AvatarFallback className="text-lg bg-primary text-white">
                             {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <Button variant="outline" size="sm" className="text-xs h-8">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-xs h-8"
+                          onClick={handleUploadClick}
+                          disabled={uploading}
+                        >
                           <Camera className="h-3 w-3 mr-1" />
-                          Upload Photo
+                          {uploading ? 'Uploading...' : 'Upload Photo'}
                         </Button>
                       </div>
                     </div>
