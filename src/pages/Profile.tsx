@@ -248,16 +248,31 @@ const Profile = () => {
 
           {/* Quick Actions */}
           <div className="flex flex-wrap gap-2 mb-4">
-            <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs h-8 px-3"
+              onClick={() => setIsEditing(!isEditing)}
+            >
               <Edit className="h-3 w-3 mr-1" />
               {currentTranslations.editProfile}
             </Button>
-            <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs h-8 px-3"
+              onClick={() => window.location.href = '/bookings'}
+            >
               <BookOpen className="h-3 w-3 mr-1" />
               {currentTranslations.myBookings}
             </Button>
             {hasRole('host') && (
-              <Button variant="outline" size="sm" className="text-xs h-8 px-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs h-8 px-3"
+                onClick={() => window.location.href = '/publish-property'}
+              >
                 <Home className="h-3 w-3 mr-1" />
                 {currentTranslations.publishProperty}
               </Button>
@@ -325,7 +340,22 @@ const Profile = () => {
                   <CardDescription className="text-xs">{currentTranslations.personalInfoDesc}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3 p-3">
-                  <div className="space-y-3">
+                   <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="profilePhoto" className="text-xs font-medium">{currentTranslations.profilePhoto}</Label>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-16 w-16">
+                          <AvatarImage src="" alt={user.name} />
+                          <AvatarFallback className="text-lg bg-primary text-white">
+                            {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <Button variant="outline" size="sm" className="text-xs h-8">
+                          <Camera className="h-3 w-3 mr-1" />
+                          Upload Photo
+                        </Button>
+                      </div>
+                    </div>
                     <div className="space-y-1">
                       <Label htmlFor="displayName" className="text-xs font-medium">{currentTranslations.displayName}</Label>
                       <Input id="displayName" defaultValue={user.name} className="text-sm h-9" />

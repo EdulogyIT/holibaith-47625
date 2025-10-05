@@ -25,6 +25,9 @@ import ScheduleVisitModal from "@/components/ScheduleVisitModal";
 import MessageOwnerModal from "@/components/MessageOwnerModal";
 import { cn } from "@/lib/utils";
 import { getMockProperty } from "@/data/mockProperties";
+import { MeetYourHost } from "@/components/MeetYourHost";
+import { PropertyReviews } from "@/components/PropertyReviews";
+import { PriceBreakdown } from "@/components/PriceBreakdown";
 
 interface Property {
   id: string;
@@ -270,7 +273,7 @@ const Property = () => {
                 </div>
               </div>
 
-              {/* Dates Section for short-stay */}
+              {/* Dates Section & Price Breakdown for short-stay */}
               {property.category === 'short-stay' && (
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
@@ -285,6 +288,15 @@ const Property = () => {
                   </div>
                   <PropertyDatePicker 
                     onDateChange={(dates) => console.log("Selected dates:", dates)}
+                  />
+                  
+                  {/* Price Breakdown */}
+                  <PriceBreakdown 
+                    basePrice={parseFloat(property.price)}
+                    nights={3}
+                    priceType={property.price_type}
+                    category={property.category}
+                    propertyId={property.id}
                   />
                 </div>
               )}
@@ -320,6 +332,25 @@ const Property = () => {
                 <MapboxMap 
                   location={`${property.city}, ${property.location}`}
                   address={property.full_address || `${property.city}, ${property.location}`}
+                />
+              </div>
+
+              {/* Meet Your Host */}
+              {property.user_id && (
+                <div className="space-y-3">
+                  <MeetYourHost 
+                    userId={property.user_id}
+                    onMessageHost={() => setIsMessageModalOpen(true)}
+                  />
+                </div>
+              )}
+
+              {/* Reviews Section */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold font-playfair">Reviews</h3>
+                <PropertyReviews 
+                  propertyId={property.id}
+                  canLeaveReview={false}
                 />
               </div>
 
