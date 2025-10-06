@@ -30,6 +30,7 @@ export default function AdminBlogForm() {
   const isEdit = Boolean(id);
 
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     author_name: '',
@@ -47,13 +48,18 @@ export default function AdminBlogForm() {
 
   const fetchBlogPost = async () => {
     try {
+      setFetching(true);
       const { data, error } = await supabase
-        .from('blog_posts' as any)
+        .from('blog_posts')
         .select('*')
         .eq('id', id)
-        .single() as { data: BlogPost | null; error: any };
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching blog post:', error);
+        throw error;
+      }
+      
       if (data) {
         setFormData({
           title: data.title || '',
@@ -63,6 +69,13 @@ export default function AdminBlogForm() {
           status: data.status || 'draft',
           image_url: data.image_url || '',
         });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Blog post not found',
+          variant: 'destructive',
+        });
+        navigate('/admin/blogs');
       }
     } catch (error) {
       console.error('Error fetching blog post:', error);
@@ -71,6 +84,8 @@ export default function AdminBlogForm() {
         description: 'Failed to load blog post',
         variant: 'destructive',
       });
+    } finally {
+      setFetching(false);
     }
   };
 
@@ -137,6 +152,17 @@ export default function AdminBlogForm() {
       setLoading(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading blog post...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("space-y-4", isMobile && "pb-6")}>
