@@ -52,7 +52,7 @@ export function GuestsSelector({ value, onChange, className }: GuestsSelectorPro
   
   const displayText = () => {
     if (totalGuests === 0 && guests.infants === 0 && guests.pets === 0) {
-      return t('addGuests') || 'Add guests';
+      return t('addGuests') || 'Add Guests';
     }
     const parts = [];
     if (totalGuests > 0) parts.push(`${totalGuests} ${totalGuests === 1 ? (t('guest') || 'guest') : (t('guests') || 'guests')}`);
