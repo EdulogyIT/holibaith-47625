@@ -64,6 +64,8 @@ const Property = () => {
   const [error, setError] = useState<string | null>(null);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [checkInDate, setCheckInDate] = useState<Date | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   
   useScrollToTop();
 
@@ -592,6 +594,19 @@ const Property = () => {
                   location={`${property.city}, ${property.location}`}
                   address={property.full_address || `${property.city}, ${property.location}`}
                 />
+
+                {/* Meet Your Host - For short-stay properties */}
+                {property.category === 'short-stay' && property.user_id && (
+                  <MeetYourHost 
+                    userId={property.user_id}
+                    onMessageHost={() => setIsMessageModalOpen(true)}
+                  />
+                )}
+
+                {/* Reviews - For short-stay properties */}
+                {property.category === 'short-stay' && (
+                  <PropertyReviews propertyId={property.id} />
+                )}
               </div>
 
               {/* Sidebar */}
@@ -600,8 +615,23 @@ const Property = () => {
                 {property.category === 'short-stay' ? (
                   <div className="space-y-4">
                     <PropertyDatePicker 
-                      onDateChange={(dates) => console.log("Selected dates:", dates)}
+                      onDateChange={(dates) => {
+                        setCheckInDate(dates.checkIn);
+                        setCheckOutDate(dates.checkOut);
+                      }}
                     />
+                    
+                    {/* Price Breakdown */}
+                    {checkInDate && checkOutDate && (
+                      <PriceBreakdown
+                        basePrice={parseFloat(property.price)}
+                        nights={Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))}
+                        priceType={property.price_type}
+                        category={property.category}
+                        propertyId={property.id}
+                      />
+                    )}
+                    
                     <Card>
                       <CardContent className="pt-6">
                         <BookingModal 

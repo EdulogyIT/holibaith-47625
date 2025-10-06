@@ -185,6 +185,9 @@ export default function HostPayouts() {
   };
 
   const totalEarnings = commissionTransactions
+    .reduce((sum, t) => sum + t.host_amount, 0);
+
+  const withdrawnEarnings = commissionTransactions
     .filter(t => t.status === 'completed')
     .reduce((sum, t) => sum + t.host_amount, 0);
 
@@ -213,38 +216,50 @@ export default function HostPayouts() {
       </div>
 
       {/* Earnings Overview */}
-      <div className={`grid gap-${isMobile ? '3' : '4'} ${isMobile ? 'grid-cols-2' : 'md:grid-cols-3'}`}>
+      <div className={`grid gap-4 ${isMobile ? 'grid-cols-2' : 'md:grid-cols-4'}`}>
         <Card>
           <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
             <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Total Earnings</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CreditCard className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
           </CardHeader>
           <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
-            <div className="text-2xl font-bold">{formatPrice(totalEarnings)}</div>
+            <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>{formatPrice(totalEarnings, '', 'DZD')}</div>
+            <p className={`text-muted-foreground ${isMobile ? 'text-[10px]' : 'text-xs'}`}>All-time earnings</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Withdrawn</CardTitle>
+            <CheckCircle className={`text-green-500 ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+          </CardHeader>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+            <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>{formatPrice(withdrawnEarnings, '', 'DZD')}</div>
+            <p className={`text-muted-foreground ${isMobile ? 'text-[10px]' : 'text-xs'}`}>Successfully paid out</p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
             <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Pending Payouts</CardTitle>
-            <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            <AlertCircle className={`text-yellow-500 ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
           </CardHeader>
           <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
-            <div className="text-2xl font-bold">{formatPrice(pendingEarnings)}</div>
+            <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>{formatPrice(pendingEarnings, '', 'DZD')}</div>
+            <p className={`text-muted-foreground ${isMobile ? 'text-[10px]' : 'text-xs'}`}>Awaiting transfer</p>
           </CardContent>
         </Card>
         
-        {!isMobile && (
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Payment Accounts</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{paymentAccounts.length}</div>
-            </CardContent>
-          </Card>
-        )}
+        <Card>
+          <CardHeader className={`flex flex-row items-center justify-between space-y-0 ${isMobile ? 'pb-1 p-4' : 'pb-2'}`}>
+            <CardTitle className={`font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>Payment Accounts</CardTitle>
+            <Building2 className={`text-muted-foreground ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+          </CardHeader>
+          <CardContent className={isMobile ? 'p-4 pt-0' : ''}>
+            <div className={`font-bold ${isMobile ? 'text-lg' : 'text-2xl'}`}>{paymentAccounts.length}</div>
+            <p className={`text-muted-foreground ${isMobile ? 'text-[10px]' : 'text-xs'}`}>Active accounts</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Tabs defaultValue="accounts" className="space-y-4">
