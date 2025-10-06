@@ -50,10 +50,11 @@ const City = () => {
     setIsLoading(true);
     try {
       // Fetch all properties for each category and filter by city
+      // Note: 'buy' and 'sale' are the same category
       const { data: buyData } = await supabase
         .from('properties')
         .select('*')
-        .eq('category', 'buy')
+        .in('category', ['buy', 'sale'])
         .eq('status', 'active')
         .order('created_at', { ascending: false });
       
@@ -101,7 +102,7 @@ const City = () => {
 
   const cityData = {
     alger: {
-      name: t('cityAlger'),
+      name: 'Algiers',
       description: t('algerDescription'),
       history: t('algerHistory'),
       stats: {
