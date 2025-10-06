@@ -61,6 +61,12 @@ const Footer = () => {
                 >
                   <Instagram className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                 </a>
+                <a 
+                  href="mailto:contact@holibayt.com"
+                  className="p-2 rounded-lg bg-green-500/10 hover:bg-green-500 hover:text-white transition-all duration-300 cursor-pointer group"
+                >
+                  <Mail className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                </a>
               </div>
             </div>
           </div>
