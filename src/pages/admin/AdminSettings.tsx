@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,13 +8,11 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Settings,
   Bell,
-  Mail,
-  Globe,
-  Shield,
-  Database,
+  Percent,
   Save
 } from 'lucide-react';
 
@@ -41,6 +39,51 @@ export default function AdminSettings() {
     messageAlerts: true,
   });
 
+  // Commission settings
+  const [commissionSettings, setCommissionSettings] = useState({
+    shortStayRate: 15,
+    rentRate: 15,
+    buyRate: 15,
+  });
+  const [loadingCommission, setLoadingCommission] = useState(false);
+
+  useEffect(() => {
+    fetchCommissionSettings();
+  }, []);
+
+  const fetchCommissionSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('setting_key, setting_value')
+        .in('setting_key', ['short_stay_commission_rate', 'rent_commission_rate', 'buy_commission_rate']);
+
+      if (error) throw error;
+
+      if (data) {
+        const settings: any = {
+          shortStayRate: 15,
+          rentRate: 15,
+          buyRate: 15,
+        };
+
+        data.forEach((item: any) => {
+          if (item.setting_key === 'short_stay_commission_rate' && item.setting_value?.rate) {
+            settings.shortStayRate = item.setting_value.rate * 100;
+          } else if (item.setting_key === 'rent_commission_rate' && item.setting_value?.rate) {
+            settings.rentRate = item.setting_value.rate * 100;
+          } else if (item.setting_key === 'buy_commission_rate' && item.setting_value?.rate) {
+            settings.buyRate = item.setting_value.rate * 100;
+          }
+        });
+
+        setCommissionSettings(settings);
+      }
+    } catch (error) {
+      console.error('Error fetching commission settings:', error);
+    }
+  };
+
   const handlePlatformSave = () => {
     // In a real app, this would save to database
     toast({
@@ -55,6 +98,56 @@ export default function AdminSettings() {
       title: 'Success',
       description: 'Notification settings saved successfully',
     });
+  };
+
+  const handleCommissionSave = async () => {
+    try {
+      setLoadingCommission(true);
+
+      const updates = [
+        {
+          setting_key: 'short_stay_commission_rate',
+          setting_value: { rate: commissionSettings.shortStayRate / 100 },
+        },
+        {
+          setting_key: 'rent_commission_rate',
+          setting_value: { rate: commissionSettings.rentRate / 100 },
+        },
+        {
+          setting_key: 'buy_commission_rate',
+          setting_value: { rate: commissionSettings.buyRate / 100 },
+        },
+      ];
+
+      for (const update of updates) {
+        const { error } = await supabase
+          .from('platform_settings')
+          .upsert(
+            {
+              setting_key: update.setting_key,
+              setting_value: update.setting_value,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'setting_key' }
+          );
+
+        if (error) throw error;
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Commission rates saved successfully',
+      });
+    } catch (error) {
+      console.error('Error saving commission settings:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to save commission settings',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingCommission(false);
+    }
   };
 
   return (
@@ -171,6 +264,79 @@ export default function AdminSettings() {
           <Button onClick={handlePlatformSave} className="w-full">
             <Save className="h-4 w-4 mr-2" />
             Save Platform Settings
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Commission Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Percent className="h-5 w-5 mr-2" />
+            Commission Rates
+          </CardTitle>
+          <CardDescription>
+            Set platform commission rates for different property categories
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="shortStayRate">Short-Stay Commission Rate (%)</Label>
+            <Input
+              id="shortStayRate"
+              type="number"
+              min="0"
+              max="100"
+              step="0.1"
+              value={commissionSettings.shortStayRate}
+              onChange={(e) =>
+                setCommissionSettings({ ...commissionSettings, shortStayRate: parseFloat(e.target.value) || 0 })
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Commission rate for short-stay rental bookings
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="rentRate">Long-Term Rent Commission Rate (%)</Label>
+            <Input
+              id="rentRate"
+              type="number"
+              min="0"
+              max="100"
+              step="0.1"
+              value={commissionSettings.rentRate}
+              onChange={(e) =>
+                setCommissionSettings({ ...commissionSettings, rentRate: parseFloat(e.target.value) || 0 })
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Commission rate for long-term rental properties
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="buyRate">Property Purchase Commission Rate (%)</Label>
+            <Input
+              id="buyRate"
+              type="number"
+              min="0"
+              max="100"
+              step="0.1"
+              value={commissionSettings.buyRate}
+              onChange={(e) =>
+                setCommissionSettings({ ...commissionSettings, buyRate: parseFloat(e.target.value) || 0 })
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Commission rate for property sales
+            </p>
+          </div>
+
+          <Button onClick={handleCommissionSave} className="w-full" disabled={loadingCommission}>
+            <Save className="h-4 w-4 mr-2" />
+            {loadingCommission ? 'Saving...' : 'Save Commission Rates'}
           </Button>
         </CardContent>
       </Card>
