@@ -114,7 +114,7 @@ const Messages = () => {
     }
   };
 
-  // Start new conversation
+  // Start new conversation or select existing one
   const startNewConversation = async () => {
     if (!user) {
       // Redirect to login if not authenticated
@@ -123,6 +123,28 @@ const Messages = () => {
     }
     
     try {
+      // Check if user already has an active conversation
+      const { data: existingConversations, error: fetchError } = await supabase
+        .from('conversations')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('updated_at', { ascending: false })
+        .limit(1);
+
+      if (fetchError) throw fetchError;
+
+      // If conversation exists, select it
+      if (existingConversations && existingConversations.length > 0) {
+        setSelectedConversation(existingConversations[0].id);
+        toast({
+          title: "Chat Opened",
+          description: "Continue your conversation with our support team"
+        });
+        return;
+      }
+
+      // Otherwise create new conversation
       const { data, error } = await supabase
         .from('conversations')
         .insert({
@@ -145,7 +167,7 @@ const Messages = () => {
       console.error('Error creating conversation:', error);
       toast({
         title: "Error",
-        description: "Failed to start new conversation",
+        description: "Failed to start conversation",
         variant: "destructive"
       });
     }
@@ -155,24 +177,16 @@ const Messages = () => {
     if (isAuthenticated && user) {
       fetchConversations();
       
-      // Auto-create conversation if coming from "Start Chat" and no conversations exist
+      // Auto-open or create conversation if coming from "Start Chat"
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('start') === 'true') {
         // Clear the URL parameter
         window.history.replaceState({}, document.title, window.location.pathname);
         
-        // Check if user has any conversations, if not create one
-        setTimeout(async () => {
-          const { data } = await supabase
-            .from('conversations')
-            .select('id')
-            .eq('user_id', user.id)
-            .limit(1);
-          
-          if (!data || data.length === 0) {
-            startNewConversation();
-          }
-        }, 1000);
+        // Start or open existing conversation
+        setTimeout(() => {
+          startNewConversation();
+        }, 500);
       }
     }
     setLoading(false);

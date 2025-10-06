@@ -59,8 +59,8 @@ const ContactAdvisor = () => {
     {
       icon: Mail,
       title: t('emailSupport'),
-      details: "support@holibayt.com",
-      action: () => window.open('mailto:support@holibayt.com')
+      details: "contact@holibayt.com",
+      action: () => window.open('mailto:contact@holibayt.com')
     },
     {
       icon: MessageCircle,

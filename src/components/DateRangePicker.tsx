@@ -60,9 +60,9 @@ export function DateRangePicker({
         classNames={{
           months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
           month: "space-y-4",
-          caption: "flex justify-center pt-1 relative items-center font-medium text-foreground",
+          caption: "flex justify-center pt-1 relative items-center font-medium text-foreground mb-4",
           caption_label: "text-sm font-medium",
-          caption_dropdowns: "flex justify-center gap-1",
+          caption_dropdowns: "flex justify-center gap-2",
           vhidden: "hidden",
           nav: "space-x-1 flex items-center",
           nav_button: cn(
@@ -88,11 +88,10 @@ export function DateRangePicker({
           day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground rounded-none",
           day_hidden: "invisible",
           dropdown: cn(
-            "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover px-3 py-2 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
-            "h-8 px-2 text-xs bg-background border border-input hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            "h-9 px-3 py-2 text-sm bg-background border border-input rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
           ),
-          dropdown_month: "dropdown",
-          dropdown_year: "dropdown"
+          dropdown_month: "min-w-[120px]",
+          dropdown_year: "min-w-[100px]"
         }}
         components={{
           IconLeft: ({ ...props }) => (
