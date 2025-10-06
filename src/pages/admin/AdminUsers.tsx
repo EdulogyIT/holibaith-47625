@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Switch } from '@/components/ui/switch';
 import { 
   Table, 
   TableBody, 
@@ -40,7 +41,8 @@ import {
   Clock,
   Trash2,
   MoreVertical,
-  Eye
+  Eye,
+  Award
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -175,6 +177,49 @@ export default function AdminUsers() {
       });
     } finally {
       setDeleteId(null);
+    }
+  };
+
+  const handleSuperhostToggle = async (userId: string, currentStatus: boolean, userName: string) => {
+    try {
+      const newStatus = !currentStatus;
+      
+      // Update superhost status
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ is_superhost: newStatus })
+        .eq('id', userId);
+
+      if (updateError) throw updateError;
+
+      // If becoming a superhost, send notification
+      if (newStatus) {
+        const { error: notificationError } = await supabase
+          .from('notifications')
+          .insert({
+            user_id: userId,
+            title: 'Congratulations! You are now a Superhost',
+            message: `You've been awarded Superhost status! This badge recognizes your commitment to providing exceptional hospitality and service.`,
+            type: 'superhost_awarded',
+            related_id: userId
+          });
+
+        if (notificationError) throw notificationError;
+      }
+
+      toast({
+        title: 'Success',
+        description: `${userName} ${newStatus ? 'is now' : 'is no longer'} a Superhost`,
+      });
+      
+      fetchUsers();
+    } catch (error) {
+      console.error('Error updating superhost status:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update superhost status',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -321,7 +366,22 @@ export default function AdminUsers() {
                           <Badge className={`${getRoleColor(user.role)} text-xs`}>
                             {user.role}
                           </Badge>
+                          {user.is_superhost && (
+                            <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+                              <Award className="h-3 w-3 mr-1" />
+                              Superhost
+                            </Badge>
+                          )}
                         </div>
+                        {user.role === 'host' && (
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-xs text-muted-foreground">Superhost:</span>
+                            <Switch
+                              checked={user.is_superhost || false}
+                              onCheckedChange={() => handleSuperhostToggle(user.id, user.is_superhost, user.name)}
+                            />
+                          </div>
+                        )}
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -489,9 +549,26 @@ export default function AdminUsers() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getRoleColor(user.role)}>
-                        {user.role}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getRoleColor(user.role)}>
+                          {user.role}
+                        </Badge>
+                        {user.is_superhost && (
+                          <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+                            <Award className="h-3 w-3 mr-1" />
+                            Superhost
+                          </Badge>
+                        )}
+                      </div>
+                      {user.role === 'host' && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs text-muted-foreground">Superhost:</span>
+                          <Switch
+                            checked={user.is_superhost || false}
+                            onCheckedChange={() => handleSuperhostToggle(user.id, user.is_superhost, user.name)}
+                          />
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">{new Date(user.created_at).toLocaleDateString()}</span>
