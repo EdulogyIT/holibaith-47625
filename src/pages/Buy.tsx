@@ -104,10 +104,11 @@ const Buy = () => {
 
   const fetchProperties = async () => {
     try {
+      // Fetch both 'buy' and 'sale' categories
       const { data, error } = await supabase
         .from("properties")
         .select("*")
-        .eq("category", "buy")
+        .in("category", ["buy", "sale"])
         .eq("status", "active")
         .order("created_at", { ascending: false });
 
