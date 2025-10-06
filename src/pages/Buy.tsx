@@ -107,7 +107,7 @@ const Buy = () => {
       const { data, error } = await supabase
         .from("properties")
         .select("*")
-        .eq("category", "sale")
+        .eq("category", "buy")
         .eq("status", "active")
         .order("created_at", { ascending: false });
 

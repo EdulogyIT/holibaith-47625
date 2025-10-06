@@ -323,7 +323,7 @@ const City = () => {
                     variant="outline" 
                     size="lg" 
                     className="font-inter"
-                    onClick={() => navigate('/buy')}
+                    onClick={() => navigate(`/buy?location=${encodeURIComponent(currentCity.name)}`)}
                   >
                     {t('seeAllForSale')}
                   </Button>
@@ -352,7 +352,7 @@ const City = () => {
                     variant="outline" 
                     size="lg" 
                     className="font-inter"
-                    onClick={() => navigate('/rent')}
+                    onClick={() => navigate(`/rent?location=${encodeURIComponent(currentCity.name)}`)}
                   >
                     {t('seeAllForRent')}
                   </Button>
@@ -381,7 +381,7 @@ const City = () => {
                     variant="outline" 
                     size="lg" 
                     className="font-inter"
-                    onClick={() => navigate('/short-stay')}
+                    onClick={() => navigate(`/short-stay?location=${encodeURIComponent(currentCity.name)}`)}
                   >
                     {t('seeAllShortStay')}
                   </Button>
