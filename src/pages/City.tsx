@@ -49,36 +49,49 @@ const City = () => {
     
     setIsLoading(true);
     try {
-      // Fetch buy properties
+      // Fetch all properties for each category and filter by city
       const { data: buyData } = await supabase
         .from('properties')
         .select('*')
         .eq('category', 'buy')
         .eq('status', 'active')
-        .ilike('city', `%${currentCity.name}%`)
         .order('created_at', { ascending: false });
       
-      // Fetch rent properties
       const { data: rentData } = await supabase
         .from('properties')
         .select('*')
         .eq('category', 'rent')
         .eq('status', 'active')
-        .ilike('city', `%${currentCity.name}%`)
         .order('created_at', { ascending: false });
       
-      // Fetch short stay properties
       const { data: shortStayData } = await supabase
         .from('properties')
         .select('*')
         .eq('category', 'short-stay')
         .eq('status', 'active')
-        .ilike('city', `%${currentCity.name}%`)
         .order('created_at', { ascending: false });
 
-      setBuyProperties(buyData || []);
-      setRentProperties(rentData || []);
-      setShortStayProperties(shortStayData || []);
+      // Map city IDs to name variations for filtering
+      const cityNameVariations: Record<string, string[]> = {
+        'alger': ['alger', 'algiers'],
+        'oran': ['oran', 'wahran'],
+        'constantine': ['constantine', 'qusantina'],
+        'annaba': ['annaba']
+      };
+      
+      const cityVariations = cityNameVariations[cityId as string] || [cityId as string];
+      
+      // Filter properties by city name variations (case-insensitive)
+      const filterByCity = (properties: any[]) => {
+        return properties.filter(p => {
+          const cityName = (p.city || '').toLowerCase();
+          return cityVariations.some(variation => cityName.includes(variation.toLowerCase()));
+        });
+      };
+
+      setBuyProperties(filterByCity(buyData || []));
+      setRentProperties(filterByCity(rentData || []));
+      setShortStayProperties(filterByCity(shortStayData || []));
     } catch (error) {
       console.error('Error fetching city properties:', error);
     } finally {
