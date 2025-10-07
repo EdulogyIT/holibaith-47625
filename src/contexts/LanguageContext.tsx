@@ -331,9 +331,6 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "Localisation",
-    mapboxHint: "Pour afficher la carte interactive, veuillez entrer votre token Mapbox public. Vous pouvez l'obtenir sur",
-    mapboxTokenPlaceholder: "Votre token Mapbox public",
-    loadMap: "Charger la carte",
     addressLabel: "Adresse",
     detailsLabel: "Détails",
     nearbyShops: "Commerces",
@@ -992,9 +989,6 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "Location",
-    mapboxHint: "To display the interactive map, please enter your public Mapbox token. You can get it at",
-    mapboxTokenPlaceholder: "Your public Mapbox token",
-    loadMap: "Load map",
     addressLabel: "Address",
     detailsLabel: "Details",
     nearbyShops: "Shops",
@@ -1821,9 +1815,6 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "الموقع",
-    mapboxHint: "لعرض الخريطة التفاعلية، أدخل مفتاح Mapbox العام. يمكنك الحصول عليه من",
-    mapboxTokenPlaceholder: "مفتاح Mapbox العام",
-    loadMap: "تحميل الخريطة",
     addressLabel: "العنوان",
     detailsLabel: "التفاصيل",
     nearbyShops: "متاجر",

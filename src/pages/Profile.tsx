@@ -46,6 +46,26 @@ const Profile = () => {
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const [isSuperhost, setIsSuperhost] = useState(false);
+  const [profileData, setProfileData] = useState({
+    displayName: user?.name || '',
+    email: user?.email || '',
+    phone: '',
+    country: 'Algeria',
+  });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [notifications, setNotifications] = useState({
+    email: true,
+    sms: false,
+    push: true,
+  });
+  const [privacy, setPrivacy] = useState({
+    showPhoto: true,
+    analytics: true,
+  });
 
   useEffect(() => {
     if (user?.id) {
@@ -283,9 +303,42 @@ const Profile = () => {
 
   const currentTranslations = translations[currentLang.toLowerCase()] || translations.en;
 
-  const handleSave = () => {
-    toast.success(currentLang === 'AR' ? 'تم تحديث الملف.' : currentLang === 'FR' ? 'Profil mis à jour.' : 'Profile updated.');
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          name: profileData.displayName,
+        } as any)
+        .eq('id', user?.id);
+
+      if (error) throw error;
+
+      toast.success(currentLang === 'AR' ? 'تم تحديث الملف.' : currentLang === 'FR' ? 'Profil mis à jour.' : 'Profile updated.');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(currentLang === 'AR' ? 'فشل التحديث' : currentLang === 'FR' ? 'Échec de la mise à jour' : 'Failed to update');
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error(currentLang === 'AR' ? 'كلمات المرور غير متطابقة' : currentLang === 'FR' ? 'Les mots de passe ne correspondent pas' : 'Passwords do not match');
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: passwordData.newPassword
+      });
+
+      if (error) throw error;
+
+      toast.success(currentLang === 'AR' ? 'تم تغيير كلمة المرور' : currentLang === 'FR' ? 'Mot de passe modifié' : 'Password changed');
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      toast.error(currentLang === 'AR' ? 'فشل تغيير كلمة المرور' : currentLang === 'FR' ? 'Échec du changement de mot de passe' : 'Failed to change password');
+    }
   };
 
   const handleLogout = () => {
@@ -316,12 +369,17 @@ const Profile = () => {
                 <h1 className="text-xl font-bold mb-0.5">Profile</h1>
                 <p className="text-xs text-muted-foreground">Manage your account</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="text-xs">
-                    {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
-                  </Badge>
-                  {isSuperhost && (
-                    <Badge className="bg-gradient-primary text-white text-xs">
+                  {isSuperhost ? (
+                    <Badge className="bg-amber-400 hover:bg-amber-500 text-amber-950 font-semibold text-xs border-0">
                       ⭐ Superhost
+                    </Badge>
+                  ) : hasRole('host') ? (
+                    <Badge variant="secondary" className="text-xs">
+                      {currentTranslations.hostRole}
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-xs">
+                      {currentTranslations.userRole}
                     </Badge>
                   )}
                 </div>
@@ -466,15 +524,31 @@ const Profile = () => {
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="displayName" className="text-xs font-medium">{currentTranslations.displayName}</Label>
-                      <Input id="displayName" defaultValue={user.name} className="text-sm h-9" />
+                      <Input 
+                        id="displayName" 
+                        value={profileData.displayName} 
+                        onChange={(e) => setProfileData({...profileData, displayName: e.target.value})}
+                        className="text-sm h-9" 
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="email" className="text-xs font-medium">{currentTranslations.email}</Label>
-                      <Input id="email" defaultValue={user.email} disabled className="text-sm h-9 bg-muted/50" />
+                      <Input 
+                        id="email" 
+                        value={profileData.email} 
+                        disabled 
+                        className="text-sm h-9 bg-muted/50" 
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="phone" className="text-xs font-medium">{currentTranslations.phone}</Label>
-                      <Input id="phone" placeholder="+213 555 123 456" className="text-sm h-9" />
+                      <Input 
+                        id="phone" 
+                        placeholder="+213 555 123 456" 
+                        value={profileData.phone}
+                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                        className="text-sm h-9" 
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="country" className="text-xs font-medium">{currentTranslations.country}</Label>
@@ -565,17 +639,38 @@ const Profile = () => {
               <CardContent className="space-y-6 p-6">
                 <div className="space-y-2">
                   <Label htmlFor="currentPassword" className="text-primary font-medium">{currentTranslations.currentPassword}</Label>
-                  <Input id="currentPassword" type="password" className="border-accent/30 focus:border-primary transition-colors" />
+                  <Input 
+                    id="currentPassword" 
+                    type="password" 
+                    value={passwordData.currentPassword}
+                    onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                    className="border-accent/30 focus:border-primary transition-colors" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="newPassword" className="text-primary font-medium">{currentTranslations.newPassword}</Label>
-                  <Input id="newPassword" type="password" className="border-accent/30 focus:border-primary transition-colors" />
+                  <Input 
+                    id="newPassword" 
+                    type="password" 
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                    className="border-accent/30 focus:border-primary transition-colors" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword" className="text-primary font-medium">{currentTranslations.confirmPassword}</Label>
-                  <Input id="confirmPassword" type="password" className="border-accent/30 focus:border-primary transition-colors" />
+                  <Input 
+                    id="confirmPassword" 
+                    type="password" 
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                    className="border-accent/30 focus:border-primary transition-colors" 
+                  />
                 </div>
-                <Button className="bg-gradient-primary hover:opacity-90 transition-all shadow-lg">
+                <Button 
+                  onClick={handlePasswordChange}
+                  className="bg-gradient-primary hover:opacity-90 transition-all shadow-lg"
+                >
                   {currentTranslations.changePassword}
                 </Button>
               </CardContent>
@@ -595,7 +690,11 @@ const Profile = () => {
                     <div className="font-medium text-foreground">Email notifications</div>
                     <div className="text-sm text-muted-foreground">Receive updates via email</div>
                   </div>
-                  <Switch className="data-[state=checked]:bg-gradient-primary" />
+                  <Switch 
+                    checked={notifications.email}
+                    onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
+                    className="data-[state=checked]:bg-gradient-primary" 
+                  />
                 </div>
                 <Separator className="bg-accent/20" />
                 <div className="flex items-center justify-between p-4 border border-accent/20 rounded-xl bg-gradient-to-r from-white/50 to-accent/5">
@@ -603,7 +702,23 @@ const Profile = () => {
                     <div className="font-medium text-foreground">SMS notifications</div>
                     <div className="text-sm text-muted-foreground">Receive updates via SMS</div>
                   </div>
-                  <Switch className="data-[state=checked]:bg-gradient-primary" />
+                  <Switch 
+                    checked={notifications.sms}
+                    onCheckedChange={(checked) => setNotifications({...notifications, sms: checked})}
+                    className="data-[state=checked]:bg-gradient-primary" 
+                  />
+                </div>
+                <Separator className="bg-accent/20" />
+                <div className="flex items-center justify-between p-4 border border-accent/20 rounded-xl bg-gradient-to-r from-white/50 to-accent/5">
+                  <div>
+                    <div className="font-medium text-foreground">Push notifications</div>
+                    <div className="text-sm text-muted-foreground">Receive push notifications</div>
+                  </div>
+                  <Switch 
+                    checked={notifications.push}
+                    onCheckedChange={(checked) => setNotifications({...notifications, push: checked})}
+                    className="data-[state=checked]:bg-gradient-primary" 
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -622,7 +737,11 @@ const Profile = () => {
                     <div className="font-medium text-foreground">Show profile photo</div>
                     <div className="text-sm text-muted-foreground">Let others see your profile picture</div>
                   </div>
-                  <Switch defaultChecked className="data-[state=checked]:bg-gradient-primary" />
+                  <Switch 
+                    checked={privacy.showPhoto}
+                    onCheckedChange={(checked) => setPrivacy({...privacy, showPhoto: checked})}
+                    className="data-[state=checked]:bg-gradient-primary" 
+                  />
                 </div>
                 <Separator className="bg-accent/20" />
                 <div className="flex items-center justify-between p-4 border border-accent/20 rounded-xl bg-gradient-to-r from-white/50 to-accent/5">
@@ -630,7 +749,11 @@ const Profile = () => {
                     <div className="font-medium text-foreground">Analytics & personalization</div>
                     <div className="text-sm text-muted-foreground">Help us improve your experience</div>
                   </div>
-                  <Switch defaultChecked className="data-[state=checked]:bg-gradient-primary" />
+                  <Switch 
+                    checked={privacy.analytics}
+                    onCheckedChange={(checked) => setPrivacy({...privacy, analytics: checked})}
+                    className="data-[state=checked]:bg-gradient-primary" 
+                  />
                 </div>
               </CardContent>
             </Card>

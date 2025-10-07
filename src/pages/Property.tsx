@@ -15,7 +15,7 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
-import MapboxMap from "@/components/MapboxMap";
+import PropertyMap from "@/components/PropertyMap";
 import PropertyDatePicker from "@/components/PropertyDatePicker";
 import { PaymentButton } from "@/components/PaymentButton";
 import { BookingModal } from "@/components/BookingModal";
@@ -335,7 +335,7 @@ const Property = () => {
               {/* Location */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold font-playfair">{t('location')}</h3>
-                <MapboxMap 
+                <PropertyMap 
                   location={`${property.city}, ${property.location}`}
                   address={property.full_address || `${property.city}, ${property.location}`}
                 />
@@ -594,7 +594,7 @@ const Property = () => {
                   </CardContent>
                 </Card>
                 {/* Map */}
-                <MapboxMap 
+                <PropertyMap 
                   location={`${property.city}, ${property.location}`}
                   address={property.full_address || `${property.city}, ${property.location}`}
                 />
