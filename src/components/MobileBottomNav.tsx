@@ -38,13 +38,53 @@ const MobileBottomNav = () => {
   const fetchUnreadCount = async () => {
     if (!user) return;
     
-    const { data } = await supabase
-      .from('conversations')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active');
-    
-    setUnreadCount(data?.length || 0);
+    try {
+      const { data } = await supabase
+        .from('conversations')
+        .select(`
+          *,
+          messages (
+            id,
+            sender_id,
+            created_at
+          )
+        `)
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false });
+
+      if (!data) return;
+
+      // Deduplicate and filter conversations
+      const conversationsMap = new Map();
+      for (const conv of data) {
+        if (conv.user_id === conv.admin_id || conv.user_id === conv.recipient_id) continue;
+        if (!conv.messages || conv.messages.length === 0) continue;
+        
+        const subject = conv.subject || 'Support Request';
+        if (!conversationsMap.has(subject)) {
+          conversationsMap.set(subject, conv);
+        } else {
+          const existing = conversationsMap.get(subject);
+          if (new Date(conv.updated_at) > new Date(existing.updated_at)) {
+            conversationsMap.set(subject, conv);
+          }
+        }
+      }
+
+      // Count unread conversations
+      let count = 0;
+      for (const conv of conversationsMap.values()) {
+        const lastReadAt = conv.last_read_at ? new Date(conv.last_read_at) : new Date(0);
+        const hasUnread = conv.messages?.some((msg: any) => 
+          msg.sender_id !== user.id && new Date(msg.created_at) > lastReadAt
+        );
+        if (hasUnread) count++;
+      }
+      
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
   };
 
   const navItems = [

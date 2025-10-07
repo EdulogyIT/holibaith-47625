@@ -75,7 +75,7 @@ const FeaturedListings = () => {
                   alt={listing.title}
                   className="w-full h-36 object-cover"
                 />
-                <div className="absolute top-2 left-2 flex gap-1.5">
+                <div className="absolute top-2 left-2 flex gap-1.5 flex-wrap">
                   {badge && (
                     <Badge className="bg-white text-foreground text-[10px] py-0.5">
                       {badge}
@@ -83,6 +83,12 @@ const FeaturedListings = () => {
                   )}
                   {listing.is_verified && (
                     <Badge variant="secondary" className="text-[10px] py-0.5">Verified</Badge>
+                  )}
+                  {listing.is_featured && (
+                    <Badge className="bg-primary text-white text-[10px] py-0.5">Featured</Badge>
+                  )}
+                  {listing.features?.guest_favorite && (
+                    <Badge className="bg-pink-500 text-white text-[10px] py-0.5">Guest Favorite</Badge>
                   )}
                 </div>
                 <Button
