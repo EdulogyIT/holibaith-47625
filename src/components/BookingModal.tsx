@@ -32,6 +32,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
   const [guestsCount, setGuestsCount] = useState(1);
   const [specialRequests, setSpecialRequests] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const { formatPrice } = useCurrency();
   const { isAuthenticated } = useAuth();
 
@@ -92,9 +93,39 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
 
   const generateBookingId = () => `bk_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
+  const checkDateAvailability = async () => {
+    if (!checkInDate || !checkOutDate) return true;
+
+    setIsCheckingAvailability(true);
+    try {
+      const { data: conflictingBookings, error } = await supabase
+        .from('bookings')
+        .select('id')
+        .eq('property_id', property.id)
+        .in('status', ['confirmed', 'pending'])
+        .or(`and(check_in_date.lte.${checkOutDate},check_out_date.gte.${checkInDate})`);
+
+      if (error) {
+        console.error('Error checking availability:', error);
+        return true; // Allow to proceed if check fails
+      }
+
+      return !conflictingBookings || conflictingBookings.length === 0;
+    } finally {
+      setIsCheckingAvailability(false);
+    }
+  };
+
   const handlePayBooking = async () => {
     if (!canPayBooking) {
       alert(`Minimum payment amount is €${MIN_EUR}. Please increase nights or price.`);
+      return;
+    }
+
+    // Check date availability
+    const isAvailable = await checkDateAvailability();
+    if (!isAvailable) {
+      alert('Sorry, the selected dates are no longer available. Please choose different dates.');
       return;
     }
 
@@ -136,6 +167,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
   const handlePayDeposit = async () => {
     if (!canPayDeposit) {
       alert(`Minimum deposit amount is €${MIN_EUR}.`);
+      return;
+    }
+
+    // Check date availability
+    const isAvailable = await checkDateAvailability();
+    if (!isAvailable) {
+      alert('Sorry, the selected dates are no longer available. Please choose different dates.');
       return;
     }
 
@@ -315,10 +353,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                     onClick={handlePayBooking}
                     className="w-full"
                     size="lg"
-                    disabled={!canPayBooking}
+                    disabled={!canPayBooking || isCheckingAvailability}
                   >
                     <CreditCard className="w-4 h-4 mr-2" />
-                    Pay €{finalTotalAmount.toFixed(2)}
+                    {isCheckingAvailability ? 'Checking availability...' : `Pay €${finalTotalAmount.toFixed(2)}`}
                   </Button>
                   {!canPayBooking && (
                     <div className="text-xs text-muted-foreground">

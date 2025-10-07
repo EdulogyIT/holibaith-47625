@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,52 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { DateRangePicker } from "./DateRangePicker";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PropertyDatePickerProps {
+  propertyId: string;
   onDateChange: (dates: { checkIn: Date | undefined; checkOut: Date | undefined }) => void;
 }
 
-const PropertyDatePicker = ({ onDateChange }: PropertyDatePickerProps) => {
+const PropertyDatePicker = ({ propertyId, onDateChange }: PropertyDatePickerProps) => {
   const { t } = useLanguage();
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>();
+  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    fetchBookedDates();
+  }, [propertyId]);
+
+  const fetchBookedDates = async () => {
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select('check_in_date, check_out_date')
+      .eq('property_id', propertyId)
+      .in('status', ['confirmed', 'pending']);
+
+    if (error) {
+      console.error('Error fetching booked dates:', error);
+      return;
+    }
+
+    const dates: Date[] = [];
+    bookings?.forEach((booking) => {
+      const checkIn = new Date(booking.check_in_date);
+      const checkOut = new Date(booking.check_out_date);
+      
+      for (let d = new Date(checkIn); d <= checkOut; d.setDate(d.getDate() + 1)) {
+        dates.push(new Date(d));
+      }
+    });
+    
+    setBookedDates(dates);
+  };
+
+  const isDateBooked = (date: Date) => {
+    return bookedDates.some(bookedDate => 
+      bookedDate.toDateString() === date.toDateString()
+    );
+  };
 
   const handleDateRangeChange = (range?: { from?: Date; to?: Date }) => {
     setDateRange(range);
@@ -66,6 +104,7 @@ const PropertyDatePicker = ({ onDateChange }: PropertyDatePickerProps) => {
               value={dateRange}
               onChange={handleDateRangeChange}
               allowPast={false}
+              disabledDates={bookedDates}
             />
           </PopoverContent>
         </Popover>

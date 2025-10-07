@@ -289,7 +289,11 @@ const Property = () => {
                     </div>
                   </div>
                   <PropertyDatePicker 
-                    onDateChange={(dates) => console.log("Selected dates:", dates)}
+                    propertyId={property.id}
+                    onDateChange={(dates) => {
+                      setCheckInDate(dates.checkIn || null);
+                      setCheckOutDate(dates.checkOut || null);
+                    }}
                   />
                   
                   {/* Price Breakdown */}
@@ -615,6 +619,7 @@ const Property = () => {
                 {property.category === 'short-stay' ? (
                   <div className="space-y-4">
                     <PropertyDatePicker 
+                      propertyId={property.id}
                       onDateChange={(dates) => {
                         setCheckInDate(dates.checkIn);
                         setCheckOutDate(dates.checkOut);

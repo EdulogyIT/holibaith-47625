@@ -10,6 +10,7 @@ interface DateRangePickerProps {
   onChange: (range?: { from?: Date; to?: Date }) => void;
   allowPast?: boolean;
   className?: string;
+  disabledDates?: Date[];
 }
 
 const localeMap = {
@@ -22,7 +23,8 @@ export function DateRangePicker({
   value, 
   onChange, 
   allowPast = true, 
-  className 
+  className,
+  disabledDates = []
 }: DateRangePickerProps) {
   const { currentLang, t } = useLanguage();
   const today = new Date();
@@ -43,6 +45,16 @@ export function DateRangePicker({
     onChange(range ? { from: range.from, to: range.to } : undefined);
   };
 
+  const isDateDisabled = (date: Date) => {
+    // Check if date is in the past
+    if (!allowPast && date < today) return true;
+    
+    // Check if date is in disabledDates array
+    return disabledDates.some(disabledDate => 
+      disabledDate.toDateString() === date.toDateString()
+    );
+  };
+
   return (
     <div className={cn("rounded-xl shadow-sm p-4 bg-background border", className)}>
       <DayPicker
@@ -55,7 +67,17 @@ export function DateRangePicker({
         captionLayout="dropdown-buttons"
         fromYear={2020}
         toYear={2030}
-        disabled={allowPast ? undefined : { before: today }}
+        disabled={isDateDisabled}
+        modifiers={{
+          booked: disabledDates
+        }}
+        modifiersStyles={{
+          booked: {
+            backgroundColor: 'hsl(var(--destructive) / 0.1)',
+            color: 'hsl(var(--destructive))',
+            textDecoration: 'line-through'
+          }
+        }}
         className="pointer-events-auto"
         classNames={{
           months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",

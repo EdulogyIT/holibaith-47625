@@ -139,6 +139,49 @@ serve(async (req) => {
         logStep("Booking creation failed", { error: bookingCreateError.message });
       } else {
         logStep("Booking created successfully", { bookingId: booking.id });
+        
+        // Get property details for notifications
+        const { data: propertyData, error: propertyError } = await dbClient
+          .from('properties')
+          .select('title, user_id')
+          .eq('id', payment.property_id)
+          .single();
+
+        if (!propertyError && propertyData) {
+          // Send notification to customer
+          const { error: customerNotifError } = await dbClient
+            .from('notifications')
+            .insert({
+              user_id: user.id,
+              title: 'Booking Confirmed',
+              message: `Your booking for "${propertyData.title}" has been confirmed! Check-in: ${bookingData.checkInDate}`,
+              type: 'booking_confirmed',
+              related_id: booking.id
+            });
+
+          if (customerNotifError) {
+            logStep("Customer notification failed", { error: customerNotifError.message });
+          } else {
+            logStep("Customer notification sent");
+          }
+
+          // Send notification to host
+          const { error: hostNotifError } = await dbClient
+            .from('notifications')
+            .insert({
+              user_id: propertyData.user_id,
+              title: 'New Booking Received',
+              message: `You have a new booking for "${propertyData.title}". Check-in: ${bookingData.checkInDate}`,
+              type: 'booking_received',
+              related_id: booking.id
+            });
+
+          if (hostNotifError) {
+            logStep("Host notification failed", { error: hostNotifError.message });
+          } else {
+            logStep("Host notification sent");
+          }
+        }
       }
     }
 
