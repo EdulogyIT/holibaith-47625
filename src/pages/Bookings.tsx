@@ -137,32 +137,36 @@ const Bookings = () => {
   // Update booking status to completed for past bookings that are still confirmed
   useEffect(() => {
     const updateCompletedBookings = async () => {
+      if (bookings.length === 0) return;
+      
       const bookingsToComplete = bookings.filter(booking => {
         const checkoutDate = toZonedTime(new Date(booking.check_out_date), algerianTZ);
         checkoutDate.setHours(0, 0, 0, 0);
         return checkoutDate <= nowInAlgeria && booking.status === 'confirmed';
       });
 
-      for (const booking of bookingsToComplete) {
-        try {
-          await supabase
+      if (bookingsToComplete.length === 0) return;
+
+      try {
+        // Update all bookings in one batch
+        const updates = bookingsToComplete.map(booking => 
+          supabase
             .from('bookings')
             .update({ status: 'completed' })
-            .eq('id', booking.id);
-        } catch (error) {
-          console.error('Error updating booking status:', error);
-        }
-      }
-
-      if (bookingsToComplete.length > 0) {
+            .eq('id', booking.id)
+        );
+        
+        await Promise.all(updates);
+        
+        // Refresh bookings after update
         fetchBookings();
+      } catch (error) {
+        console.error('Error updating booking status:', error);
       }
     };
 
-    if (bookings.length > 0) {
-      updateCompletedBookings();
-    }
-  }, [bookings.length]);
+    updateCompletedBookings();
+  }, [user?.id]); // Only run when user changes, not when bookings change
 
   const handleRateStay = (booking: BookingWithProperty) => {
     setSelectedBooking(booking);
