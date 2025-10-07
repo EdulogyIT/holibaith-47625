@@ -83,7 +83,7 @@ export default function HostDashboard() {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-lg text-muted-foreground">Loading dashboard...</p>
+          <p className="mt-4 text-lg text-muted-foreground">{t('loadingDashboard')}</p>
         </div>
       </div>
     );
@@ -95,14 +95,14 @@ export default function HostDashboard() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center max-w-md">
           <div className="text-destructive text-xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-foreground mb-2">Unable to Load Dashboard</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2">{t('unableToLoad')}</h2>
           <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={() => {
             setError(null);
             setLoading(true);
             fetchHostProperties();
           }}>
-            Try Again
+            {t('tryAgain')}
           </Button>
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function HostDashboard() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-lg text-muted-foreground">Loading dashboard...</p>
+          <p className="mt-4 text-lg text-muted-foreground">{t('loadingDashboard')}</p>
         </div>
       </div>
     );
@@ -127,14 +127,14 @@ export default function HostDashboard() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center max-w-md">
           <div className="text-destructive text-xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-foreground mb-2">Unable to Load Dashboard</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2">{t('unableToLoad')}</h2>
           <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={() => {
             setError(null);
             setLoading(true);
             fetchHostProperties();
           }}>
-            Try Again
+            {t('tryAgain')}
           </Button>
         </div>
       </div>
@@ -146,9 +146,9 @@ export default function HostDashboard() {
       <div className="space-y-6">
         {/* Hero Section */}
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold text-foreground">Dashboard</h2>
+          <h2 className="text-3xl font-bold text-foreground">{t('host.dashboard')}</h2>
           <p className="text-lg text-muted-foreground">
-            Welcome to your host space
+            {t('host.welcomeMessage')}
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export default function HostDashboard() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Active properties</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('host.activeProperties')}</p>
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-3xl font-bold text-foreground">
@@ -169,7 +169,7 @@ export default function HostDashboard() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Messages</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('host.messages')}</p>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">-</p>
@@ -179,7 +179,7 @@ export default function HostDashboard() {
           <Card className="bg-card col-span-2">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Revenue this month</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('revenueThisMonth')}</p>
                 <CalendarDays className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-3xl font-bold text-foreground">{formatPrice(0)}</p>
@@ -190,7 +190,7 @@ export default function HostDashboard() {
         {/* Recent Properties */}
         {properties.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-foreground">Recent Properties</h3>
+            <h3 className="text-lg font-semibold text-foreground">{t('host.recentProperties')}</h3>
             <div className="grid grid-cols-2 gap-3">
               {properties.slice(0, 4).map((property) => {
                 const propertyImages = Array.isArray(property.images) ? property.images : [];
@@ -217,7 +217,7 @@ export default function HostDashboard() {
                           variant={property.status === 'active' ? 'default' : 'secondary'}
                           className="absolute top-2 right-2 text-xs"
                         >
-                          {property.status === 'active' ? 'Active' : 'Inactive'}
+                          {property.status === 'active' ? t('host.active') : t('host.inactive')}
                         </Badge>
                       </div>
                     </CardContent>
@@ -237,7 +237,7 @@ export default function HostDashboard() {
       <div>
         <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
         <p className="text-muted-foreground">
-          {t('host.welcomeMessage')}
+          {t('host.manageProperties')}
         </p>
       </div>
 

@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const FeaturedListingsPage = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const FeaturedListingsPage = () => {
   const { hasRole } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   useScrollToTop();
@@ -113,12 +115,12 @@ const FeaturedListingsPage = () => {
       <main className={cn(isMobile ? "pt-14 pb-24" : "pt-20 pb-8")}>
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Featured Listings</h1>
-            <p className="text-muted-foreground">Handpicked properties from across Algeria</p>
+            <h1 className="text-3xl font-bold mb-2">{t('featuredListings')}</h1>
+            <p className="text-muted-foreground">{t('handpickedProperties')}</p>
           </div>
 
           {loading ? (
-            <div className="col-span-full text-center py-12">Loading...</div>
+            <div className="col-span-full text-center py-12">{t('loading')}</div>
           ) : (
             <div className={cn(
               "grid gap-6",
@@ -138,24 +140,24 @@ const FeaturedListingsPage = () => {
                     />
                     <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap max-w-[60%]">
                       {listing.is_new && (
-                        <Badge className="bg-white text-foreground text-xs">New</Badge>
+                        <Badge className="bg-white text-foreground text-xs">{t('newBadge')}</Badge>
                       )}
                       {listing.is_hot_deal && (
-                        <Badge className="bg-orange-500 text-white text-xs">Hot Deal</Badge>
+                        <Badge className="bg-orange-500 text-white text-xs">{t('hotDealBadge')}</Badge>
                       )}
                       {listing.is_verified && (
                         <Badge variant="secondary" className="text-xs">
                           <Shield className="h-3 w-3 mr-1" />
-                          Verified
+                          {t('verifiedBadge')}
                         </Badge>
                       )}
                       {listing.is_featured && (
-                        <Badge className="bg-primary text-white text-xs">Featured</Badge>
+                        <Badge className="bg-primary text-white text-xs">{t('featuredBadge')}</Badge>
                       )}
                       {listing.features?.guest_favorite && (
                         <Badge className="bg-pink-500 text-white text-xs">
                           <Heart className="h-3 w-3 mr-1 fill-white" />
-                          Guest Favorite
+                          {t('guestFavoriteBadge')}
                         </Badge>
                       )}
                     </div>

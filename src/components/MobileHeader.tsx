@@ -163,7 +163,7 @@ const MobileHeader = () => {
                           className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-accent rounded-lg transition-colors"
                         >
                           <Settings className="h-5 w-5" />
-                          <span className="text-base font-medium">Admin Dashboard</span>
+                          <span className="text-base font-medium">{t('adminDashboard')}</span>
                         </button>
                       )}
                       
@@ -193,7 +193,7 @@ const MobileHeader = () => {
                 {/* Your Account Section */}
                 {user && (
                   <div className="px-4">
-                    <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">{t('myProfile')}</h3>
+                    <h3 className="px-4 py-2 text-sm font-semibold text-muted-foreground">{t('preferences')}</h3>
                     <div className="space-y-1">
                       <button
                         onClick={() => handleNavigation("/wishlist")}

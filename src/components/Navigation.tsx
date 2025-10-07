@@ -120,9 +120,9 @@ const Navigation = () => {
                   <Button 
                     className="bg-gradient-primary font-inter font-medium hover:shadow-elegant"
                     onClick={() => navigate('/host/onboarding')}
-                  >
-                    Become a Host
-                  </Button>
+                      >
+                        {t('becomeHost')}
+                      </Button>
                 )}
 
                 <DropdownMenu>
@@ -143,7 +143,7 @@ const Navigation = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/messages')}>
                       <MessageCircle className="h-4 w-4 mr-2" />
-                      Messages
+                      {t('messages')}
                     </DropdownMenuItem>
                     {hasRole('admin') ? (
                       <DropdownMenuItem onClick={() => navigate('/publish-property')}>
@@ -164,15 +164,15 @@ const Navigation = () => {
                     )}
                     {hasRole('admin') && (
                       <DropdownMenuItem onClick={() => navigate('/admin')}>
-                        <Settings className="h-4 w-4 mr-2" />
-                        Admin Dashboard
-                      </DropdownMenuItem>
+                      <Settings className="h-4 w-4 mr-2" />
+                      {t('adminDashboard')}
+                    </DropdownMenuItem>
                     )}
                     {hasRole('host') && (
                       <DropdownMenuItem onClick={() => navigate('/host')}>
-                        <Settings className="h-4 w-4 mr-2" />
-                        Host Dashboard
-                      </DropdownMenuItem>
+                      <Settings className="h-4 w-4 mr-2" />
+                      {t('hostDashboard')}
+                    </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
@@ -275,9 +275,9 @@ const Navigation = () => {
                           navigate('/host/onboarding');
                           setIsMenuOpen(false);
                         }}
-                      >
-                        Become a Host
-                      </Button>
+                        >
+                          {t('becomeHost')}
+                        </Button>
                     )}
                     <Button variant="ghost" className="font-inter font-medium justify-start" onClick={() => {
                       navigate('/profile');
@@ -291,7 +291,7 @@ const Navigation = () => {
                       setIsMenuOpen(false);
                     }}>
                       <MessageCircle className="h-4 w-4 mr-2" />
-                      Messages
+                      {t('messages')}
                     </Button>
                     {hasRole('admin') ? (
                       <Button variant="ghost" className="font-inter font-medium justify-start" onClick={() => {
@@ -325,7 +325,7 @@ const Navigation = () => {
                         setIsMenuOpen(false);
                       }}>
                         <Settings className="h-4 w-4 mr-2" />
-                        Admin Dashboard
+                        {t('adminDashboard')}
                       </Button>
                     )}
                     {hasRole('host') && (
@@ -334,7 +334,7 @@ const Navigation = () => {
                         setIsMenuOpen(false);
                       }}>
                         <Settings className="h-4 w-4 mr-2" />
-                        Host Dashboard
+                        {t('hostDashboard')}
                       </Button>
                     )}
                     <Button variant="ghost" className="font-inter font-medium justify-start" onClick={() => {

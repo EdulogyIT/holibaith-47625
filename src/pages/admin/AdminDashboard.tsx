@@ -129,7 +129,7 @@ export default function AdminDashboard() {
           <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/properties')}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Total properties</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('admin.totalProperties')}</p>
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </div>
               {loading ? (
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
                 <>
                   <p className="text-3xl font-bold text-foreground">{properties.length}</p>
                   <p className={`text-xs mt-1 ${weeklyGrowth.properties >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% this week
+                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% {t('thisWeek')}
                   </p>
                 </>
               )}
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/properties')}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Active properties</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('admin.activeProperties')}</p>
                 <CalendarDays className="h-4 w-4 text-muted-foreground" />
               </div>
               {loading ? (
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
                 <>
                   <p className="text-3xl font-bold text-foreground">{activeProperties}</p>
                   <p className={`text-xs mt-1 ${weeklyGrowth.properties >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% this week
+                    {weeklyGrowth.properties >= 0 ? '+' : ''}{weeklyGrowth.properties}% {t('thisWeek')}
                   </p>
                 </>
               )}
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
           <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/users')}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Total users</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('admin.totalUsers')}</p>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </div>
               {loading ? (
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
                 <>
                   <p className="text-3xl font-bold text-foreground">{profiles.length}</p>
                   <p className={`text-xs mt-1 ${weeklyGrowth.users >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {weeklyGrowth.users >= 0 ? '+' : ''}{weeklyGrowth.users}% this week
+                    {weeklyGrowth.users >= 0 ? '+' : ''}{weeklyGrowth.users}% {t('thisWeek')}
                   </p>
                 </>
               )}
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
           <Card className="bg-card cursor-pointer active:scale-[0.98] transition-transform" onClick={() => navigate('/admin/messages')}>
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">Messages</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('admin.messages')}</p>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </div>
               {loading ? (
@@ -195,7 +195,7 @@ export default function AdminDashboard() {
                 <>
                   <p className="text-3xl font-bold text-foreground">{conversations.length}</p>
                   <p className={`text-xs mt-1 ${weeklyGrowth.messages >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {weeklyGrowth.messages >= 0 ? '+' : ''}{weeklyGrowth.messages}% this week
+                    {weeklyGrowth.messages >= 0 ? '+' : ''}{weeklyGrowth.messages}% {t('thisWeek')}
                   </p>
                 </>
               )}
@@ -206,7 +206,7 @@ export default function AdminDashboard() {
         {/* Recent Properties */}
         {properties.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-foreground">Recent Properties</h3>
+            <h3 className="text-lg font-semibold text-foreground">{t('admin.recentProperties')}</h3>
             <div className="grid grid-cols-2 gap-3">
               {recentProperties.slice(0, 4).map((property) => {
                 const propertyImages = Array.isArray(property.images) ? property.images : [];
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
                           variant={property.status === 'active' ? 'default' : 'secondary'}
                           className="absolute top-2 right-2 text-xs"
                         >
-                          {property.status === 'active' ? 'Active' : 'Pending'}
+                          {property.status === 'active' ? t('host.active') : 'Pending'}
                         </Badge>
                       </div>
                     </CardContent>
@@ -330,7 +330,7 @@ export default function AdminDashboard() {
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
                   <Building2 className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p>No properties yet</p>
+                  <p>{t('noPropertiesYet')}</p>
                 </div>
               )}
             </div>
@@ -381,7 +381,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="text-right ml-4 flex-shrink-0">
                           <p className="font-bold text-lg">{percentage}%</p>
-                          <p className="text-xs text-muted-foreground">{count} properties</p>
+                          <p className="text-xs text-muted-foreground">{count} {t('properties')}</p>
                         </div>
                       </div>
                     );
