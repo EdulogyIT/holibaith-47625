@@ -19,6 +19,8 @@ interface Conversation {
   created_at: string;
   updated_at: string;
   admin_id: string | null;
+  last_read_at: string | null;
+  messages?: any[];
 }
 
 interface Message {
@@ -66,19 +68,23 @@ const Messages = () => {
       
       setConversations(filteredConversations);
       
-      // Calculate unread count by checking if last message was from admin
+      // Calculate unread count by checking if last message was after last_read_at
       let unreadTotal = 0;
       for (const conv of filteredConversations) {
         const { data: convMessages } = await supabase
           .from('messages')
-          .select('sender_id')
+          .select('sender_id, created_at')
           .eq('conversation_id', conv.id)
           .order('created_at', { ascending: false })
           .limit(1);
         
-        // If last message was not from the current user, it's unread
+        // If last message was not from the current user and is after last_read_at, it's unread
         if (convMessages && convMessages.length > 0 && convMessages[0].sender_id !== user.id) {
-          unreadTotal++;
+          const lastReadAt = conv.last_read_at ? new Date(conv.last_read_at) : new Date(0);
+          const lastMessageAt = new Date(convMessages[0].created_at);
+          if (lastMessageAt > lastReadAt) {
+            unreadTotal++;
+          }
         }
       }
       setUnreadCount(unreadTotal);
@@ -224,8 +230,25 @@ const Messages = () => {
   useEffect(() => {
     if (selectedConversation) {
       fetchMessages(selectedConversation);
+      // Mark conversation as read
+      markConversationAsRead(selectedConversation);
     }
   }, [selectedConversation]);
+
+  const markConversationAsRead = async (conversationId: string) => {
+    try {
+      await supabase
+        .from('conversations')
+        .update({ last_read_at: new Date().toISOString() })
+        .eq('id', conversationId)
+        .eq('user_id', user?.id);
+      
+      // Refresh conversations to update unread count
+      fetchConversations();
+    } catch (error) {
+      console.error('Error marking conversation as read:', error);
+    }
+  };
 
   if (!isAuthenticated) {
     return (
@@ -386,9 +409,16 @@ const Messages = () => {
                     >
                       <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 relative">
                         <MessageCircle className="h-6 w-6 text-primary" />
-                        {conversation.status === 'active' && (
-                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-white"></div>
-                        )}
+                        {(() => {
+                          const lastReadAt = conversation.last_read_at ? new Date(conversation.last_read_at) : new Date(0);
+                          // Check if there are messages after last read time
+                          const hasUnread = conversation.messages?.some((msg: any) => {
+                            return msg.sender_id !== user?.id && new Date(msg.created_at) > lastReadAt;
+                          });
+                          return hasUnread && (
+                            <div className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-white"></div>
+                          );
+                        })()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold truncate">

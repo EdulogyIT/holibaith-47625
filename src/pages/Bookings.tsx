@@ -11,9 +11,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useToast } from "@/hooks/use-toast";
 import { CancelBookingButton } from "@/components/CancelBookingButton";
+import { RateStayDialog } from "@/components/RateStayDialog";
 
 interface BookingWithProperty {
   id: string;
@@ -50,6 +52,8 @@ const Bookings = () => {
   const [bookings, setBookings] = useState<BookingWithProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rateDialogOpen, setRateDialogOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookingWithProperty | null>(null);
 
   // Fetch user's bookings with property details
   const fetchBookings = async () => {
@@ -87,7 +91,7 @@ const Bookings = () => {
         `)
         .eq('user_id', user.id)
         .neq('status', 'cancelled')
-        .order('check_in_date', { ascending: false });
+        .order('check_in_date', { ascending: true });
 
       if (fetchError) {
         throw fetchError;
@@ -113,15 +117,57 @@ const Bookings = () => {
     }
   }, [user, isAuthenticated]);
 
-  // Separate bookings into upcoming and past
-  const now = new Date();
-  now.setHours(0, 0, 0, 0); // Set to start of today for accurate comparison
-  const upcomingBookings = bookings.filter(booking => 
-    new Date(booking.check_out_date) > now
-  );
-  const pastBookings = bookings.filter(booking => 
-    new Date(booking.check_out_date) <= now
-  );
+  // Separate bookings into upcoming and past using Algerian timezone
+  const algerianTZ = "Africa/Algiers";
+  const nowInAlgeria = toZonedTime(new Date(), algerianTZ);
+  nowInAlgeria.setHours(0, 0, 0, 0);
+  
+  const upcomingBookings = bookings.filter(booking => {
+    const checkoutDate = toZonedTime(new Date(booking.check_out_date), algerianTZ);
+    checkoutDate.setHours(0, 0, 0, 0);
+    return checkoutDate > nowInAlgeria && booking.status !== 'completed';
+  });
+  
+  const pastBookings = bookings.filter(booking => {
+    const checkoutDate = toZonedTime(new Date(booking.check_out_date), algerianTZ);
+    checkoutDate.setHours(0, 0, 0, 0);
+    return checkoutDate <= nowInAlgeria || booking.status === 'completed';
+  });
+
+  // Update booking status to completed for past bookings that are still confirmed
+  useEffect(() => {
+    const updateCompletedBookings = async () => {
+      const bookingsToComplete = bookings.filter(booking => {
+        const checkoutDate = toZonedTime(new Date(booking.check_out_date), algerianTZ);
+        checkoutDate.setHours(0, 0, 0, 0);
+        return checkoutDate <= nowInAlgeria && booking.status === 'confirmed';
+      });
+
+      for (const booking of bookingsToComplete) {
+        try {
+          await supabase
+            .from('bookings')
+            .update({ status: 'completed' })
+            .eq('id', booking.id);
+        } catch (error) {
+          console.error('Error updating booking status:', error);
+        }
+      }
+
+      if (bookingsToComplete.length > 0) {
+        fetchBookings();
+      }
+    };
+
+    if (bookings.length > 0) {
+      updateCompletedBookings();
+    }
+  }, [bookings.length]);
+
+  const handleRateStay = (booking: BookingWithProperty) => {
+    setSelectedBooking(booking);
+    setRateDialogOpen(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -235,8 +281,13 @@ const Bookings = () => {
                     onCancelSuccess={handleBookingCancelled}
                   />
                 )}
-                {isPast && (
-                  <Button variant="outline" size="sm" className="w-full text-xs h-8">
+                {isPast && booking.status === 'completed' && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full text-xs h-8"
+                    onClick={() => handleRateStay(booking)}
+                  >
                     <Star className="h-3 w-3 mr-1" />
                     Rate Stay
                   </Button>
@@ -350,6 +401,17 @@ const Bookings = () => {
       </main>
       <MobileBottomNav />
       <FloatingMapButton />
+      
+      {selectedBooking && (
+        <RateStayDialog
+          open={rateDialogOpen}
+          onOpenChange={setRateDialogOpen}
+          bookingId={selectedBooking.id}
+          propertyId={selectedBooking.properties.id}
+          propertyTitle={selectedBooking.properties.title}
+          userId={user?.id || ''}
+        />
+      )}
     </div>
   );
 };

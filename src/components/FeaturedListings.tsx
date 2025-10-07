@@ -23,7 +23,7 @@ const FeaturedListings = () => {
           .from('properties')
           .select('*')
           .eq('status', 'active')
-          .or('is_new.eq.true,is_hot_deal.eq.true,is_verified.eq.true')
+          .or('is_featured.eq.true,is_new.eq.true,is_hot_deal.eq.true,is_verified.eq.true')
           .limit(6)
           .order('created_at', { ascending: false });
 

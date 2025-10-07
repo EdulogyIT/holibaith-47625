@@ -35,7 +35,8 @@ import {
   Filter,
   Plus,
   Download,
-  MoreVertical
+  MoreVertical,
+  Star
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -106,6 +107,31 @@ export default function AdminProperties() {
       toast({
         title: 'Error',
         description: 'Failed to update property status',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleFeaturedToggle = async (propertyId: string, currentFeatured: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .update({ is_featured: !currentFeatured })
+        .eq('id', propertyId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: `Property ${!currentFeatured ? 'added to' : 'removed from'} featured listings`,
+      });
+      
+      fetchProperties();
+    } catch (error) {
+      console.error('Error updating featured status:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update featured status',
         variant: 'destructive',
       });
     }
@@ -356,6 +382,10 @@ export default function AdminProperties() {
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleFeaturedToggle(property.id, property.is_featured)}>
+                            <Star className={`h-4 w-4 mr-2 ${property.is_featured ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                            {property.is_featured ? 'Remove from Featured' : 'Add to Featured'}
+                          </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => setDeleteId(property.id)}
                             className="text-red-600"
@@ -518,6 +548,7 @@ export default function AdminProperties() {
                   <TableHead>Location</TableHead>
                   <TableHead>Owner</TableHead>
                   <TableHead>Price</TableHead>
+                  <TableHead>Featured</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Actions</TableHead>
@@ -543,6 +574,15 @@ export default function AdminProperties() {
                     </TableCell>
                     <TableCell>{property.contact_name}</TableCell>
                     <TableCell>{property.price} DA</TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleFeaturedToggle(property.id, property.is_featured)}
+                      >
+                        <Star className={`h-4 w-4 ${property.is_featured ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+                      </Button>
+                    </TableCell>
                     <TableCell>
                       <Select
                         value={property.status || 'pending'}
