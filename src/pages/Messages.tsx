@@ -57,9 +57,11 @@ const Messages = () => {
 
       if (error) throw error;
       
-      // Only show conversations that have messages or are active
+      // Only show conversations that have messages or are active, and exclude self-conversations
       const filteredConversations = (data || []).filter((conv: any) => 
-        conv.messages?.length > 0 || conv.status === 'active'
+        (conv.messages?.length > 0 || conv.status === 'active') &&
+        conv.user_id !== conv.admin_id && 
+        conv.user_id !== conv.recipient_id
       );
       
       setConversations(filteredConversations);
@@ -389,11 +391,8 @@ const Messages = () => {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold truncate flex items-center gap-2">
+                        <div className="font-semibold truncate">
                           {conversation.subject || 'Support Request'}
-                          {conversation.status === 'active' && (
-                            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">Pending</span>
-                          )}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           Tap to open chat
