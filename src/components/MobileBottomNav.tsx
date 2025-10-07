@@ -88,11 +88,11 @@ const MobileBottomNav = () => {
   };
 
   const navItems = [
-    { id: "explore", icon: Search, label: "Explore", path: "/" },
-    { id: "wishlist", icon: Heart, label: "Wishlist", path: "/wishlist" },
-    { id: "trips", icon: Calendar, label: "Trips", path: "/bookings" },
-    { id: "messages", icon: MessageCircle, label: "Messages", path: "/messages" },
-    { id: "profile", icon: User, label: "Profile", path: "/profile" },
+    { id: "explore", icon: Search, label: t('navExplore'), path: "/" },
+    { id: "wishlist", icon: Heart, label: t('navWishlist'), path: "/wishlist" },
+    { id: "trips", icon: Calendar, label: t('trips'), path: "/bookings" },
+    { id: "messages", icon: MessageCircle, label: t('messages'), path: "/messages" },
+    { id: "profile", icon: User, label: t('navProfile'), path: "/profile" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -16,6 +16,7 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useToast } from "@/hooks/use-toast";
 import { CancelBookingButton } from "@/components/CancelBookingButton";
 import { RateStayDialog } from "@/components/RateStayDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BookingWithProperty {
   id: string;
@@ -48,6 +49,7 @@ const Bookings = () => {
   const { user, isAuthenticated } = useAuth();
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const [bookings, setBookings] = useState<BookingWithProperty[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,8 +104,8 @@ const Bookings = () => {
       console.error('Error fetching bookings:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch bookings');
       toast({
-        title: "Error",
-        description: "Failed to load your bookings. Please try again.",
+        title: t('error'),
+        description: t('errorLoadingBookings'),
         variant: "destructive"
       });
     } finally {
@@ -183,9 +185,19 @@ const Bookings = () => {
     }
   };
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'confirmed': return t('confirmed');
+      case 'pending': return t('pending');
+      case 'completed': return t('bookingCompleted');
+      case 'cancelled': return t('cancelled');
+      default: return status;
+    }
+  };
+
   const handleMessageHost = (hostEmail: string, propertyTitle: string) => {
-    const subject = encodeURIComponent(`Inquiry about ${propertyTitle}`);
-    const body = encodeURIComponent(`Hello,\n\nI have a question about my booking for ${propertyTitle}.\n\nBest regards`);
+    const subject = encodeURIComponent(`${t('propertyInquiry')} ${propertyTitle}`);
+    const body = encodeURIComponent(`${t('hello')},\n\n${t('tellUsMore')}\n\n${t('bestRegards')}`);
     window.open(`mailto:${hostEmail}?subject=${subject}&body=${body}`);
   };
 
@@ -224,7 +236,7 @@ const Bookings = () => {
                   {property?.title || 'Property'}
                 </CardTitle>
                 <Badge className={`${getStatusColor(booking.status)} text-xs px-1.5 py-0`}>
-                  {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                  {getStatusText(booking.status)}
                 </Badge>
               </div>
               <CardDescription className="flex items-center text-muted-foreground text-xs">
@@ -241,16 +253,16 @@ const Bookings = () => {
               
               <div className="flex items-center text-xs text-muted-foreground">
                 <Users className="h-3 w-3 mr-1" />
-                {booking.guests_count} {booking.guests_count === 1 ? 'Guest' : 'Guests'}
+                {booking.guests_count} {booking.guests_count === 1 ? t('guest') : t('guests')}
               </div>
 
               <div className="text-xs">
-                <span className="text-muted-foreground">Host: </span>
+                <span className="text-muted-foreground">{t('propertyHost')}: </span>
                 <span className="font-medium">{property?.contact_name || 'N/A'}</span>
               </div>
 
               <div className="text-xs">
-                <span className="text-muted-foreground">Total: </span>
+                <span className="text-muted-foreground">{t('total')}: </span>
                 <span className="font-semibold">{formatPrice(booking.total_amount)}</span>
               </div>
 
@@ -263,7 +275,7 @@ const Bookings = () => {
                       className="flex-1 text-xs h-8"
                       onClick={() => window.open(`/property/${booking.properties.id}`, '_blank')}
                     >
-                      View
+                      {t('view')}
                     </Button>
                   )}
                   {property?.contact_email && (
@@ -274,7 +286,7 @@ const Bookings = () => {
                       onClick={() => handleMessageHost(property.contact_email, property.title)}
                     >
                       <MessageCircle className="h-3 w-3 mr-1" />
-                      Message
+                      {t('messageHost')}
                     </Button>
                   )}
                 </div>
@@ -293,7 +305,7 @@ const Bookings = () => {
                     onClick={() => handleRateStay(booking)}
                   >
                     <Star className="h-3 w-3 mr-1" />
-                    Rate Stay
+                    {t('rateStay')}
                   </Button>
                 )}
               </div>
@@ -312,12 +324,12 @@ const Bookings = () => {
           <div className="px-4 py-8">
             <Card className="text-center py-12">
               <CardContent>
-                <h1 className="text-2xl font-bold mb-4">Please log in</h1>
+                <h1 className="text-2xl font-bold mb-4">{t('pleaseLogIn')}</h1>
                 <p className="text-muted-foreground mb-4">
-                  Sign in to view your bookings
+                  {t('signInToViewMessages')}
                 </p>
                 <Button onClick={() => window.location.href = '/login'}>
-                  Log In
+                  {t('logIn')}
                 </Button>
               </CardContent>
             </Card>
@@ -334,9 +346,9 @@ const Bookings = () => {
       <main className="pt-16 pb-20">
         <div className="px-4 py-6">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-2">Trips</h1>
+            <h1 className="text-3xl font-bold mb-2">{t('trips')}</h1>
             <p className="text-muted-foreground">
-              Manage your reservations and past stays
+              {t('manageReservations')}
             </p>
           </div>
 
@@ -344,22 +356,22 @@ const Bookings = () => {
             <Card className="text-center py-12">
               <CardContent>
                 <Loader2 className="h-16 w-16 text-muted-foreground mx-auto mb-4 animate-spin" />
-                <h3 className="text-xl font-semibold mb-2">Loading your bookings...</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('loadingBookings')}</h3>
               </CardContent>
             </Card>
           ) : error ? (
             <Card className="text-center py-12">
               <CardContent>
-                <h3 className="text-xl font-semibold mb-2 text-destructive">Error loading bookings</h3>
+                <h3 className="text-xl font-semibold mb-2 text-destructive">{t('errorLoadingBookings')}</h3>
                 <p className="text-muted-foreground mb-4">{error}</p>
-                <Button onClick={fetchBookings}>Try Again</Button>
+                <Button onClick={fetchBookings}>{t('tryAgain')}</Button>
               </CardContent>
             </Card>
           ) : (
             <Tabs defaultValue="upcoming" className="space-y-6">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="upcoming">Upcoming ({upcomingBookings.length})</TabsTrigger>
-                <TabsTrigger value="past">Past ({pastBookings.length})</TabsTrigger>
+                <TabsTrigger value="upcoming">{t('upcoming')} ({upcomingBookings.length})</TabsTrigger>
+                <TabsTrigger value="past">{t('past')} ({pastBookings.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="upcoming" className="space-y-4">
@@ -371,11 +383,11 @@ const Bookings = () => {
                   <Card className="text-center py-12">
                     <CardContent>
                       <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">No upcoming trips</h3>
+                      <h3 className="text-xl font-semibold mb-2">{t('noUpcomingTrips')}</h3>
                       <p className="text-muted-foreground mb-4">
-                        Ready to start planning your next adventure?
+                        {t('readyToStart')}
                       </p>
-                      <Button onClick={() => window.location.href = '/rent'}>Browse Properties</Button>
+                      <Button onClick={() => window.location.href = '/rent'}>{t('browseProperties')}</Button>
                     </CardContent>
                   </Card>
                 )}
@@ -390,11 +402,11 @@ const Bookings = () => {
                   <Card className="text-center py-12">
                     <CardContent>
                       <Star className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">No past stays yet</h3>
+                      <h3 className="text-xl font-semibold mb-2">{t('noPastStaysYet')}</h3>
                       <p className="text-muted-foreground mb-4">
-                        Your completed bookings will appear here
+                        {t('completedBookingsAppear')}
                       </p>
-                      <Button onClick={() => window.location.href = '/rent'}>Start Exploring</Button>
+                      <Button onClick={() => window.location.href = '/rent'}>{t('startExploring')}</Button>
                     </CardContent>
                   </Card>
                 )}

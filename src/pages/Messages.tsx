@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, Send, Plus, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Conversation {
   id: string;
@@ -34,6 +35,7 @@ interface Message {
 const Messages = () => {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
