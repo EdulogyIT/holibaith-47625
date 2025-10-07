@@ -45,6 +45,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [uploading, setUploading] = useState(false);
+  const [isSuperhost, setIsSuperhost] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
@@ -57,12 +58,17 @@ const Profile = () => {
     
     const { data: profile } = await supabase
       .from('profiles')
-      .select('avatar_url')
+      .select('avatar_url, is_superhost')
       .eq('id', user.id)
       .single();
     
-    if (profile && (profile as any).avatar_url) {
-      setAvatarUrl((profile as any).avatar_url);
+    if (profile) {
+      if ((profile as any).avatar_url) {
+        setAvatarUrl((profile as any).avatar_url);
+      }
+      if ((profile as any).is_superhost !== undefined) {
+        setIsSuperhost((profile as any).is_superhost);
+      }
     }
   };
 
@@ -309,9 +315,16 @@ const Profile = () => {
               <div>
                 <h1 className="text-xl font-bold mb-0.5">Profile</h1>
                 <p className="text-xs text-muted-foreground">Manage your account</p>
-                <Badge variant="secondary" className="mt-1 text-xs">
-                  {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
-                </Badge>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="secondary" className="text-xs">
+                    {hasRole('host') ? currentTranslations.hostRole : currentTranslations.userRole}
+                  </Badge>
+                  {isSuperhost && (
+                    <Badge className="bg-gradient-primary text-white text-xs">
+                      ⭐ Superhost
+                    </Badge>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -387,18 +400,30 @@ const Profile = () => {
         {/* Main Content */}
         <div className="px-4">
           <Tabs defaultValue="personal" className="space-y-4 animate-fade-in">
-            <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm text-xs h-9">
-              <TabsTrigger value="personal" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 bg-white/80 backdrop-blur-sm text-xs h-auto sm:h-9">
+              <TabsTrigger value="personal" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
                 <User className="h-3 w-3" />
-                <span className="hidden sm:inline text-xs">Info</span>
+                <span className="text-[10px] sm:text-xs">Info</span>
               </TabsTrigger>
-              <TabsTrigger value="account" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+              <TabsTrigger value="account" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
                 <Settings className="h-3 w-3" />
-                <span className="hidden sm:inline text-xs">Account</span>
+                <span className="text-[10px] sm:text-xs">Account</span>
               </TabsTrigger>
-              <TabsTrigger value="password" className="flex items-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-xs px-2">
+              <TabsTrigger value="password" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
                 <Shield className="h-3 w-3" />
-                <span className="hidden sm:inline text-xs">Security</span>
+                <span className="text-[10px] sm:text-xs">Security</span>
+              </TabsTrigger>
+              <TabsTrigger value="notifications" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
+                <Bell className="h-3 w-3" />
+                <span className="text-[10px] sm:text-xs">Notify</span>
+              </TabsTrigger>
+              <TabsTrigger value="privacy" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
+                <Shield className="h-3 w-3" />
+                <span className="text-[10px] sm:text-xs">Privacy</span>
+              </TabsTrigger>
+              <TabsTrigger value="sessions" className="flex items-center justify-center gap-1 data-[state=active]:bg-gradient-primary data-[state=active]:text-white transition-all text-[10px] sm:text-xs px-1 sm:px-2 py-2">
+                <Monitor className="h-3 w-3" />
+                <span className="text-[10px] sm:text-xs">Sessions</span>
               </TabsTrigger>
             </TabsList>
 
