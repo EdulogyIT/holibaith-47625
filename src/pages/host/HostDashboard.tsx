@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CalendarDays, MessageSquare, Building2, Plus } from 'lucide-react';
+import { CalendarDays, MessageSquare, Building2, Plus, Wallet, CreditCard, Clock, DollarSign } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -31,14 +31,20 @@ export default function HostDashboard() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [properties, setProperties] = useState<Property[]>([]);
+  const [stats, setStats] = useState({
+    monthlyRevenue: 0,
+    totalEarnings: 0,
+    pendingPayments: 0,
+    withdrawnAmount: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchHostProperties();
+    fetchHostData();
   }, [user]);
 
-  const fetchHostProperties = async () => {
+  const fetchHostData = async () => {
     if (!user) {
       console.log('No user found, skipping fetch');
       setLoading(false);
@@ -48,22 +54,58 @@ export default function HostDashboard() {
     console.log('Fetching properties for user:', user.id);
     
     try {
-      const { data, error } = await supabase
+      const { data: propertiesData, error: propertiesError } = await supabase
         .from('properties')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching properties:', error);
-        setError(`Failed to load properties: ${error.message}`);
+      if (propertiesError) {
+        console.error('Error fetching properties:', propertiesError);
+        setError(`Failed to load properties: ${propertiesError.message}`);
+        setLoading(false);
+        return;
       } else {
-        console.log('Properties loaded:', data?.length || 0);
-        setProperties(data || []);
+        console.log('Properties loaded:', propertiesData?.length || 0);
+        setProperties(propertiesData || []);
       }
+
+      // Fetch earnings data from commission transactions
+      const { data: commissionData, error: commissionError } = await supabase
+        .from('commission_transactions')
+        .select('*')
+        .eq('host_user_id', user.id);
+
+      if (commissionError) {
+        console.error('Error fetching commission data:', commissionError);
+      }
+
+      // Fetch monthly revenue from bookings (last 30 days)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const propertyIds = propertiesData?.map(p => p.id) || [];
+      const { data: revenueData } = await supabase
+        .from('bookings')
+        .select('booking_fee')
+        .in('property_id', propertyIds)
+        .eq('status', 'completed')
+        .gte('created_at', thirtyDaysAgo.toISOString());
+
+      const monthlyRevenue = revenueData?.reduce((sum, booking) => sum + Number(booking.booking_fee || 0), 0) || 0;
+      const totalEarnings = commissionData?.reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
+      const pendingPayments = commissionData?.filter(t => t.status === 'pending').reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
+      const withdrawnAmount = commissionData?.filter(t => t.status === 'completed').reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
+
+      setStats({
+        monthlyRevenue,
+        totalEarnings,
+        pendingPayments,
+        withdrawnAmount,
+      });
     } catch (error) {
-      console.error('Error fetching properties:', error);
-      setError('An unexpected error occurred while loading properties');
+      console.error('Error fetching host data:', error);
+      setError('An unexpected error occurred while loading data');
     } finally {
       setLoading(false);
     }
@@ -100,7 +142,7 @@ export default function HostDashboard() {
           <Button onClick={() => {
             setError(null);
             setLoading(true);
-            fetchHostProperties();
+            fetchHostData();
           }}>
             {t('tryAgain')}
           </Button>
@@ -132,7 +174,7 @@ export default function HostDashboard() {
           <Button onClick={() => {
             setError(null);
             setLoading(true);
-            fetchHostProperties();
+            fetchHostData();
           }}>
             {t('tryAgain')}
           </Button>
@@ -176,13 +218,47 @@ export default function HostDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card col-span-2">
+          <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('revenueThisMonth')}</p>
-                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                <p className="text-xs font-medium text-muted-foreground">{t('host.monthlyRevenue')}</p>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
               </div>
-              <p className="text-3xl font-bold text-foreground">{formatPrice(0)}</p>
+              <p className="text-2xl font-bold text-foreground">{formatPrice(stats.monthlyRevenue)}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('host.last30Days')}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">{t('host.totalEarnings')}</p>
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-2xl font-bold text-foreground">{formatPrice(stats.totalEarnings)}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('host.allTimeEarnings')}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">{t('host.pendingPayments')}</p>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-2xl font-bold text-foreground">{formatPrice(stats.pendingPayments)}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('host.awaitingCompletion')}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card">
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">{t('host.withdrawn')}</p>
+                <CreditCard className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-2xl font-bold text-foreground">{formatPrice(stats.withdrawnAmount)}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('host.completedPayments')}</p>
             </CardContent>
           </Card>
         </div>
@@ -242,35 +318,48 @@ export default function HostDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.activeProperties')}</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.filter(p => p.status === 'active').length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.messagesReceived')}</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">-</div>
-            <p className="text-xs text-muted-foreground">{t('host.checkMessages')}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="hover:shadow-elegant transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatPrice(0)}</div>
+            <div className="text-2xl font-bold">{formatPrice(stats.monthlyRevenue)}</div>
+            <p className="text-xs text-muted-foreground">{t('host.last30Days')}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-elegant transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('host.totalEarnings')}</CardTitle>
+            <Wallet className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatPrice(stats.totalEarnings)}</div>
+            <p className="text-xs text-muted-foreground">{t('host.allTimeEarnings')}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-elegant transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('host.pendingPayments')}</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatPrice(stats.pendingPayments)}</div>
+            <p className="text-xs text-muted-foreground">{t('host.awaitingCompletion')}</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-elegant transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('host.withdrawn')}</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatPrice(stats.withdrawnAmount)}</div>
+            <p className="text-xs text-muted-foreground">{t('host.completedPayments')}</p>
           </CardContent>
         </Card>
       </div>

@@ -47,8 +47,15 @@ export default function AdminSettings() {
   });
   const [loadingCommission, setLoadingCommission] = useState(false);
 
+  // Currency conversion settings
+  const [currencySettings, setCurrencySettings] = useState({
+    dzdToEurRate: 0.0069, // 1 DZD = 0.0069 EUR (145 DZD = 1 EUR)
+  });
+  const [loadingCurrency, setLoadingCurrency] = useState(false);
+
   useEffect(() => {
     fetchCommissionSettings();
+    fetchCurrencySettings();
   }, []);
 
   const fetchCommissionSettings = async () => {
@@ -81,6 +88,26 @@ export default function AdminSettings() {
       }
     } catch (error) {
       console.error('Error fetching commission settings:', error);
+    }
+  };
+
+  const fetchCurrencySettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('platform_settings')
+        .select('setting_key, setting_value')
+        .eq('setting_key', 'dzd_to_eur_rate')
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data?.setting_value && typeof data.setting_value === 'object' && 'rate' in data.setting_value) {
+        setCurrencySettings({
+          dzdToEurRate: data.setting_value.rate as number,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching currency settings:', error);
     }
   };
 
@@ -147,6 +174,39 @@ export default function AdminSettings() {
       });
     } finally {
       setLoadingCommission(false);
+    }
+  };
+
+  const handleCurrencySave = async () => {
+    try {
+      setLoadingCurrency(true);
+
+      const { error } = await supabase
+        .from('platform_settings')
+        .upsert(
+          {
+            setting_key: 'dzd_to_eur_rate',
+            setting_value: { rate: currencySettings.dzdToEurRate },
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'setting_key' }
+        );
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Currency conversion rate saved successfully',
+      });
+    } catch (error) {
+      console.error('Error saving currency settings:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to save currency conversion rate',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingCurrency(false);
     }
   };
 
@@ -337,6 +397,45 @@ export default function AdminSettings() {
           <Button onClick={handleCommissionSave} className="w-full" disabled={loadingCommission}>
             <Save className="h-4 w-4 mr-2" />
             {loadingCommission ? 'Saving...' : 'Save Commission Rates'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Currency Conversion Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Percent className="h-5 w-5 mr-2" />
+            Currency Conversion Rate
+          </CardTitle>
+          <CardDescription>
+            Set the DZD to EUR conversion rate (updated daily based on market rates)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="dzdToEurRate">DZD to EUR Rate</Label>
+            <Input
+              id="dzdToEurRate"
+              type="number"
+              min="0"
+              step="0.000001"
+              value={currencySettings.dzdToEurRate}
+              onChange={(e) =>
+                setCurrencySettings({ ...currencySettings, dzdToEurRate: parseFloat(e.target.value) || 0 })
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              1 DZD = {currencySettings.dzdToEurRate} EUR (or 1 EUR = {(1 / currencySettings.dzdToEurRate).toFixed(2)} DZD)
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Since Stripe doesn't support DZD, this rate is used for all currency conversions. Update this daily with the current market rate.
+            </p>
+          </div>
+
+          <Button onClick={handleCurrencySave} className="w-full" disabled={loadingCurrency}>
+            <Save className="h-4 w-4 mr-2" />
+            {loadingCurrency ? 'Saving...' : 'Save Conversion Rate'}
           </Button>
         </CardContent>
       </Card>
