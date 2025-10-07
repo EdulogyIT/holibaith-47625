@@ -77,7 +77,7 @@ export default function AdminSuperhosts() {
             user_id: userId,
             title: 'Congratulations! You are now a Superhost',
             message: `You've been awarded Superhost status! This badge recognizes your commitment to providing exceptional hospitality and service.`,
-            type: 'superhost_awarded',
+            type: 'superhost_promotion',
             related_id: userId
           });
 
