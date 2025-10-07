@@ -65,8 +65,22 @@ const Messages = () => {
       
       setConversations(filteredConversations);
       
-      // Calculate unread count (conversations with no messages from admin yet)
-      setUnreadCount(filteredConversations.filter((c: any) => c.status === 'active').length);
+      // Calculate unread count by checking if last message was from admin
+      let unreadTotal = 0;
+      for (const conv of filteredConversations) {
+        const { data: convMessages } = await supabase
+          .from('messages')
+          .select('sender_id')
+          .eq('conversation_id', conv.id)
+          .order('created_at', { ascending: false })
+          .limit(1);
+        
+        // If last message was not from the current user, it's unread
+        if (convMessages && convMessages.length > 0 && convMessages[0].sender_id !== user.id) {
+          unreadTotal++;
+        }
+      }
+      setUnreadCount(unreadTotal);
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast({

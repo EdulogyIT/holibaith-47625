@@ -605,10 +605,50 @@ const Profile = () => {
                       variant="outline" 
                       size="sm" 
                       className="border-primary/30 text-primary hover:bg-primary/10"
-                      onClick={() => {
+                      onClick={async () => {
                         if (isEditing) {
-                          // Save email logic here
-                          toast.success('Email updated successfully');
+                          // Validate email format
+                          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                          if (!emailRegex.test(profileData.email)) {
+                            toast.error(currentLang === 'AR' ? 'البريد الإلكتروني غير صالح' : currentLang === 'FR' ? 'E-mail invalide' : 'Invalid email address');
+                            return;
+                          }
+                          
+                          // Check if email already exists
+                          const { data: existingProfile } = await supabase
+                            .from('profiles')
+                            .select('id')
+                            .eq('email', profileData.email)
+                            .neq('id', user.id)
+                            .single();
+                          
+                          if (existingProfile) {
+                            toast.error(currentLang === 'AR' ? 'هذا البريد الإلكتروني مستخدم بالفعل' : currentLang === 'FR' ? 'Cet e-mail est déjà utilisé' : 'This email is already associated with an account');
+                            return;
+                          }
+                          
+                          // Update email in auth
+                          const { error: authError } = await supabase.auth.updateUser({
+                            email: profileData.email
+                          });
+                          
+                          if (authError) {
+                            toast.error(currentLang === 'AR' ? 'فشل تحديث البريد الإلكتروني' : currentLang === 'FR' ? 'Échec de la mise à jour de l\'e-mail' : 'Failed to update email');
+                            return;
+                          }
+                          
+                          // Update email in profiles table
+                          const { error: profileError } = await supabase
+                            .from('profiles')
+                            .update({ email: profileData.email } as any)
+                            .eq('id', user.id);
+                          
+                          if (profileError) {
+                            toast.error(currentLang === 'AR' ? 'فشل تحديث الملف الشخصي' : currentLang === 'FR' ? 'Échec de la mise à jour du profil' : 'Failed to update profile');
+                            return;
+                          }
+                          
+                          toast.success(currentLang === 'AR' ? 'تم تحديث البريد الإلكتروني بنجاح. يرجى التحقق من بريدك الإلكتروني الجديد للتأكيد.' : currentLang === 'FR' ? 'E-mail mis à jour avec succès. Veuillez vérifier votre nouvel e-mail pour confirmation.' : 'Email updated successfully. Please check your new email for confirmation.');
                         }
                         setIsEditing(!isEditing);
                       }}

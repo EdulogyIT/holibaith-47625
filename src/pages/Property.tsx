@@ -221,7 +221,7 @@ const Property = () => {
                   <span className="font-inter">{property.city}, {property.location}</span>
                 </div>
                 <div className="text-3xl font-bold text-primary font-playfair">
-                  {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'DZD')}
+                  {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'EUR')}
                 </div>
               </div>
 
@@ -437,7 +437,7 @@ const Property = () => {
                     {property.category === 'short-stay' ? t('pricePerNight') : t('totalPrice')}
                   </div>
                   <div className="text-xl font-bold text-primary font-playfair leading-tight">
-                    {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'DZD')}
+                    {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'EUR')}
                   </div>
                 </div>
               </div>
@@ -531,7 +531,7 @@ const Property = () => {
                       </div>
                       <Badge variant="secondary" className="text-lg px-3 py-1 font-inter capitalize">{t(property.property_type) || property.property_type}</Badge>
                     </div>
-                    <div className="text-4xl font-bold text-primary font-playfair">{formatPrice(property.price, property.price_type, (property.price_currency as any) || 'DZD')}</div>
+                    <div className="text-4xl font-bold text-primary font-playfair">{formatPrice(property.price, property.price_type, (property.price_currency as any) || 'EUR')}</div>
                   </CardHeader>
                   <CardContent>
                     <div className="flex justify-between items-center bg-muted/50 rounded-lg p-4 mb-6">

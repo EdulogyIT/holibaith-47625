@@ -172,7 +172,7 @@ const Rent = () => {
       <CardContent className={cn(isMobile ? "p-2 pt-0" : "pt-0")}>
         <div className={cn("flex items-center justify-between", isMobile ? "mb-1" : "mb-3")}>
           <div className={cn("font-bold text-primary", isMobile ? "text-sm" : "text-2xl")}>
-            {formatPrice(num(property.price), property.price_type, (property.price_currency as any) || 'DZD')}
+            {formatPrice(num(property.price), property.price_type, (property.price_currency as any) || 'EUR')}
           </div>
         </div>
 
