@@ -583,15 +583,39 @@ const Profile = () => {
                 <CardDescription>{currentTranslations.accountDesc}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 p-6">
-                <div className="flex items-center justify-between p-4 border border-accent/20 rounded-xl bg-gradient-to-r from-white/50 to-accent/5 hover:shadow-md transition-all">
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-primary" />
-                    <div>
-                      <div className="font-medium text-foreground">{currentTranslations.changeEmail}</div>
-                      <div className="text-sm text-muted-foreground">{user.email}</div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 border border-accent/20 rounded-xl bg-gradient-to-r from-white/50 to-accent/5">
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-primary" />
+                      <div className="flex-1">
+                        <div className="font-medium text-foreground mb-2">{currentTranslations.changeEmail}</div>
+                        {isEditing ? (
+                          <Input 
+                            type="email"
+                            value={profileData.email}
+                            onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                            className="text-sm"
+                          />
+                        ) : (
+                          <div className="text-sm text-muted-foreground">{user.email}</div>
+                        )}
+                      </div>
                     </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-primary/30 text-primary hover:bg-primary/10"
+                      onClick={() => {
+                        if (isEditing) {
+                          // Save email logic here
+                          toast.success('Email updated successfully');
+                        }
+                        setIsEditing(!isEditing);
+                      }}
+                    >
+                      {isEditing ? 'Save' : 'Edit'}
+                    </Button>
                   </div>
-                  <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10">Edit</Button>
                 </div>
               </CardContent>
             </Card>

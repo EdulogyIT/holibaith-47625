@@ -21,12 +21,16 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import heroImage from "@/assets/contact-advisor-hero.jpg";
 
 const ContactAdvisor = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
   useScrollToTop();
   
   const [formData, setFormData] = useState({
@@ -36,10 +40,57 @@ const ContactAdvisor = () => {
     subject: "",
     message: ""
   });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    
+    if (!user) {
+      toast.error('Please log in to send a message');
+      navigate('/login');
+      return;
+    }
+
+    setSending(true);
+    
+    try {
+      // Create conversation
+      const { data: conversation, error: convError } = await supabase
+        .from('conversations')
+        .insert({
+          user_id: user.id,
+          conversation_type: 'support',
+          subject: formData.subject || 'Contact Advisor Request',
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (convError) throw convError;
+
+      // Send initial message
+      const { error: msgError } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversation.id,
+          sender_id: user.id,
+          content: `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n${formData.message}`,
+          message_type: 'text'
+        });
+
+      if (msgError) throw msgError;
+
+      toast.success('Your message has been sent to our advisors!');
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      
+      // Navigate to messages
+      setTimeout(() => navigate('/messages'), 1500);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   const advisorStats = [
@@ -227,9 +278,9 @@ const ContactAdvisor = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full h-11 bg-gradient-primary font-inter text-sm">
+              <Button type="submit" className="w-full h-11 bg-gradient-primary font-inter text-sm" disabled={sending}>
                 <Send className="h-4 w-4 mr-2" />
-                {t('sendMessage')}
+                {sending ? 'Sending...' : t('sendMessage')}
               </Button>
             </form>
           </div>
@@ -376,9 +427,9 @@ const ContactAdvisor = () => {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-gradient-primary">
+              <Button type="submit" className="w-full bg-gradient-primary" disabled={sending}>
                 <Send className="h-4 w-4 mr-2" />
-                {t('sendMessage')}
+                {sending ? 'Sending...' : t('sendMessage')}
               </Button>
             </form>
           </div>

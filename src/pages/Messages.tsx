@@ -39,6 +39,7 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Fetch conversations
   const fetchConversations = async () => {
@@ -47,12 +48,25 @@ const Messages = () => {
     try {
       const { data, error } = await supabase
         .from('conversations')
-        .select('*')
+        .select(`
+          *,
+          messages (count)
+        `)
         .eq('user_id', user.id)
-        .order('updated_at', { ascending: false });
+        .order('updated_at', { ascending: false })
+        .limit(1);
 
       if (error) throw error;
-      setConversations(data || []);
+      
+      // Only show conversations that have messages or are active
+      const filteredConversations = (data || []).filter((conv: any) => 
+        conv.messages?.length > 0 || conv.status === 'active'
+      );
+      
+      setConversations(filteredConversations);
+      
+      // Calculate unread count (conversations with no messages from admin yet)
+      setUnreadCount(filteredConversations.filter((c: any) => c.status === 'active').length);
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast({
@@ -353,14 +367,20 @@ const Messages = () => {
                     <div
                       key={conversation.id}
                       onClick={() => setSelectedConversation(conversation.id)}
-                      className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-border cursor-pointer hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-border cursor-pointer hover:bg-gray-50 transition-colors relative"
                     >
-                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 relative">
                         <MessageCircle className="h-6 w-6 text-primary" />
+                        {conversation.status === 'active' && (
+                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-white"></div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold truncate">
-                          {conversation.subject || 'General Inquiry'}
+                        <div className="font-semibold truncate flex items-center gap-2">
+                          {conversation.subject || 'Support Request'}
+                          {conversation.status === 'active' && (
+                            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">Pending</span>
+                          )}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           Tap to open chat

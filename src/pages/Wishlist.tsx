@@ -117,44 +117,45 @@ const Wishlist = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-3">
               {properties.map((property) => (
                 <div
                   key={property.id}
-                  className="bg-white rounded-3xl overflow-hidden shadow-sm border border-border"
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-border"
                 >
                   <div className="relative">
                     <img
                       src={property.images?.[0] || '/placeholder-property.jpg'}
                       alt={property.title}
-                      className="w-full h-48 object-cover cursor-pointer"
+                      className="w-full h-32 object-cover cursor-pointer"
                       onClick={() => navigate(`/property/${property.id}`)}
                     />
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full"
+                      className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full h-8 w-8"
                       onClick={() => toggleWishlist(property.id)}
                     >
-                      <Heart className="h-5 w-5 fill-red-500 text-red-500" />
+                      <Heart className="h-4 w-4 fill-red-500 text-red-500" />
                     </Button>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">{property.title}</h3>
-                    <div className="flex items-center text-muted-foreground text-sm mb-2">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {property.city}, {property.location}
+                  <div className="p-3">
+                    <h3 className="font-semibold text-sm mb-0.5 line-clamp-1">{property.title}</h3>
+                    <div className="flex items-center text-muted-foreground text-xs mb-2">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      {property.city}
                     </div>
-                    <div className="flex justify-between items-center">
-                      <div className="font-bold text-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="font-bold text-base">
                         {formatPrice(Number(property.price), property.price_type, (property.price_currency as any) || 'DZD')}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-xs text-muted-foreground">
                         {property.bedrooms} beds • {property.bathrooms} baths
                       </div>
                     </div>
                     <Button 
-                      className="w-full mt-3"
+                      size="sm"
+                      className="w-full h-8 text-xs"
                       onClick={() => navigate(`/property/${property.id}`)}
                     >
                       View Details
