@@ -52,41 +52,67 @@ const Messages = () => {
         .from('conversations')
         .select(`
           *,
-          messages (count)
+          messages (
+            id,
+            sender_id,
+            created_at
+          )
         `)
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
       
-      // Only show conversations that have messages or are active, and exclude self-conversations
-      const filteredConversations = (data || []).filter((conv: any) => 
-        (conv.messages?.length > 0 || conv.status === 'active') &&
-        conv.user_id !== conv.admin_id && 
-        conv.user_id !== conv.recipient_id
-      );
+      // Filter and deduplicate conversations
+      const conversationsMap = new Map();
       
-      setConversations(filteredConversations);
-      
-      // Calculate unread count by checking if last message was after last_read_at
-      let unreadTotal = 0;
-      for (const conv of filteredConversations) {
-        const { data: convMessages } = await supabase
-          .from('messages')
-          .select('sender_id, created_at')
-          .eq('conversation_id', conv.id)
-          .order('created_at', { ascending: false })
-          .limit(1);
+      for (const conv of (data || [])) {
+        // Skip self-conversations
+        if (conv.user_id === conv.admin_id || conv.user_id === conv.recipient_id) {
+          continue;
+        }
         
-        // If last message was not from the current user and is after last_read_at, it's unread
-        if (convMessages && convMessages.length > 0 && convMessages[0].sender_id !== user.id) {
-          const lastReadAt = conv.last_read_at ? new Date(conv.last_read_at) : new Date(0);
-          const lastMessageAt = new Date(convMessages[0].created_at);
-          if (lastMessageAt > lastReadAt) {
-            unreadTotal++;
+        // Only show conversations that have messages
+        if (!conv.messages || conv.messages.length === 0) {
+          continue;
+        }
+        
+        const subject = conv.subject || 'Support Request';
+        
+        // Deduplicate: keep only the most recent conversation per subject
+        if (!conversationsMap.has(subject)) {
+          conversationsMap.set(subject, conv);
+        } else {
+          const existing = conversationsMap.get(subject);
+          // Replace if current conversation is more recent
+          if (new Date(conv.updated_at) > new Date(existing.updated_at)) {
+            conversationsMap.set(subject, conv);
           }
         }
       }
+      
+      const filteredConversations = Array.from(conversationsMap.values())
+        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      
+      setConversations(filteredConversations);
+      
+      // Calculate unread count correctly
+      let unreadTotal = 0;
+      for (const conv of filteredConversations) {
+        const lastReadAt = conv.last_read_at ? new Date(conv.last_read_at) : new Date(0);
+        
+        // Check if there's any message from someone else that's newer than last_read_at
+        const hasUnreadMessages = conv.messages.some((msg: any) => {
+          const isFromOther = msg.sender_id !== user.id;
+          const isAfterLastRead = new Date(msg.created_at) > lastReadAt;
+          return isFromOther && isAfterLastRead;
+        });
+        
+        if (hasUnreadMessages) {
+          unreadTotal++;
+        }
+      }
+      
       setUnreadCount(unreadTotal);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -411,9 +437,11 @@ const Messages = () => {
                         <MessageCircle className="h-6 w-6 text-primary" />
                         {(() => {
                           const lastReadAt = conversation.last_read_at ? new Date(conversation.last_read_at) : new Date(0);
-                          // Check if there are messages after last read time
+                          // Check if there are messages after last read time from someone else
                           const hasUnread = conversation.messages?.some((msg: any) => {
-                            return msg.sender_id !== user?.id && new Date(msg.created_at) > lastReadAt;
+                            const isFromOther = msg.sender_id !== user?.id;
+                            const isAfterLastRead = new Date(msg.created_at) > lastReadAt;
+                            return isFromOther && isAfterLastRead;
                           });
                           return hasUnread && (
                             <div className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full border-2 border-white"></div>
