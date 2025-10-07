@@ -16,7 +16,8 @@ import {
   LogOut,
   Home,
   Menu,
-  FileText
+  FileText,
+  Award
 } from 'lucide-react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -39,6 +40,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { title: t('admin.dashboard'), url: '/admin', icon: LayoutDashboard },
     { title: t('admin.properties'), url: '/admin/properties', icon: Building2 },
     { title: t('admin.hostsGuests'), url: '/admin/users', icon: Users },
+    { title: 'Superhosts', url: '/admin/superhosts', icon: Award },
     { title: t('admin.messages'), url: '/admin/messages', icon: MessageSquare },
     { title: 'Blogs', url: '/admin/blogs', icon: FileText },
     { title: t('admin.settings'), url: '/admin/settings', icon: Settings },
