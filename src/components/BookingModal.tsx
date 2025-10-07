@@ -73,22 +73,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
 
   // ---- Stripe constraints ----
   const MIN_EUR = 1; // Minimum EUR amount for Stripe
-  const { currentCurrency, exchangeRates } = useCurrency();
+  const { currentCurrency, exchangeRates, formatPrice: formatCurrencyPrice, getCurrencySymbol } = useCurrency();
 
   // Calculate booking details 
-  // Property prices are stored in their original currency, convert to EUR for payment
+  // Property prices are stored in their original currency
   const basePriceOriginal = Number(property.price) || 0;
-  const sourceCurrency = (property.price_currency as any) || 'DZD';
+  const sourceCurrency = (property.price_currency as any) || 'EUR';
   
-  // Convert to EUR for Stripe payment
-  // First convert to DZD if not already, then to EUR
+  // Convert price from source currency to EUR for Stripe payment
   let basePriceEUR = basePriceOriginal;
-  if (sourceCurrency !== 'DZD') {
-    // Convert source to DZD first
-    basePriceEUR = basePriceOriginal / exchangeRates[sourceCurrency as 'USD' | 'EUR'];
+  if (sourceCurrency !== 'EUR') {
+    basePriceEUR = basePriceOriginal / exchangeRates[sourceCurrency as 'USD' | 'EUR' | 'DZD'];
   }
-  // Then convert DZD to EUR
-  basePriceEUR = basePriceEUR * exchangeRates.EUR;
 
   // Convert monthly/weekly price to nightly when short-stay
   let dailyPriceEUR = basePriceEUR;
@@ -121,6 +117,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
   // Apply minimum EUR constraint and round to 2 decimals
   const finalTotalAmount = Math.max(MIN_EUR, Math.round(totalAmountEUR * 100) / 100);
   const finalSecurityDeposit = Math.max(MIN_EUR, Math.round(securityDepositEUR * 100) / 100);
+
+  // Determine Stripe currency: EUR for DZD, USD for USD, EUR for EUR
+  const stripeCurrency = currentCurrency === 'USD' ? 'USD' : 'EUR';
+  
+  // Convert amounts to display currency for UI
+  const dailyPriceDisplay = dailyPriceEUR * exchangeRates[currentCurrency];
+  const subtotalDisplay = subtotalEUR * exchangeRates[currentCurrency];
+  const bookingFeeDisplay = bookingFeeEUR * exchangeRates[currentCurrency];
+  const totalDisplay = finalTotalAmount * exchangeRates[currentCurrency];
+  const depositDisplay = finalSecurityDeposit * exchangeRates[currentCurrency];
+  
+  // Convert EUR amounts to Stripe currency for payment
+  const stripeTotal = stripeCurrency === 'USD' ? finalTotalAmount * exchangeRates.USD : finalTotalAmount;
+  const stripeDeposit = stripeCurrency === 'USD' ? finalSecurityDeposit * exchangeRates.USD : finalSecurityDeposit;
 
   const isFormValid = Boolean(checkInDate && checkOutDate && nights > 0 && guestsCount > 0);
   const canPayBooking = isFormValid && finalTotalAmount >= MIN_EUR;
@@ -169,8 +179,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
         body: {
           propertyId: property.id,
           paymentType: 'booking_fee',
-          amount: finalTotalAmount,
-          currency: 'EUR',
+          amount: stripeTotal,
+          currency: stripeCurrency,
           description: `Booking fee for ${property.title}`,
           bookingData: {
             checkInDate,
@@ -217,8 +227,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
         body: {
           propertyId: property.id,
           paymentType: 'security_deposit',
-          amount: finalSecurityDeposit,
-          currency: 'EUR',
+          amount: stripeDeposit,
+          currency: stripeCurrency,
           description: `Security deposit for ${property.title}`,
           bookingData: {
             checkInDate,
@@ -342,28 +352,30 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                 <>
                   <div className="flex justify-between text-sm">
                     <span>
-                      €{dailyPriceEUR.toFixed(2)} × {nights} night{nights !== 1 ? 's' : ''}
+                      {formatCurrencyPrice(dailyPriceDisplay, '', currentCurrency as any)} × {nights} night{nights !== 1 ? 's' : ''}
                     </span>
-                    <span>€{subtotalEUR.toFixed(2)}</span>
+                    <span>{formatCurrencyPrice(subtotalDisplay, '', currentCurrency as any)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Booking fee (5%)</span>
-                    <span>€{bookingFeeEUR.toFixed(2)}</span>
+                    <span>{formatCurrencyPrice(bookingFeeDisplay, '', currentCurrency as any)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-semibold">
-                    <span>Total (EUR)</span>
-                    <span>€{finalTotalAmount.toFixed(2)}</span>
+                    <span>Total</span>
+                    <span>{formatCurrencyPrice(totalDisplay, '', currentCurrency as any)}</span>
                   </div>
                   <div className="text-xs text-gray-600">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      Security deposit: €{finalSecurityDeposit.toFixed(2)} (refundable)
+                      Security deposit: {formatCurrencyPrice(depositDisplay, '', currentCurrency as any)} (refundable)
                     </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Displayed in {currentCurrency}, charged in EUR
-                  </div>
+                  {currentCurrency === 'DZD' && (
+                    <div className="text-xs text-muted-foreground mt-2">
+                      Payment will be processed in EUR
+                    </div>
+                  )}
                 </>
               )}
 
@@ -384,7 +396,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                     disabled={!canPayBooking || isCheckingAvailability}
                   >
                     <CreditCard className="w-4 h-4 mr-2" />
-                    {isCheckingAvailability ? 'Checking availability...' : `Pay €${finalTotalAmount.toFixed(2)}`}
+                    {isCheckingAvailability ? 'Checking availability...' : `Pay ${formatCurrencyPrice(totalDisplay, '', currentCurrency as any)}`}
                   </Button>
                   {!canPayBooking && (
                     <div className="text-xs text-muted-foreground">
@@ -401,7 +413,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
                         size="lg"
                         disabled={!canPayDeposit}
                       >
-                        Pay Security Deposit: €{finalSecurityDeposit.toFixed(2)}
+                        Pay Security Deposit: {formatCurrencyPrice(depositDisplay, '', currentCurrency as any)}
                       </Button>
                       {!canPayDeposit && (
                         <div className="text-xs text-muted-foreground">

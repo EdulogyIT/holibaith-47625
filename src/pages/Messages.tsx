@@ -53,8 +53,7 @@ const Messages = () => {
           messages (count)
         `)
         .eq('user_id', user.id)
-        .order('updated_at', { ascending: false })
-        .limit(1);
+        .order('updated_at', { ascending: false });
 
       if (error) throw error;
       

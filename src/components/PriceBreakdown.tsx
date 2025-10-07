@@ -97,18 +97,6 @@ export const PriceBreakdown = ({ basePrice, nights, priceType, category, propert
           <span className="text-primary">{formatPrice(total, '', currentCurrency as any)}</span>
         </div>
 
-        <Separator className="my-2" />
-
-        <div className="space-y-2 text-xs text-muted-foreground">
-          <div className="flex justify-between">
-            <span>Host earnings ({(100 - commissionRate * 100).toFixed(0)}%)</span>
-            <span>{formatPrice(hostEarnings, '', currentCurrency as any)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Platform commission ({(commissionRate * 100).toFixed(0)}%)</span>
-            <span>{formatPrice(platformCommission, '', currentCurrency as any)}</span>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );
