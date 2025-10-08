@@ -33,7 +33,8 @@ export const HostLayout = ({ children }: HostLayoutProps) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const hostMenuItems = [
-    { title: 'Reservations', url: '/host', icon: Calendar },
+    { title: 'Dashboard', url: '/host', icon: Home },
+    { title: 'Bookings', url: '/host/bookings', icon: Calendar },
     { title: 'Calendar', url: '/host/calendar', icon: CalendarDays },
     { title: 'Listings', url: '/host/listings', icon: Building2 },
     { title: 'Messages', url: '/host/messages', icon: MessageSquare },
