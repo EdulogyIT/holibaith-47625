@@ -826,6 +826,8 @@ const Property = () => {
             isOpen={isScheduleModalOpen}
             onClose={() => setIsScheduleModalOpen(false)}
             propertyTitle={property.title}
+            propertyId={property.id}
+            hostUserId={property.user_id}
           />
           <MessageOwnerModal
             isOpen={isMessageModalOpen}
