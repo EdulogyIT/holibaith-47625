@@ -117,11 +117,6 @@ const MobileBottomNav = () => {
                   {unreadCount}
                 </span>
               )}
-              {item.id !== 'messages' && (
-                <span className={`text-xs ${active ? "text-primary font-medium" : "text-muted-foreground"}`}>
-                  {item.label}
-                </span>
-              )}
             </button>
           );
         })}

@@ -10,10 +10,11 @@ interface PriceBreakdownProps {
   priceType: string;
   category: string;
   propertyId: string;
+  priceCurrency?: string;
 }
 
-export const PriceBreakdown = ({ basePrice, nights, priceType, category, propertyId }: PriceBreakdownProps) => {
-  const { formatPrice, currentCurrency } = useCurrency();
+export const PriceBreakdown = ({ basePrice, nights, priceType, category, propertyId, priceCurrency = 'EUR' }: PriceBreakdownProps) => {
+  const { formatPrice, currentCurrency, exchangeRates } = useCurrency();
   const [commissionRate, setCommissionRate] = useState(0.15); // Default 15%
 
   useEffect(() => {
@@ -56,12 +57,33 @@ export const PriceBreakdown = ({ basePrice, nights, priceType, category, propert
     fetchCommissionRate();
   }, [propertyId, category]);
 
+  // Convert base price to current currency if different
+  let convertedBasePrice = basePrice;
+  if (priceCurrency !== currentCurrency && exchangeRates) {
+    // Convert property currency to EUR first (if not already EUR)
+    let priceInEUR = basePrice;
+    if (priceCurrency === 'USD') {
+      priceInEUR = basePrice * exchangeRates.USD;
+    } else if (priceCurrency === 'DZD') {
+      priceInEUR = basePrice * exchangeRates.DZD;
+    }
+    
+    // Then convert EUR to target currency
+    if (currentCurrency === 'USD') {
+      convertedBasePrice = priceInEUR / exchangeRates.USD;
+    } else if (currentCurrency === 'DZD') {
+      convertedBasePrice = priceInEUR / exchangeRates.DZD;
+    } else {
+      convertedBasePrice = priceInEUR;
+    }
+  }
+
   // Calculate nightly price if needed
-  let nightlyPrice = basePrice;
+  let nightlyPrice = convertedBasePrice;
   if (priceType === 'monthly' && category === 'short-stay') {
-    nightlyPrice = basePrice / 30.44;
+    nightlyPrice = convertedBasePrice / 30.44;
   } else if (priceType === 'weekly' && category === 'short-stay') {
-    nightlyPrice = basePrice / 7;
+    nightlyPrice = convertedBasePrice / 7;
   }
 
   const subtotal = nightlyPrice * nights;

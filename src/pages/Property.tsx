@@ -303,6 +303,7 @@ const Property = () => {
                     priceType={property.price_type}
                     category={property.category}
                     propertyId={property.id}
+                    priceCurrency={property.price_currency || 'EUR'}
                   />
                 </div>
               )}
