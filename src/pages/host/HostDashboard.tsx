@@ -80,22 +80,14 @@ export default function HostDashboard() {
         console.error('Error fetching commission data:', commissionError);
       }
 
-      // Fetch monthly revenue from bookings (last 30 days)
+      // Calculate monthly revenue from commission transactions (last 30 days)
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       
-      const propertyIds = propertiesData?.map(p => p.id) || [];
-      const { data: revenueData } = await supabase
-        .from('bookings')
-        .select('booking_fee')
-        .in('property_id', propertyIds)
-        .eq('status', 'completed')
-        .gte('created_at', thirtyDaysAgo.toISOString());
-
-      const monthlyRevenue = revenueData?.reduce((sum, booking) => sum + Number(booking.booking_fee || 0), 0) || 0;
+      const monthlyRevenue = commissionData?.filter(t => new Date(t.created_at) >= thirtyDaysAgo).reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
       const totalEarnings = commissionData?.reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
       const pendingPayments = commissionData?.filter(t => t.status === 'pending').reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
-      const withdrawnAmount = commissionData?.filter(t => t.status === 'completed').reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
+      const withdrawnAmount = commissionData?.filter(t => t.status === 'completed' || t.status === 'paid').reduce((sum, t) => sum + Number(t.host_amount || 0), 0) || 0;
 
       setStats({
         monthlyRevenue,
