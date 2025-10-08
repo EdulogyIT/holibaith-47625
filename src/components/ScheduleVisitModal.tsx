@@ -140,7 +140,7 @@ const ScheduleVisitModal = ({ isOpen, onClose, propertyTitle, propertyId, hostUs
 
       toast({
         title: "Visit Scheduled",
-        description: `Your visit has been scheduled for ${visitDateTime}`,
+        description: `Your visit has been scheduled for ${visitDateTime}. The host will receive your message and contact details.`,
       });
       
       onClose();
