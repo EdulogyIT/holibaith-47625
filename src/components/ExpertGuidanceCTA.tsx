@@ -9,14 +9,14 @@ const ExpertGuidanceCTA = () => {
       <div className="bg-primary text-primary-foreground rounded-3xl p-8">
         <h2 className="text-2xl font-bold mb-3">Need Expert Guidance?</h2>
         <p className="text-primary-foreground/90 mb-6 text-base">
-          Speak to our property advisors for personalized recommendations
+          Speak To Our Property Advisors For Personalized Recommendations
         </p>
         <Button
           onClick={() => navigate("/contact-advisor")}
           className="rounded-xl px-6 bg-background text-foreground hover:bg-background/90 font-medium"
           size="lg"
         >
-          Contact an Advisor
+          Contact An Advisor
         </Button>
       </div>
     </section>
