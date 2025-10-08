@@ -63,16 +63,16 @@ export const PriceBreakdown = ({ basePrice, nights, priceType, category, propert
     // Convert property currency to EUR first (if not already EUR)
     let priceInEUR = basePrice;
     if (priceCurrency === 'USD') {
-      priceInEUR = basePrice * exchangeRates.USD;
+      priceInEUR = basePrice / exchangeRates.USD;
     } else if (priceCurrency === 'DZD') {
-      priceInEUR = basePrice * exchangeRates.DZD;
+      priceInEUR = basePrice / exchangeRates.DZD;
     }
     
     // Then convert EUR to target currency
     if (currentCurrency === 'USD') {
-      convertedBasePrice = priceInEUR / exchangeRates.USD;
+      convertedBasePrice = priceInEUR * exchangeRates.USD;
     } else if (currentCurrency === 'DZD') {
-      convertedBasePrice = priceInEUR / exchangeRates.DZD;
+      convertedBasePrice = priceInEUR * exchangeRates.DZD;
     } else {
       convertedBasePrice = priceInEUR;
     }
