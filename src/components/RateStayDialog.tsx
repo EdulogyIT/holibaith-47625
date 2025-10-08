@@ -73,6 +73,23 @@ export function RateStayDialog({
         throw new Error("Reviews can only be submitted for completed bookings");
       }
 
+      // Check if review already exists
+      const { data: existingReview, error: checkError } = await supabase
+        .from("reviews")
+        .select("id")
+        .eq("booking_id", bookingId)
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error("Error checking existing review:", checkError);
+        throw checkError;
+      }
+
+      if (existingReview) {
+        throw new Error("You have already submitted a review for this stay");
+      }
+
       const { error } = await supabase.from("reviews").insert({
         booking_id: bookingId,
         property_id: propertyId,
