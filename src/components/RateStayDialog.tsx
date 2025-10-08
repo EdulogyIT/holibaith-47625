@@ -56,6 +56,23 @@ export function RateStayDialog({
 
     setSubmitting(true);
     try {
+      // First verify the booking exists and is completed
+      const { data: booking, error: bookingError } = await supabase
+        .from("bookings")
+        .select("id, status")
+        .eq("id", bookingId)
+        .eq("user_id", userId)
+        .single();
+
+      if (bookingError || !booking) {
+        console.error("Booking verification error:", bookingError);
+        throw new Error("Booking not found or access denied");
+      }
+
+      if (booking.status !== "completed") {
+        throw new Error("Reviews can only be submitted for completed bookings");
+      }
+
       const { error } = await supabase.from("reviews").insert({
         booking_id: bookingId,
         property_id: propertyId,
@@ -70,7 +87,10 @@ export function RateStayDialog({
         value_rating: value || null,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Review insert error:", error);
+        throw error;
+      }
 
       toast({
         title: "Review submitted",
@@ -87,11 +107,12 @@ export function RateStayDialog({
       setCommunication(0);
       setLocation(0);
       setValue(0);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting review:", error);
+      const errorMessage = error?.message || "Failed to submit review. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to submit review. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

@@ -3,7 +3,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import MobileHeader from "@/components/MobileHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import FloatingMapButton from "@/components/FloatingMapButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -422,12 +421,8 @@ const Messages = () => {
                 </Card>
               ) : (
                 <>
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="mb-4">
                     <h2 className="text-xl font-semibold">Chats</h2>
-                    <Button onClick={startNewConversation} size="sm">
-                      <Plus className="h-4 w-4 mr-1" />
-                      New
-                    </Button>
                   </div>
                   {conversations.map((conversation) => (
                     <div
@@ -470,7 +465,6 @@ const Messages = () => {
         </div>
       </main>
       <MobileBottomNav />
-      <FloatingMapButton />
     </div>
   );
 };

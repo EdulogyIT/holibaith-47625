@@ -113,6 +113,7 @@ export default function EditProperty() {
           contact_name: property.contact_name,
           contact_phone: property.contact_phone,
           contact_email: property.contact_email,
+          images: property.images,
           features: property.features,
           status: property.status,
         })
