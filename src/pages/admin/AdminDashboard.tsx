@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Users, Building2, MessageSquare, ChevronRight } from 'lucide-react';
+import { CalendarDays, Users, Building2, MessageSquare, ChevronRight, DollarSign } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [properties, setProperties] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<any[]>([]);
   const [conversations, setConversations] = useState<any[]>([]);
+  const [commissions, setCommissions] = useState<any[]>([]);
   const [weeklyGrowth, setWeeklyGrowth] = useState({ properties: 0, users: 0, messages: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -25,13 +26,14 @@ export default function AdminDashboard() {
         const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
-        const [propertiesResult, profilesResult, conversationsResult, 
+        const [propertiesResult, profilesResult, conversationsResult, commissionsResult,
                propertiesLastWeek, propertiesPrevWeek,
                profilesLastWeek, profilesPrevWeek,
                conversationsLastWeek, conversationsPrevWeek] = await Promise.all([
           supabase.from('properties').select('*'),
           supabase.from('profiles').select('*'),
           supabase.from('conversations').select('*'),
+          supabase.from('commission_transactions').select('*, properties(title)').eq('status', 'completed').order('created_at', { ascending: false }).limit(10),
           supabase.from('properties').select('id').gte('created_at', oneWeekAgo.toISOString()),
           supabase.from('properties').select('id').gte('created_at', twoWeeksAgo.toISOString()).lt('created_at', oneWeekAgo.toISOString()),
           supabase.from('profiles').select('id').gte('created_at', oneWeekAgo.toISOString()),
@@ -43,6 +45,7 @@ export default function AdminDashboard() {
         if (propertiesResult.data) setProperties(propertiesResult.data);
         if (profilesResult.data) setProfiles(profilesResult.data);
         if (conversationsResult.data) setConversations(conversationsResult.data);
+        if (commissionsResult.data) setCommissions(commissionsResult.data);
 
         // Calculate week-over-week growth
         const calcGrowth = (current: number, previous: number) => {
@@ -69,6 +72,8 @@ export default function AdminDashboard() {
   const recentProperties = properties
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
+  
+  const totalCommissions = commissions.reduce((sum, c) => sum + Number(c.commission_amount), 0);
 
   const kpiData = [
     {
@@ -339,8 +344,8 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">{t('admin.propertyDistribution')}</CardTitle>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-lg">Commission Earnings</CardTitle>
+            <DollarSign className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -348,44 +353,39 @@ export default function AdminDashboard() {
                 <>
                   <Skeleton className="h-16 w-full" />
                   <Skeleton className="h-16 w-full" />
-                  <Skeleton className="h-16 w-full" />
                 </>
               ) : (
                 <>
-                  {[
-                    { label: 'Sale', value: 'sale' },
-                    { label: 'Rent', value: 'rent' },
-                    { label: 'Short Stay', value: 'short-stay' }
-                  ].map((category) => {
-                    const count = properties.filter(p => 
-                      p.category.toLowerCase() === category.value.toLowerCase()
-                    ).length;
-                    const percentage = properties.length > 0 ? Math.round((count / properties.length) * 100) : 0;
-                    
-                    return (
+                  <div className="p-4 rounded-lg bg-green-50 border border-green-200">
+                    <p className="text-sm text-muted-foreground">Total Commission Earned</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {totalCommissions.toLocaleString()} DZD
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">Recent Commissions</h4>
+                    {commissions.slice(0, 3).map((commission) => (
                       <div 
-                        key={category.value} 
-                        className="flex items-center justify-between p-3 rounded-lg hover:bg-accent/50 cursor-pointer transition-colors border"
-                        onClick={() => navigate('/admin/properties')}
+                        key={commission.id}
+                        className="flex justify-between items-center p-3 rounded-lg hover:bg-accent/50 transition-colors border text-sm"
                       >
-                        <div className="flex-1">
-                          <p className="font-medium">{category.label}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-primary transition-all" 
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                          </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{commission.properties?.title || 'Unknown Property'}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(commission.created_at).toLocaleDateString()}
+                          </p>
                         </div>
-                        <div className="text-right ml-4 flex-shrink-0">
-                          <p className="font-bold text-lg">{percentage}%</p>
-                          <p className="text-xs text-muted-foreground">{count} {t('properties')}</p>
+                        <div className="text-right ml-2 flex-shrink-0">
+                          <p className="font-bold text-green-600">
+                            +{Number(commission.commission_amount).toLocaleString()} DZD
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {Math.round(Number(commission.commission_rate) * 100)}% rate
+                          </p>
                         </div>
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </>
               )}
             </div>
