@@ -56,7 +56,7 @@ const Blog = () => {
               {t('BlogInsights')}
             </h1>
             <p className={cn("text-muted-foreground font-inter max-w-2xl mx-auto", isMobile ? "text-base" : "text-xl")}>
-              {t('blogDescription')}
+              {t('BlogDescription')}
             </p>
           </div>
         </section>
@@ -139,10 +139,10 @@ const Blog = () => {
         <section className={cn("bg-gradient-subtle", isMobile ? "py-8" : "py-16")}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className={cn("font-bold text-foreground mb-4 font-playfair", isMobile ? "text-2xl" : "text-3xl")}>
-              {t('stayUpdated')}
+              {t('StayUpdated')}
             </h2>
             <p className={cn("text-muted-foreground mb-8 font-inter", isMobile ? "text-sm mb-4" : "text-lg")}>
-              {t('newsletterDescription')}
+              {t('NewsletterDescription')}
             </p>
             <div className={cn("flex flex-col gap-4 max-w-md mx-auto", isMobile ? "gap-2" : "sm:flex-row")}>
               <input 
@@ -151,7 +151,7 @@ const Blog = () => {
                 className={cn("flex-1 px-4 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring font-inter", isMobile ? "py-2 text-sm" : "py-3")}
               />
               <button className={cn("bg-gradient-primary text-primary-foreground rounded-md font-medium hover:shadow-elegant transition-all font-inter", isMobile ? "px-4 py-2 text-sm" : "px-6 py-3")}>
-                {t('subscribe')}
+                {t('Subscribe')}
               </button>
             </div>
           </div>
