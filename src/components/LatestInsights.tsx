@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const LatestInsights = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, currentLang } = useLanguage();
   const [insights, setInsights] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,23 +75,25 @@ const LatestInsights = () => {
               />
               <div className="absolute top-2 left-2">
                 <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-                  {insight.category || 'Article'}
+                  {insight[`category_${currentLang.toLowerCase()}` as keyof typeof insight] as string || insight.category || t('allCategories')}
                 </span>
               </div>
             </div>
             <div className="p-3">
-              <h3 className="font-bold text-sm mb-1 line-clamp-2">{insight.title}</h3>
+              <h3 className="font-bold text-sm mb-1 line-clamp-2">
+                {insight[`title_${currentLang.toLowerCase()}` as keyof typeof insight] as string || insight.title}
+              </h3>
               <p className="text-muted-foreground text-xs mb-2 line-clamp-2">
-                {insight.content.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                {((insight[`content_${currentLang.toLowerCase()}` as keyof typeof insight] as string || insight.content) || '').replace(/<[^>]*>/g, '').slice(0, 100)}...
               </p>
               <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                 <div className="flex items-center">
                   <User className="h-3 w-3 mr-0.5" />
-                  {insight.author_name}
+                  {insight[`author_name_${currentLang.toLowerCase()}` as keyof typeof insight] as string || insight.author_name}
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-3 w-3 mr-0.5" />
-                  5 min read
+                  5 {t('readTime')}
                 </div>
               </div>
             </div>

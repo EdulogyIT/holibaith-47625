@@ -130,15 +130,17 @@ const BlogPost = () => {
           {/* Article Header */}
           <header className="mb-8">
             <div className="flex items-center gap-4 mb-4">
-              <Badge variant="secondary">{post.category}</Badge>
+              <Badge variant="secondary">
+                {post[`category_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.category || t('allCategories')}
+              </Badge>
               <div className="flex items-center text-sm text-muted-foreground">
                 <Clock className="w-4 h-4 mr-1" />
-                5 min read
+                5 {t('readTime')}
               </div>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-playfair">
-              {post.title}
+              {post[`title_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.title}
             </h1>
             
             <p className="text-xl text-muted-foreground mb-6 font-inter line-clamp-3">
@@ -148,12 +150,18 @@ const BlogPost = () => {
             <div className="flex items-center justify-between text-sm text-muted-foreground font-inter border-b border-border pb-6">
               <div className="flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                <span className="mr-4">{post.author_name}</span>
+                <span className="mr-4">
+                  {post[`author_name_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.author_name}
+                </span>
                 <Calendar className="w-4 h-4 mr-1" />
-                <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                <span>
+                  {new Date(post.created_at).toLocaleDateString(
+                    currentLang === 'AR' ? 'ar-DZ' : currentLang === 'FR' ? 'fr-FR' : 'en-US'
+                  )}
+                </span>
               </div>
               <div className="text-xs">
-                By {post.author_name}
+                {t('author')}: {post[`author_name_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.author_name}
               </div>
             </div>
           </header>
@@ -161,7 +169,9 @@ const BlogPost = () => {
           {/* Article Body */}
           <div 
             className="prose prose-lg max-w-none font-inter"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ 
+              __html: post[`content_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.content 
+            }}
           />
 
           {/* Tags */}
