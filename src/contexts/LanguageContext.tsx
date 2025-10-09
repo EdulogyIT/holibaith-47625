@@ -549,6 +549,24 @@ const allTranslations: Record<Language, any> = {
     finance: 'Finance',
     renovation: 'Rénovation',
     legal: 'Juridique',
+    
+    // Blog interaction
+    shareThisArticle: 'Partager cet article',
+    comments: 'Commentaires',
+    writeComment: 'Écrire un commentaire',
+    postComment: 'Publier le commentaire',
+    loginToComment: 'Veuillez vous connecter pour commenter',
+    commentAdded: 'Commentaire ajouté avec succès',
+    commentFailed: 'Échec de l\'ajout du commentaire',
+    noComments: 'Aucun commentaire pour le moment. Soyez le premier à commenter !',
+    reply: 'Répondre',
+    writeReply: 'Écrire une réponse',
+    replyAdded: 'Réponse ajoutée avec succès',
+    replyFailed: 'Échec de l\'ajout de la réponse',
+    success: 'Succès',
+    error: 'Erreur',
+    share: 'Partager',
+    linkCopied: 'Lien copié dans le presse-papiers',
 
     // Blog post titles
     blogTitle1: 'L\'Avenir de l\'Immobilier en Algérie',
@@ -1202,6 +1220,24 @@ const allTranslations: Record<Language, any> = {
     finance: 'Finance',
     renovation: 'Renovation',
     legal: 'Legal',
+    
+    // Blog interaction
+    shareThisArticle: 'Share this article',
+    comments: 'Comments',
+    writeComment: 'Write a comment',
+    postComment: 'Post Comment',
+    loginToComment: 'Please login to comment',
+    commentAdded: 'Comment added successfully',
+    commentFailed: 'Failed to add comment',
+    noComments: 'No comments yet. Be the first to comment!',
+    reply: 'Reply',
+    writeReply: 'Write a reply',
+    replyAdded: 'Reply added successfully',
+    replyFailed: 'Failed to add reply',
+    success: 'Success',
+    error: 'Error',
+    share: 'Share',
+    linkCopied: 'Link copied to clipboard',
 
     // Blog post titles
     blogTitle1: 'The Future of Real Estate in Algeria',
@@ -1836,6 +1872,24 @@ const allTranslations: Record<Language, any> = {
     finance: 'التمويل',
     renovation: 'التجديد',
     legal: 'قانوني',
+    
+    // Blog interaction
+    shareThisArticle: 'شارك هذا المقال',
+    comments: 'التعليقات',
+    writeComment: 'اكتب تعليقاً',
+    postComment: 'نشر التعليق',
+    loginToComment: 'يرجى تسجيل الدخول للتعليق',
+    commentAdded: 'تم إضافة التعليق بنجاح',
+    commentFailed: 'فشل إضافة التعليق',
+    noComments: 'لا توجد تعليقات بعد. كن أول من يعلق!',
+    reply: 'رد',
+    writeReply: 'اكتب رداً',
+    replyAdded: 'تم إضافة الرد بنجاح',
+    replyFailed: 'فشل إضافة الرد',
+    success: 'نجح',
+    error: 'خطأ',
+    share: 'شارك',
+    linkCopied: 'تم نسخ الرابط إلى الحافظة',
 
     // Blog post titles
     blogTitle1: 'مستقبل العقارات في الجزائر',
