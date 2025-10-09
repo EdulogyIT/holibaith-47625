@@ -135,7 +135,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     footerDescription: "Votre plateforme de confiance pour trouver la propriété parfaite en Algérie",
     quickLinks: "Liens Rapides",
     support: "Support",
-    legal: "Légal",
     privacyPolicy: "Politique de Confidentialité",
     termsOfService: "Conditions d'Utilisation",
     followUs: "Suivez-nous",
@@ -192,7 +191,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     realEstate: "Immobilier",
     investing: "Investissement",
     renovation: "Rénovation",
-    legal: "Juridique",
     
     // Blog Interactions
     shareThisArticle: "Partager cet article",
@@ -287,9 +285,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'Acheter un bien',
     rentProperty: 'Louer un logement',
     shortStayProperty: 'Court séjour',
-    heroTitle: 'Holibayt',
-    heroSubtitle: 'Achetez. Louez. Vivez l\'Algérie autrement.',
-    heroDescription: 'La première plateforme immobilière digitale nouvelle génération pour l\'Algérie.',
   },
   EN: {
     // Navigation
@@ -404,7 +399,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     footerDescription: "Your trusted platform for finding the perfect property in Algeria",
     quickLinks: "Quick Links",
     support: "Support",
-    legal: "Legal",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
     followUs: "Follow Us",
@@ -461,7 +455,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     realEstate: "Real Estate",
     investing: "Investing",
     renovation: "Renovation",
-    legal: "Legal",
     
     // Blog Interactions
     shareThisArticle: "Share this article",
@@ -556,9 +549,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'Buy property',
     rentProperty: 'Rent property',
     shortStayProperty: 'Short stay',
-    heroTitle: 'Holibayt',
-    heroSubtitle: 'Buy. Rent. Live Algeria differently.',
-    heroDescription: 'The first next-generation digital real estate platform for Algeria.',
   },
   AR: {
     // Navigation
@@ -673,7 +663,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     footerDescription: "منصتك الموثوقة للعثور على العقار المثالي في الجزائر",
     quickLinks: "روابط سريعة",
     support: "الدعم",
-    legal: "قانوني",
     privacyPolicy: "سياسة الخصوصية",
     termsOfService: "شروط الخدمة",
     followUs: "تابعنا",
@@ -730,7 +719,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     realEstate: "العقارات",
     investing: "الاستثمار",
     renovation: "التجديد",
-    legal: "قانوني",
     
     // Blog Interactions
     shareThisArticle: "شارك هذا المقال",
@@ -825,9 +813,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'شراء عقار',
     rentProperty: 'استئجار عقار',
     shortStayProperty: 'إقامة قصيرة',
-    heroTitle: 'هوليبايت',
-    heroSubtitle: 'اشترِ. استأجر. عِش الجزائر بشكل مختلف.',
-    heroDescription: 'أول منصة عقارية رقمية من الجيل التالي للجزائر.',
   },
 };
 
