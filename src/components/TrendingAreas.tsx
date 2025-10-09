@@ -14,12 +14,12 @@ const TrendingAreas = () => {
   return (
     <section className="px-4 py-4 bg-white">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold">{t('trendingAreas')}</h2>
+        <h2 className="text-xl font-bold">{t('Trending Areas')}</h2>
         <button 
           onClick={() => navigate('/trending-areas')}
           className="text-primary font-medium text-xs hover:underline"
         >
-          {t('seeAll')}
+          {t('See All')}
         </button>
       </div>
       <div className="flex gap-2.5 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
@@ -32,7 +32,7 @@ const TrendingAreas = () => {
             <div className="text-left">
               <div className="font-semibold text-base mb-0.5">{area.displayName}</div>
               <div className="text-muted-foreground text-xs">
-                {area.properties} {t('properties')}
+                {area.properties} {t('Properties')}
               </div>
             </div>
           </button>
