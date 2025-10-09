@@ -135,13 +135,13 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-6">
             <Bed className="h-6 w-6 text-white" />
-            <span className="text-white font-semibold font-inter">{t("shortStay")}</span>
+            <span className="text-white font-semibold font-inter">{t("Short Stay")}</span>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-playfair font-bold text-white mb-4 leading-tight">
-            {t("findPerfectStay")}
+            {t("Find PerfectStay")}
           </h1>
           <p className="text-xl md:text-2xl text-white/90 font-inter font-light max-w-3xl mx-auto leading-relaxed">
-            {t("shortStayHeroDescription")}
+            {t("Short Stay Hero Description")}
           </p>
         </div>
 
@@ -153,7 +153,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
                 <Input
                   type="text"
-                  placeholder={t("stayDestination")}
+                  placeholder={t("Stay Destination")}
                   value={formData.location}
                   onChange={(e) => updateFormField("location", e.target.value)}
                   onFocus={() => {
@@ -209,7 +209,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                       <span>
                         {formData.dateRange?.from
                           ? format(formData.dateRange.from, "dd/MM/yyyy")
-                          : t("checkIn")}
+                          : t("Check In")}
                       </span>
                     </Button>
                   </PopoverTrigger>
@@ -240,7 +240,7 @@ const ShortStayHeroSearch: React.FC<ShortStayHeroSearchProps> = ({ onSearch }) =
                       <span>
                         {formData.dateRange?.to
                           ? format(formData.dateRange.to, "dd/MM/yyyy")
-                          : t("checkOut")}
+                          : t("Check Out")}
                       </span>
                     </Button>
                   </PopoverTrigger>
