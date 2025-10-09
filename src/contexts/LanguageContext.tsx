@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
+// i18n/LanguageContext.tsx
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 
 type Language = 'FR' | 'EN' | 'AR';
 
@@ -8,6 +9,10 @@ interface LanguageContextType {
   t: (key: string) => string | any;
 }
 
+/**
+ * Keep your full translations object here (exactly as you shared).
+ * If you maintain it in a separate file, you can import it instead.
+ */
 const allTranslations = {
   FR: {
     // Navigation
@@ -27,6 +32,24 @@ const allTranslations = {
     publishProperty: 'Publier une annonce',
     myProfile: 'Mon profil',
     myBookings: 'Mes réservations',
+    wishlist: 'Liste de souhaits',
+    myWishlist: 'Ma liste de souhaits',
+    wishlistEmpty: 'Votre liste de souhaits est vide',
+    startBrowsing: 'Commencez à parcourir les propriétés et ajoutez vos favoris',
+    browseProperties: 'Parcourir les propriétés',
+    loginToViewWishlist: 'Veuillez vous connecter pour voir votre liste de souhaits',
+    adults: 'Adultes',
+    children: 'Enfants',
+    infants: 'Bébés',
+    pets: 'Animaux',
+    ages13OrAbove: '13 ans ou plus',
+    ages2to12: '2 à 12 ans',
+    under2: 'Moins de 2 ans',
+    bringingServiceAnimal: 'Amenez-vous un animal de service ?',
+    who: 'Qui',
+    addGuests: 'Ajouter des invités',
+    guest: 'invité',
+    guests: 'invités',
     logout: 'Se déconnecter',
     
     // Hero
@@ -45,6 +68,14 @@ const allTranslations = {
     bedrooms: 'Chambres',
     bathrooms: 'Salles de bain',
     area: 'Surface',
+    areaUnit: 'm²',
+    perDay: '/jour',
+    perWeek: '/semaine',
+    perMonth: '/mois',
+    perNight: '/nuit',
+    day: 'jour',
+    week: 'semaine',
+    month: 'mois',
     
     // Common
     search: 'Rechercher',
@@ -56,6 +87,8 @@ const allTranslations = {
     to: 'Au',
     selectDate: 'Sélectionner une date',
     selectDates: 'Sélectionner des dates',
+    noPropertiesFound: 'Aucune propriété trouvée',
+    browseAllProperties: 'Parcourir toutes les propriétés',
     
     // Login
     loginSuccess: 'Connexion réussie!',
@@ -75,7 +108,6 @@ const allTranslations = {
     propertiesForRentDesc: 'Trouvez votre location idéale',
     shortStayTitle: 'Séjours Courts',
     shortStayDesc: 'Hébergements parfaits pour vos courts séjours',
-    shortStayProperties: 'Propriétés de Séjour Court',
     
     // Quick Access Section
     howCanWeHelp: 'Comment pouvons-nous vous aider ?',
@@ -93,7 +125,7 @@ const allTranslations = {
     speakToAdvisor: 'Parler à un conseiller',
     
     // Services Section
-    threeWaysToLive: 'Trois façons de vivre en Algérie',
+    threeWaysToLive: 'Trois façons de',
     liveAlgeria: 'vivre l\'Algérie',
     platformDesc: 'Une plateforme unique pour tous vos besoins immobiliers. Que vous cherchiez à acheter, louer ou séjourner, nous vous accompagnons avec confiance et transparence.',
     buyTitle: 'Acheter',
@@ -113,19 +145,6 @@ const allTranslations = {
     qualityDesc: 'Une sélection rigoureuse pour votre satisfaction',
     support247: 'Support 24/7',
     supportDesc: 'Une équipe dédiée à votre service',
-    
-    // Home page sections
-    seeAll: 'Voir tout',
-    trendingAreas: 'Zones tendance',
-    exploreByCities: 'Explorer par Villes',
-    latestInsights: 'Dernières Actualités',
-    featuredListings: 'Annonces en Vedette',
-    findYourDreamHome: 'Trouvez Votre Maison de Rêve',
-    flexibleLiving: 'Vie Flexible',
-    exploreVerifiedProperties: 'Explorez les propriétés vérifiées',
-    qualityRentalOptions: 'Options de location de qualité',
-    holidayRentals: 'Locations de Vacances',
-    perfectVacationStays: 'Séjours de vacances parfaits',
     
     // Hero placeholders and options
     cityNeighborhood: 'Ville, quartier ou adresse',
@@ -321,6 +340,8 @@ const allTranslations = {
     securityFeature: 'Sécurité',
     furnishedFeature: 'Meublé',
     airConditioningFeature: 'Climatisation',
+    gymFeature: 'Salle de sport',
+    petsAllowed: 'Animaux autorisés',
     // Property features
     privatePool: "Piscine privée",
     landscapedGarden: "Jardin paysager",
@@ -331,6 +352,9 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "Localisation",
+    mapboxHint: "Pour afficher la carte interactive, veuillez entrer votre token Mapbox public. Vous pouvez l'obtenir sur",
+    mapboxTokenPlaceholder: "Votre token Mapbox public",
+    loadMap: "Charger la carte",
     addressLabel: "Adresse",
     detailsLabel: "Détails",
     nearbyShops: "Commerces",
@@ -394,7 +418,7 @@ const allTranslations = {
     subscribe: 'S\'abonner',
     backToBlog: "Retour au Blog",
     
-    // Property types
+    // Property types (specific property type translations)
     propertyVilla: 'Villa',
     propertyAppartement: 'Appartement', 
     propertyDuplex: 'Duplex',
@@ -404,135 +428,12 @@ const allTranslations = {
     propertyChambre: 'Chambre',
     propertySuite: 'Suite',
     propertyPenthouse: 'Penthouse',
+    appartement: 'Appartement',
     
     // Pricing units
     currencyDA: 'DA',
     currencyPerMonth: 'DA/mois',
     currencyPerNight: 'DA/nuit',
-
-    // Bookings
-    myTrips: 'Mes Voyages',
-    upcomingStays: 'Séjours À Venir',
-    pastStays: 'Séjours Passés',
-    rateYourStay: 'Évaluez Votre Séjour',
-    rateStay: 'Évaluer',
-    submitReview: 'Soumettre L\'avis',
-    bookingCompleted: 'Terminé',
-    confirmed: 'Confirmé',
-    pending: 'En Attente',
-    cancelled: 'Annulé',
-    cancelBooking: 'Annuler La Réservation',
-    noBookings: 'Aucune Réservation',
-    noUpcomingBookings: 'Aucun Séjour À Venir',
-    noPastBookings: 'Aucun Séjour Passé',
-    trips: 'Voyages',
-    manageReservations: 'Gérez Vos Réservations Et Séjours Passés',
-    loadingBookings: 'Chargement De Vos Réservations...',
-    errorLoadingBookings: 'Erreur Lors Du Chargement Des Réservations',
-    tryAgain: 'Réessayer',
-    upcoming: 'À Venir',
-    past: 'Passés',
-    noUpcomingTrips: 'Aucun Voyage À Venir',
-    readyToStart: 'Prêt À Planifier Votre Prochaine Aventure ?',
-    browseProperties: 'Parcourir Les Propriétés',
-    noPastStaysYet: 'Aucun Séjour Passé',
-    completedBookingsAppear: 'Vos Réservations Terminées Apparaîtront Ici',
-    startExploring: 'Commencer À Explorer',
-    guest: 'Invité',
-    guests: 'Invités',
-    propertyHost: 'Hôte',
-    total: 'Total',
-    view: 'Voir',
-    messageHost: 'Message',
-    
-    // Messages
-    messages: 'Messages',
-    supportRequest: 'Demande de support',
-    send: 'Envoyer',
-    typeMessage: 'Tapez un message...',
-    noConversations: 'Aucune conversation',
-    startNewConversation: 'Démarrer une nouvelle conversation',
-    conversationWith: 'Conversation avec',
-    pleaseLogIn: 'Veuillez vous connecter',
-    signInToViewMessages: 'Connectez-vous pour voir vos messages',
-    logIn: 'Se connecter',
-    loading: 'Chargement...',
-    supportTeam: 'Équipe de support',
-    online: 'En ligne',
-    noMessagesYet: 'Aucun message',
-    chats: 'Discussions',
-    new: 'Nouveau',
-    tapToOpenChat: 'Appuyez pour ouvrir le chat',
-    startChat: 'Démarrer le chat',
-    chatOpened: 'Chat ouvert',
-    continueConversation: 'Continuer votre conversation avec notre équipe de support',
-    success: 'Succès',
-    newConversationStarted: 'Nouvelle conversation démarrée avec notre équipe de support',
-    error: 'Erreur',
-    failedToStartConversation: 'Échec du démarrage de la conversation',
-    failedToLoadConversations: 'Échec du chargement des conversations',
-    failedToLoadMessages: 'Échec du chargement des messages',
-    failedToSendMessage: 'Échec de l\'envoi du message',
-    propertyInquiry: 'Demande de propriété',
-
-    // Featured Listings
-    handpickedProperties: 'Propriétés sélectionnées avec soin',
-    newBadge: 'Nouveau',
-    hotDealBadge: 'Offre spéciale',
-    verifiedBadge: 'Vérifié',
-    guestFavoriteBadge: 'Favori',
-    featuredBadge: 'En vedette',
-    
-    // Rate Stay Dialog
-    ratingRequired: 'Évaluation requise',
-    provideOverallRating: 'Veuillez fournir une évaluation globale',
-    reviewSubmitted: 'Avis soumis',
-    thankYouForReview: 'Merci d\'avoir partagé votre expérience !',
-    failedToSubmitReview: 'Échec de la soumission de l\'avis. Veuillez réessayer.',
-    howWasExperience: 'Comment s\'est passée votre expérience à',
-    overallRating: 'Évaluation globale',
-    cleanliness: 'Propreté',
-    accuracy: 'Précision',
-    checkInRating: 'Arrivée',
-    communication: 'Communication',
-    locationRating: 'Emplacement',
-    valueRating: 'Rapport qualité-prix',
-    yourReview: 'Votre avis (facultatif)',
-    shareMoreExperience: 'Partagez-en plus sur votre expérience...',
-    submitting: 'Envoi en cours...',
-
-    // Admin Section
-    adminDashboard: 'Tableau de bord admin',
-    manageProperties: 'Gérer les propriétés',
-    manageUsers: 'Gérer les utilisateurs',
-    adminMessages: 'Messages admin',
-    adminSettings: 'Paramètres admin',
-    adminSuperhosts: 'Super-hôtes',
-    adminBlogs: 'Blogs admin',
-    
-    // Host Section
-    hostDashboard: 'Tableau de bord hôte',
-    myListings: 'Mes annonces',
-    hostBookings: 'Réservations',
-    hostMessages: 'Messages',
-    paymentSettings: 'Paramètres de paiement',
-    payouts: 'Paiements',
-    becomeHost: 'Devenir hôte',
-    
-    // General Status & Actions
-    status: 'Statut',
-    active: 'Actif',
-    inactive: 'Inactif',
-    edit: 'Modifier',
-    delete: 'Supprimer',
-    manage: 'Gérer',
-    add: 'Ajouter',
-    remove: 'Retirer',
-    
-    // Navigation (bottom nav labels)
-    navExplore: 'Explorer',
-    navWishlist: 'Favoris',
-    navProfile: 'Profil',
 
     // Property names
     villaMediterranean: "Villa Méditerranéenne",
@@ -667,48 +568,53 @@ const allTranslations = {
 
     // Host dashboard translations
     host: {
-      dashboard: 'Tableau De Bord',
-      welcomeMessage: 'Bienvenue Dans Votre Espace Hôte',
-      activeProperties: 'Propriétés Actives',
-      messagesReceived: 'Messages Reçus',
-      monthlyRevenue: 'Revenus Mensuels',
-      checkMessages: 'Consultez Vos Messages',
-      quickActions: 'Actions Rapides',
-      publishProperty: 'Publier Une Propriété',
-      viewListings: 'Voir Mes Annonces',
+      dashboard: 'Tableau de bord',
+      welcomeMessage: 'Bienvenue dans votre espace hôte',
+      activeProperties: 'Propriétés actives',
+      messagesReceived: 'Messages reçus',
+      monthlyRevenue: 'Revenus ce mois',
+      checkMessages: 'Consultez vos messages',
+      quickActions: 'Actions rapides',
+      publishProperty: 'Publier une propriété',
+      viewListings: 'Voir mes annonces',
       messages: 'Messages',
-      recentProperties: 'Propriétés Récentes',
-      publishedOn: 'Publié Le',
+      recentProperties: 'Dernières propriétés',
+      publishedOn: 'Publié le',
       active: 'Actif',
       inactive: 'Inactif',
-      loadingProperties: 'Chargement De Vos Propriétés...',
-      totalEarnings: 'Revenus Totaux',
-      pendingPayments: 'En Attente',
-      withdrawn: 'Retiré',
-      allTimeEarnings: 'Revenus Totaux',
-      awaitingCompletion: 'En Attente De Finalisation',
-      completedPayments: 'Paiements Terminés',
-      last30Days: 'Les 30 Derniers Jours',
+      loadingProperties: 'Chargement de vos propriétés...',
       // Listings page
-      listings: 'Mes annonces',
-      manageProperties: 'Gérer vos propriétés et leurs performances',
-      
-      // Additional translations
-      becomeHost: "Devenir hôte",
-      preferences: "Préférences",
-      language: "Langue",
-      currency: "Devise",
-      newBadge: "Nouveau",
-      hotDealBadge: "Offre spéciale",
-      verifiedBadge: "Vérifié",
-      guestFavoriteBadge: "Favori des invités",
-      featuredBadge: "En vedette",
-      handpickedProperties: "Propriétés sélectionnées avec des caractéristiques exceptionnelles",
+      listings: 'Mes Annonces',
+      manageProperties: 'Gérez vos propriétés et leurs performances',
+      newListing: 'Nouvelle Annonce',
+      activeListings: 'Annonces Actives',
+      totalMessages: 'Total Messages',
+      totalViews: 'Total Vues',
+      thisMonth: 'Ce mois',
+      view: 'Voir',
+      edit: 'Modifier',
+      createdOn: 'Créé le',
+      noListingsYet: 'Aucune annonce encore',
+      createFirstListing: 'Créez votre première annonce pour commencer à recevoir des demandes',
+      createMyFirstListing: 'Créer ma première annonce',
+      // Messages page
+      messagesPage: 'Messages',
+      manageContactRequests: 'Gérez les demandes de contact pour vos propriétés',
+      unreadMessages: 'Messages non lus',
+      responseRate: 'Taux de réponse',
+      newStatus: 'Nouveau',
+      readStatus: 'Lu',
+      repliedStatus: 'Répondu',
+      archivedStatus: 'Archivé',
+      markAsRead: 'Marquer comme lu',
+      reply: 'Répondre',
+      call: 'Appeler',
+      archive: 'Archiver',
+      noMessages: 'Aucun message',
+      noContactRequests: 'Vous n\'avez reçu aucune demande de contact pour le moment.',
+      loadingMessages: 'Chargement des messages...',
+      calendar: 'Calendrier des Propriétés'
     },
-    
-    satisfactionRate: 'Taux de satisfaction',
-    back: 'Retour',
-    selectCurrency: 'Choisir la devise',
 
     // Admin translations
     admin: {
@@ -778,6 +684,24 @@ const allTranslations = {
     publishProperty: 'Publish Property',
     myProfile: 'My Profile',
     myBookings: 'My Bookings',
+    wishlist: 'Wishlist',
+    myWishlist: 'My Wishlist',
+    wishlistEmpty: 'Your wishlist is empty',
+    startBrowsing: 'Start browsing properties and add your favorites',
+    browseProperties: 'Browse Properties',
+    loginToViewWishlist: 'Please login to view your wishlist',
+    adults: 'Adults',
+    children: 'Children',
+    infants: 'Infants',
+    pets: 'Pets',
+    ages13OrAbove: 'Ages 13 or above',
+    ages2to12: 'Ages 2-12',
+    under2: 'Under 2',
+    bringingServiceAnimal: 'Bringing a service animal?',
+    who: 'Who',
+    addGuests: 'Add guests',
+    guest: 'guest',
+    guests: 'guests',
     logout: 'Logout',
     
     // Hero
@@ -796,6 +720,14 @@ const allTranslations = {
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
     area: 'Area',
+    areaUnit: 'm²',
+    perDay: '/day',
+    perWeek: '/week',
+    perMonth: '/month',
+    perNight: '/night',
+    day: 'day',
+    week: 'week',
+    month: 'month',
     
     // Common
     search: 'Search',
@@ -807,6 +739,8 @@ const allTranslations = {
     to: 'To',
     selectDate: 'Select date',
     selectDates: 'Select dates',
+    noPropertiesFound: 'No properties found',
+    browseAllProperties: 'Browse all properties',
     
     // Login
     loginSuccess: 'Login successful!',
@@ -826,7 +760,6 @@ const allTranslations = {
     propertiesForRentDesc: 'Find your ideal rental',
     shortStayTitle: 'Short Stays',
     shortStayDesc: 'Perfect accommodations for your short stays',
-    shortStayProperties: 'Short Stay Properties',
     
     // Quick Access Section
     howCanWeHelp: 'How can we help you?',
@@ -844,7 +777,7 @@ const allTranslations = {
     speakToAdvisor: 'Speak to an advisor',
     
     // Services Section
-    threeWaysToLive: 'Three ways to live in Algeria',
+    threeWaysToLive: 'Three ways to',
     liveAlgeria: 'live Algeria',
     platformDesc: 'A unique platform for all your real estate needs. Whether you\'re looking to buy, rent or stay, we support you with confidence and transparency.',
     buyTitle: 'Buy',
@@ -864,19 +797,6 @@ const allTranslations = {
     qualityDesc: 'A rigorous selection for your satisfaction',
     support247: 'Support 24/7',
     supportDesc: 'A team dedicated to your service',
-    
-    // Home page sections
-    seeAll: 'See all',
-    trendingAreas: 'Trending Areas',
-    exploreByCities: 'Explore by Cities',
-    latestInsights: 'Latest Insights',
-    featuredListings: 'Featured Listings',
-    findYourDreamHome: 'Find Your Dream Home',
-    flexibleLiving: 'Flexible Living',
-    exploreVerifiedProperties: 'Explore verified properties',
-    qualityRentalOptions: 'Quality rental options',
-    holidayRentals: 'Holiday Rentals',
-    perfectVacationStays: 'Perfect vacation stays',
     
     // Hero placeholders and options
     cityNeighborhood: 'City, neighborhood or address',
@@ -1073,6 +993,7 @@ const allTranslations = {
     furnishedFeature: 'Furnished',
     airConditioningFeature: 'Air Conditioning',
     gymFeature: 'Gym',
+    petsAllowed: 'Pets Allowed',
     descriptionField: 'Description',
     detailedDescription: 'Detailed Description',
     describeProperty: 'Describe your property in detail...',
@@ -1102,6 +1023,9 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "Location",
+    mapboxHint: "To display the interactive map, please enter your public Mapbox token. You can get it at",
+    mapboxTokenPlaceholder: "Your public Mapbox token",
+    loadMap: "Load map",
     addressLabel: "Address",
     detailsLabel: "Details",
     nearbyShops: "Shops",
@@ -1147,7 +1071,7 @@ const allTranslations = {
     subscribe: 'Subscribe',
     backToBlog: "Back to Blog",
     
-    // Property types
+    // Property types (specific property type translations)
     propertyVilla: 'Villa',
     propertyAppartement: 'Apartment', 
     propertyDuplex: 'Duplex',
@@ -1157,46 +1081,12 @@ const allTranslations = {
     propertyChambre: 'Room',
     propertySuite: 'Suite',
     propertyPenthouse: 'Penthouse',
+    appartement: 'Apartment',
     
     // Pricing units
     currencyDA: 'DZD',
-    currencyPerMonth: 'DZD/Month',
-    currencyPerNight: 'DZD/Night',
-
-    // Bookings
-    myTrips: 'My Trips',
-    upcomingStays: 'Upcoming Stays',
-    pastStays: 'Past Stays',
-    rateYourStay: 'Rate Your Stay',
-    rateStay: 'Rate Stay',
-    submitReview: 'Submit Review',
-    bookingCompleted: 'Completed',
-    confirmed: 'Confirmed',
-    pending: 'Pending',
-    cancelled: 'Cancelled',
-    cancelBooking: 'Cancel Booking',
-    noBookings: 'No Bookings',
-    noUpcomingBookings: 'No Upcoming Stays',
-    noPastBookings: 'No Past Stays',
-    trips: 'Trips',
-    manageReservations: 'Manage Your Reservations And Past Stays',
-    loadingBookings: 'Loading Your Bookings...',
-    errorLoadingBookings: 'Error Loading Bookings',
-    tryAgain: 'Try Again',
-    upcoming: 'Upcoming',
-    past: 'Past',
-    noUpcomingTrips: 'No Upcoming Trips',
-    readyToStart: 'Ready To Plan Your Next Adventure?',
-    browseProperties: 'Browse Properties',
-    noPastStaysYet: 'No Past Stays Yet',
-    completedBookingsAppear: 'Your Completed Bookings Will Appear Here',
-    startExploring: 'Start Exploring',
-    guest: 'Guest',
-    guests: 'Guests',
-    propertyHost: 'Property Host',
-    total: 'Total',
-    view: 'View',
-    messageHost: 'Message Host',
+    currencyPerMonth: 'DZD/month',
+    currencyPerNight: 'DZD/night',
 
     // Property names
     villaMediterranean: "Mediterranean Villa",
@@ -1332,54 +1222,52 @@ const allTranslations = {
     // Host dashboard translations
     host: {
       dashboard: 'Dashboard',
-      welcomeMessage: 'Welcome To Your Host Space',
-      activeProperties: 'Active Properties',
-      messagesReceived: 'Messages Received',
-      monthlyRevenue: 'Monthly Revenue',
-      checkMessages: 'Check Messages',
-      quickActions: 'Quick Actions',
-      publishProperty: 'Publish Property',
-      viewListings: 'View Listings',
+      welcomeMessage: 'Welcome to your host space',
+      activeProperties: 'Active properties',
+      messagesReceived: 'Messages received',
+      monthlyRevenue: 'Revenue this month',
+      checkMessages: 'Check your messages',
+      quickActions: 'Quick actions',
+      publishProperty: 'Publish property',
+      viewListings: 'View my listings',
       messages: 'Messages',
-      recentProperties: 'Recent Properties',
-      publishedOn: 'Published On',
+      recentProperties: 'Recent properties',
+      publishedOn: 'Published on',
       active: 'Active',
       inactive: 'Inactive',
-      loadingProperties: 'Loading Your Properties...',
-      totalEarnings: 'Total Earnings',
-      pendingPayments: 'Pending',
-      withdrawn: 'Withdrawn',
-      allTimeEarnings: 'All Time Earnings',
-      awaitingCompletion: 'Awaiting Completion',
-      completedPayments: 'Completed Payments',
-      last30Days: 'Last 30 Days',
+      loadingProperties: 'Loading your properties...',
       // Listings page
       listings: 'My Listings',
       manageProperties: 'Manage your properties and their performance',
-      
-      // Additional translations
-      becomeHost: "Become a Host",
-      preferences: "Preferences",
-      language: "Language",
-      currency: "Currency",
-      newBadge: "New",
-      hotDealBadge: "Hot Deal",
-      verifiedBadge: "Verified",
-      guestFavoriteBadge: "Guest Favorite",
-      featuredBadge: "Featured",
-      handpickedProperties: "Handpicked properties with exceptional features",
+      newListing: 'New Listing',
+      activeListings: 'Active Listings',
+      totalMessages: 'Total Messages',
+      totalViews: 'Total Views',
+      thisMonth: 'This month',
+      view: 'View',
+      edit: 'Edit',
+      createdOn: 'Created on',
+      noListingsYet: 'No listings yet',
+      createFirstListing: 'Create your first listing to start receiving inquiries',
+      createMyFirstListing: 'Create my first listing',
+      // Messages page
+      messagesPage: 'Messages',
+      manageContactRequests: 'Manage contact requests for your properties',
+      unreadMessages: 'Unread messages',
+      responseRate: 'Response rate',
+      newStatus: 'New',
+      readStatus: 'Read',
+      repliedStatus: 'Replied',
+      archivedStatus: 'Archived',
+      markAsRead: 'Mark as read',
+      reply: 'Reply',
+      call: 'Call',
+      archive: 'Archive',
+      noMessages: 'No messages',
+      noContactRequests: 'You have not received any contact requests yet.',
+      loadingMessages: 'Loading messages...',
+      calendar: 'Property Calendar'
     },
-    
-    satisfactionRate: 'Satisfaction Rate',
-    back: 'Back',
-    selectCurrency: 'Select Currency',
-    preferences: 'Preferences',
-    language: 'Language',
-    currency: 'Currency',
-    wishlist: 'Wishlist',
-    settings: 'Settings',
-    messages: 'Messages',
-    getPersonalizedGuidance: 'Get personalized guidance from experts',
 
     // Admin translations
     admin: {
@@ -1449,6 +1337,24 @@ const allTranslations = {
     publishProperty: 'نشر عقار',
     myProfile: 'ملفي الشخصي',
     myBookings: 'حجوزاتي',
+    wishlist: 'قائمة الأمنيات',
+    myWishlist: 'قائمة أمنياتي',
+    wishlistEmpty: 'قائمة أمنياتك فارغة',
+    startBrowsing: 'ابدأ في تصفح العقارات وأضف مفضلاتك',
+    browseProperties: 'تصفح العقارات',
+    loginToViewWishlist: 'يرجى تسجيل الدخول لعرض قائمة أمنياتك',
+    adults: 'بالغون',
+    children: 'أطفال',
+    infants: 'رضع',
+    pets: 'حيوانات أليفة',
+    ages13OrAbove: '13 سنة أو أكثر',
+    ages2to12: '2-12 سنة',
+    under2: 'أقل من سنتين',
+    bringingServiceAnimal: 'هل تحضر حيوان خدمة؟',
+    who: 'من',
+    addGuests: 'إضافة ضيوف',
+    guest: 'ضيف',
+    guests: 'ضيوف',
     logout: 'تسجيل الخروج',
     
     // Hero
@@ -1467,6 +1373,14 @@ const allTranslations = {
     bedrooms: 'غرف النوم',
     bathrooms: 'دورات المياه',
     area: 'المساحة',
+    areaUnit: 'م²',
+    perDay: '/يوم',
+    perWeek: '/أسبوع',
+    perMonth: '/شهر',
+    perNight: '/ليلة',
+    day: 'يوم',
+    week: 'أسبوع',
+    month: 'شهر',
     
     // Common
     search: 'بحث',
@@ -1478,6 +1392,8 @@ const allTranslations = {
     to: 'إلى',
     selectDate: 'اختر التاريخ',
     selectDates: 'اختر التواريخ',
+    noPropertiesFound: 'لم يتم العثور على عقارات',
+    browseAllProperties: 'تصفح جميع العقارات',
     
     // Login
     loginSuccess: 'تم تسجيل الدخول بنجاح!',
@@ -1497,7 +1413,6 @@ const allTranslations = {
     propertiesForRentDesc: 'اعثر على الإيجار المثالي',
     shortStayTitle: 'الإقامات القصيرة',
     shortStayDesc: 'أماكن إقامة مثالية لإقاماتك القصيرة',
-    shortStayProperties: 'عقارات الإقامة القصيرة',
     
     // Quick Access Section
     howCanWeHelp: 'كيف يمكننا مساعدتك؟',
@@ -1515,8 +1430,8 @@ const allTranslations = {
     speakToAdvisor: 'تحدث إلى مستشار',
     
     // Services Section
-    threeWaysToLive: 'ثلاث طرق للعيش في الجزائر',
-    liveAlgeria: 'للعيش في الجزائر',
+    threeWaysToLive: 'ثلاث طرق لـ',
+    liveAlgeria: 'عيش الجزائر',
     platformDesc: 'منصة فريدة لجميع احتياجاتك العقارية. سواء كنت تبحث عن الشراء أو الإيجار أو الإقامة، نحن ندعمك بثقة وشفافية.',
     buyTitle: 'شراء',
     buySubtitle: 'اعثر على منزل المستقبل',
@@ -1535,19 +1450,6 @@ const allTranslations = {
     qualityDesc: 'اختيار دقيق لرضاك',
     support247: 'دعم 24/7',
     supportDesc: 'فريق مخصص لخدمتك',
-    
-    // Home page sections
-    seeAll: 'عرض الكل',
-    trendingAreas: 'المناطق الرائجة',
-    exploreByCities: 'استكشف حسب المدن',
-    latestInsights: 'أحدث الأخبار',
-    featuredListings: 'القوائم المميزة',
-    findYourDreamHome: 'اعثر على منزل أحلامك',
-    flexibleLiving: 'حياة مرنة',
-    exploreVerifiedProperties: 'استكشف العقارات الموثقة',
-    qualityRentalOptions: 'خيارات إيجار عالية الجودة',
-    holidayRentals: 'إيجارات العطلات',
-    perfectVacationStays: 'إقامات عطلة مثالية',
     
     // Hero placeholders and options
     cityNeighborhood: 'المدينة، الحي أو العنوان',
@@ -1687,6 +1589,8 @@ const allTranslations = {
     expertAdvisors: 'مستشارون خبراء',
     averageRating: 'التقييم المتوسط',
     averageResponseTime: 'متوسط وقت الاستجابة',
+    satisfactionRate: 'معدل الرضا',
+    trustedExperts: 'خبراء موثوقون',
     sendMessage: 'أرسل رسالة',
     fullName: 'الاسم الكامل',
     yourFullName: 'اسمك الكامل',
@@ -1703,7 +1607,7 @@ const allTranslations = {
     needImmediateHelp: 'تحتاج مساعدة فورية؟',
     call247Hotline: 'اتصل بخط الطوارئ الخاص بنا على مدار الساعة',
     
-    // Property and publish property translations  
+    // Property and publish property translations
     propertyTypeTranslation: 'نوع العقار',
     forSale: 'للبيع',
     forRent: 'للإيجار',
@@ -1744,6 +1648,7 @@ const allTranslations = {
     furnishedFeature: 'مفروش',
     airConditioningFeature: 'تكييف',
     gymFeature: 'صالة رياضية',
+    petsAllowed: 'الحيوانات الأليفة مسموح بها',
     descriptionField: 'الوصف',
     detailedDescription: 'وصف مفصل',
     describeProperty: 'صف عقارك بالتفصيل...',
@@ -1800,7 +1705,7 @@ const allTranslations = {
     subscribe: 'اشتراك',
     backToBlog: "العودة للمدونة",
     
-    // Property types
+    // Property types (specific property type translations)
     propertyVilla: 'فيلا',
     propertyAppartement: 'شقة', 
     propertyDuplex: 'دوبلكس',
@@ -1810,6 +1715,7 @@ const allTranslations = {
     propertyChambre: 'غرفة',
     propertySuite: 'جناح',
     propertyPenthouse: 'بنتهاوس',
+    appartement: 'شقة',
     
     // Pricing units
     currencyDA: 'دج',
@@ -1952,6 +1858,9 @@ const allTranslations = {
 
     // Property page specific keys
     locationTitle: "الموقع",
+    mapboxHint: "لعرض الخريطة التفاعلية، أدخل مفتاح Mapbox العام. يمكنك الحصول عليه من",
+    mapboxTokenPlaceholder: "مفتاح Mapbox العام",
+    loadMap: "تحميل الخريطة",
     addressLabel: "العنوان",
     detailsLabel: "التفاصيل",
     nearbyShops: "متاجر",
@@ -1984,101 +1893,121 @@ const allTranslations = {
       welcomeMessage: 'مرحباً بك في مساحة المضيف',
       activeProperties: 'العقارات النشطة',
       messagesReceived: 'الرسائل المستلمة',
-      monthlyRevenue: 'الإيرادات الشهرية',
+      monthlyRevenue: 'الإيرادات هذا الشهر',
       checkMessages: 'راجع رسائلك',
       quickActions: 'إجراءات سريعة',
       publishProperty: 'نشر عقار',
       viewListings: 'عرض إعلاناتي',
       messages: 'الرسائل',
-      recentProperties: 'العقارات الأخيرة',
+      recentProperties: 'العقارات الأحدث',
       publishedOn: 'نُشر في',
       active: 'نشط',
       inactive: 'غير نشط',
       loadingProperties: 'جاري تحميل عقاراتك...',
-      totalEarnings: 'إجمالي الأرباح',
-      pendingPayments: 'قيد الانتظار',
-      withdrawn: 'تم السحب',
-      allTimeEarnings: 'الأرباح الإجمالية',
-      awaitingCompletion: 'في انتظار الإكمال',
-      completedPayments: 'المدفوعات المكتملة',
-      last30Days: 'آخر 30 يومًا',
       // Listings page
-      listings: 'إعلاناتي',
+      listings: 'قوائمي',
       manageProperties: 'إدارة عقاراتك وأدائها',
-      
-      // Additional translations
-      becomeHost: "كن مضيفًا",
-      preferences: "التفضيلات",
-      language: "اللغة",
-      currency: "العملة",
-      newBadge: "جديد",
-      hotDealBadge: "عرض ساخن",
-      verifiedBadge: "تم التحقق",
-      guestFavoriteBadge: "المفضل لدى الضيوف",
-      featuredBadge: "مميز",
-      handpickedProperties: "عقارات مختارة بعناية بميزات استثنائية",
-    },
-    
-    satisfactionRate: 'معدل الرضا',
-    back: 'رجوع',
-    selectCurrency: 'اختيار العملة',
-    preferences: 'التفضيلات',
-    language: 'اللغة',
-    currency: 'العملة',
-    wishlist: 'المفضلة',
-    settings: 'الإعدادات',
-    messages: 'الرسائل',
-    getPersonalizedGuidance: 'احصل على إرشادات مخصصة من الخبراء',
+      newListing: 'قائمة جديدة',
+      activeListings: 'القوائم النشطة',
+      totalMessages: 'إجمالي الرسائل',
+      totalViews: 'إجمالي المشاهدات',
+      thisMonth: 'هذا الشهر',
+      view: 'عرض',
+      edit: 'تعديل',
+      createdOn: 'تم الإنشاء في',
+      noListingsYet: 'لا توجد قوائم بعد',
+      createFirstListing: 'أنشئ قائمتك الأولى لبدء استقبال الاستفسارات',
+      createMyFirstListing: 'إنشاء قائمتي الأولى',
+      // Messages page
+      messagesPage: 'الرسائل',
+      manageContactRequests: 'إدارة طلبات التواصل لعقاراتك',
+      unreadMessages: 'رسائل غير مقروءة',
+      responseRate: 'معدل الاستجابة',
+      newStatus: 'جديد',
+      readStatus: 'مقروء',
+      repliedStatus: 'تم الرد',
+      archivedStatus: 'مؤرشف',
+      markAsRead: 'وضع علامة كمقروء',
+      reply: 'رد',
+      call: 'اتصال',
+      archive: 'أرشفة',
+      noMessages: 'لا توجد رسائل',
+      noContactRequests: 'لم تتلق أي طلبات تواصل حتى الآن.',
+      loadingMessages: 'جاري تحميل الرسائل...',
+      calendar: 'تقويم العقارات'
+    }
   }
 };
 
-const translations = allTranslations;
+const SUPPORTED: Language[] = ['EN', 'FR', 'AR'];
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+/** Utility: browser guards for SSR */
+function isBrowser() {
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
+}
+
+/** Normalize any input (param/navigator) to our Language union or null */
+function normalizeLang(input?: string | null): Language | null {
+  if (!input) return null;
+  const up = input.toUpperCase();
+  return (SUPPORTED as string[]).includes(up) ? (up as Language) : null;
+}
+
+/** Initial language detection with localStorage -> ?lang= -> navigator -> EN */
 function detectInitialLang(): Language {
-  // 1) Check localStorage first for saved preference
-  const savedLang = localStorage.getItem('lang');
-  if (savedLang && (savedLang === 'EN' || savedLang === 'FR' || savedLang === 'AR')) {
-    return savedLang as Language;
+  if (isBrowser()) {
+    const saved = normalizeLang(localStorage.getItem('lang'));
+    if (saved) return saved;
+
+    const urlParam = new URLSearchParams(window.location.search).get('lang');
+    const fromUrl = normalizeLang(urlParam);
+    if (fromUrl) return fromUrl;
+
+    const nav = (navigator?.language ?? (navigator as any)?.languages?.[0]) as string | undefined;
+    const guess = normalizeLang(nav?.slice(0, 2));
+    if (guess) return guess;
   }
-  
-  // 2) URL ?lang=en|fr|ar
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  if (urlLang) {
-    const up = urlLang.toUpperCase();
-    if (up === 'EN' || up === 'FR' || up === 'AR') return up as Language;
-  }
-  
-  // 3) Default to English for all users
   return 'EN';
 }
+
+/** Safe deep getter for dotted keys */
+function getPath(obj: any, path: string) {
+  return path.split('.').reduce((acc, k) => (acc && typeof acc === 'object' ? acc[k] : undefined), obj);
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [currentLang, setCurrentLang] = useState<Language>(detectInitialLang);
 
-  // Persist choice and update <html> attributes
+  // Persist, sync URL ?lang=, and update <html lang/dir>
   useEffect(() => {
+    if (!isBrowser()) return;
+
+    // persist
     localStorage.setItem('lang', currentLang);
+
+    // keep ?lang= param in URL without reload
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', currentLang);
+    window.history.replaceState({}, '', url.toString());
+
+    // html attributes + RTL
     document.documentElement.lang = currentLang === 'AR' ? 'ar' : currentLang.toLowerCase();
     document.documentElement.dir = currentLang === 'AR' ? 'rtl' : 'ltr';
   }, [currentLang]);
 
-  // Memoized translator for the active language
+  // Translator with safe fallback: current -> EN -> key
   const t = useMemo(() => {
     return (key: string): string | any => {
-      const keys = key.split('.');
-      let result: any = translations[currentLang];
-      
-      for (const k of keys) {
-        if (result && typeof result === 'object' && k in result) {
-          result = result[k];
-        } else {
-          // Hide raw keys in production, show them in development
-          return import.meta.env.DEV ? key : '';
-        }
-      }
-      
-      return result;
+      const cur = getPath(allTranslations[currentLang], key);
+      if (cur !== undefined) return cur;
+
+      const en = getPath(allTranslations.EN, key);
+      if (en !== undefined) return en;
+
+      // Show the key so UI never goes blank (better DX and safer UX)
+      return key;
     };
   }, [currentLang]);
 
