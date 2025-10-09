@@ -14,27 +14,27 @@ const ThreeWaysSection = () => {
       id: 1,
       icon: Home,
       image: propertyVilla,
-      title: t('buy'),
-      subtitle: t('findYourDreamHome'),
-      description: t('exploreVerifiedProperties'),
+      title: t('Buy'),
+      subtitle: t('Find Your Dream Home'),
+      description: t('Explore Verified Properties'),
       path: "/buy",
     },
     {
       id: 2,
       icon: Home,
       image: propertyPenthouse,
-      title: t('rent'),
-      subtitle: t('flexibleLiving'),
-      description: t('qualityRentalOptions'),
+      title: t('Rent'),
+      subtitle: t('Flexible Living'),
+      description: t('Quality Rental Options'),
       path: "/rent",
     },
     {
       id: 3,
       icon: Home,
       image: propertyShortStay,
-      title: t('shortStay'),
-      subtitle: t('holidayRentals'),
-      description: t('perfectVacationStays'),
+      title: t('Short Stay'),
+      subtitle: t('Holiday Rentals'),
+      description: t('Perfect Vacation Stays'),
       path: "/short-stay",
     },
   ];
@@ -42,7 +42,7 @@ const ThreeWaysSection = () => {
   return (
     <section className="px-4 py-8 bg-gray-50">
       <h2 className="text-2xl font-bold text-center mb-6 font-playfair">
-        {t('threeWaysToLive')}
+        {t('Three Ways To Live In Algeria')}
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {ways.map((way) => {
