@@ -180,9 +180,9 @@ export default function HostDashboard() {
       <div className="space-y-6">
         {/* Hero Section */}
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold text-foreground">{t('host.dashboard')}</h2>
+          <h2 className="text-3xl font-bold text-foreground">{t('dashboard')}</h2>
           <p className="text-lg text-muted-foreground">
-            {t('host.welcomeMessage')}
+            {t('welcomeMessage')}
           </p>
         </div>
 
@@ -191,7 +191,7 @@ export default function HostDashboard() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.activeProperties')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('activeProperties')}</p>
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-3xl font-bold text-foreground">
@@ -203,7 +203,7 @@ export default function HostDashboard() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.messages')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('messages')}</p>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-3xl font-bold text-foreground mb-1">-</p>
@@ -213,44 +213,44 @@ export default function HostDashboard() {
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.monthlyRevenue')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('monthlyRevenue')}</p>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-2xl font-bold text-foreground">{formatPrice(stats.monthlyRevenue)}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">{t('host.last30Days')}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('last30Days')}</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.totalEarnings')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('totalEarnings')}</p>
                 <Wallet className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-2xl font-bold text-foreground">{formatPrice(stats.totalEarnings)}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">{t('host.allTimeEarnings')}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('allTimeEarnings')}</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.pendingPayments')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('pendingPayments')}</p>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-2xl font-bold text-foreground">{formatPrice(stats.pendingPayments)}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">{t('host.awaitingCompletion')}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('awaitingCompletion')}</p>
             </CardContent>
           </Card>
 
           <Card className="bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <p className="text-xs font-medium text-muted-foreground">{t('host.withdrawn')}</p>
+                <p className="text-xs font-medium text-muted-foreground">{t('withdrawn')}</p>
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-2xl font-bold text-foreground">{formatPrice(stats.withdrawnAmount)}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">{t('host.completedPayments')}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t('completedPayments')}</p>
             </CardContent>
           </Card>
         </div>
@@ -258,7 +258,7 @@ export default function HostDashboard() {
         {/* Recent Properties */}
         {properties.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-foreground">{t('host.recentProperties')}</h3>
+            <h3 className="text-lg font-semibold text-foreground">{t('recentProperties')}</h3>
             <div className="grid grid-cols-2 gap-3">
               {properties.slice(0, 4).map((property) => {
                 const propertyImages = Array.isArray(property.images) ? property.images : [];
@@ -285,7 +285,7 @@ export default function HostDashboard() {
                           variant={property.status === 'active' ? 'default' : 'secondary'}
                           className="absolute top-2 right-2 text-xs"
                         >
-                          {property.status === 'active' ? t('host.active') : t('host.inactive')}
+                          {property.status === 'active' ? t('active') : t('inactive')}
                         </Badge>
                       </div>
                     </CardContent>
@@ -303,9 +303,9 @@ export default function HostDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">{t('host.dashboard')}</h1>
+        <h1 className="text-3xl font-bold">{t('dashboard')}</h1>
         <p className="text-muted-foreground">
-          {t('host.manageProperties')}
+          {t('manageProperties')}
         </p>
       </div>
 
@@ -313,45 +313,45 @@ export default function HostDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="hover:shadow-elegant transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.monthlyRevenue')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('monthlyRevenue')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatPrice(stats.monthlyRevenue)}</div>
-            <p className="text-xs text-muted-foreground">{t('host.last30Days')}</p>
+            <p className="text-xs text-muted-foreground">{t('last30Days')}</p>
           </CardContent>
         </Card>
         
         <Card className="hover:shadow-elegant transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.totalEarnings')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('totalEarnings')}</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatPrice(stats.totalEarnings)}</div>
-            <p className="text-xs text-muted-foreground">{t('host.allTimeEarnings')}</p>
+            <p className="text-xs text-muted-foreground">{t('allTimeEarnings')}</p>
           </CardContent>
         </Card>
         
         <Card className="hover:shadow-elegant transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.pendingPayments')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('pendingPayments')}</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatPrice(stats.pendingPayments)}</div>
-            <p className="text-xs text-muted-foreground">{t('host.awaitingCompletion')}</p>
+            <p className="text-xs text-muted-foreground">{t('awaitingCompletion')}</p>
           </CardContent>
         </Card>
         
         <Card className="hover:shadow-elegant transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('host.withdrawn')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('withdrawn')}</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatPrice(stats.withdrawnAmount)}</div>
-            <p className="text-xs text-muted-foreground">{t('host.completedPayments')}</p>
+            <p className="text-xs text-muted-foreground">{t('completedPayments')}</p>
           </CardContent>
         </Card>
       </div>
@@ -359,21 +359,21 @@ export default function HostDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('host.quickActions')}</CardTitle>
+          <CardTitle>{t('quickActions')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button onClick={() => navigate('/publish-property')} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
-              {t('host.publishProperty')}
+              {t('publishProperty')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/host/listings')} className="w-full">
               <Building2 className="h-4 w-4 mr-2" />
-              {t('host.viewListings')}
+              {t('viewListings')}
             </Button>
             <Button variant="outline" onClick={() => navigate('/host/messages')} className="w-full">
               <MessageSquare className="h-4 w-4 mr-2" />
-              {t('host.messages')}
+              {t('messages')}
             </Button>
           </div>
         </CardContent>
@@ -383,7 +383,7 @@ export default function HostDashboard() {
       {properties.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('host.recentProperties')}</CardTitle>
+            <CardTitle>{t('recentProperties')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -392,11 +392,11 @@ export default function HostDashboard() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{property.title}</p>
                     <p className="text-sm text-muted-foreground truncate">
-                      {property.city} • {t('host.publishedOn')} {formatDate(property.created_at)}
+                      {property.city} • {t('publishedOn')} {formatDate(property.created_at)}
                     </p>
                   </div>
                   <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="ml-2">
-                    {property.status === 'active' ? t('host.active') : t('host.inactive')}
+                    {property.status === 'active' ? t('active') : t('inactive')}
                   </Badge>
                 </div>
               ))}

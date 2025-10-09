@@ -128,7 +128,7 @@ const ServicesSection = () => {
                       className="h-11 px-5 text-sm font-medium whitespace-nowrap w-full bg-gradient-primary font-inter group-hover:shadow-elegant transition-all duration-300"
                       onClick={() => navigate(`/${service.id === 'stay' ? 'short-stay' : service.id}`)}
                     >
-                      <span className="whitespace-nowrap">{t(Service.ctaKey)}</span>
+                      <span className="whitespace-nowrap">{t(service.ctaKey)}</span>
                     </Button>
                   </div>
                 </CardContent>

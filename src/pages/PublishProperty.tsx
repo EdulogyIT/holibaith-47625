@@ -59,7 +59,7 @@ const PublishProperty = () => {
         }
       }
 
-      // Create property record
+      // Create property record - status is 'pending' by default, requires admin approval
       const { error: insertError } = await supabase
         .from('properties')
         .insert({
@@ -78,13 +78,15 @@ const PublishProperty = () => {
           price: formData.price,
           price_type: formData.priceType,
           price_currency: formData.priceCurrency,
+          check_in_time: formData.checkInTime || null,
+          check_out_time: formData.checkOutTime || null,
           features: formData.features,
           description: formData.description || null,
           contact_name: formData.fullName,
           contact_phone: formData.phoneNumber,
           contact_email: formData.email,
           images: imageUrls,
-          status: 'active'
+          status: 'pending'
         });
 
       if (insertError) {
@@ -99,7 +101,7 @@ const PublishProperty = () => {
 
       toast({
         title: t('propertyPublished'),
-        description: t('propertySubmittedSuccess'),
+        description: t('propertySubmittedForReview') || 'Your property has been submitted and is awaiting admin approval.',
       });
 
       // Navigate to the appropriate category page
