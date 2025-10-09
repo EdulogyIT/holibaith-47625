@@ -53,7 +53,7 @@ const Blog = () => {
         <section className={cn("bg-gradient-subtle", isMobile ? "py-8" : "py-16")}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className={cn("font-bold text-foreground mb-4 font-playfair", isMobile ? "text-3xl" : "text-4xl md:text-5xl")}>
-              {t('blogInsights')}
+              {t('BlogInsights')}
             </h1>
             <p className={cn("text-muted-foreground font-inter max-w-2xl mx-auto", isMobile ? "text-base" : "text-xl")}>
               {t('blogDescription')}
