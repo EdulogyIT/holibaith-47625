@@ -48,7 +48,7 @@ const About = () => {
             <div className="text-center">
               <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-5xl")}>{t('aboutBeitik')}</h1>
               <p className={cn("text-muted-foreground max-w-3xl mx-auto font-inter", isMobile ? "text-base" : "text-xl")}>
-                {t('aboutDescription')}
+                {t('AboutDescription')}
               </p>
             </div>
           </div>
@@ -83,18 +83,18 @@ const About = () => {
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2")}>
               <div>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('storyParagraph1')}
+                  {t('StoryParagraph1')}
                 </p>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('storyParagraph2')}
+                  {t('StoryParagraph2')}
                 </p>
               </div>
               <div>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('storyParagraph3')}
+                  {t('StoryParagraph3')}
                 </p>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('storyParagraph4')}
+                  {t('StoryParagraph4')}
                 </p>
               </div>
             </div>
@@ -108,7 +108,7 @@ const About = () => {
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('missionDescription')}
+                  {t('MissionDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -119,7 +119,7 @@ const About = () => {
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('visionDescription')}
+                  {t('VisionDescription')}
                 </p>
               </CardContent>
             </Card>
@@ -130,7 +130,7 @@ const About = () => {
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('valuesDescription')}
+                  {t('ValuesDescription')}
                 </p>
               </CardContent>
             </Card>
