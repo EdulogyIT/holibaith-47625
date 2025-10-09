@@ -43,7 +43,7 @@ const Blog = () => {
     }
   };
 
-  const categories = [t('allCategories'), t('marketTrends'), t('buyingGuide'), t('investment'), t('finance'), t('renovation'), t('legal')];
+  const categories = [t('AllCategories'), t('MarketTrends'), t('BuyingGuide'), t('Investment'), t('Finance'), t('Renovation'), t('Legal')];
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,10 +53,10 @@ const Blog = () => {
         <section className={cn("bg-gradient-subtle", isMobile ? "py-8" : "py-16")}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className={cn("font-bold text-foreground mb-4 font-playfair", isMobile ? "text-3xl" : "text-4xl md:text-5xl")}>
-              {t('BlogInsights')}
+              {t('Blog Insights')}
             </h1>
             <p className={cn("text-muted-foreground font-inter max-w-2xl mx-auto", isMobile ? "text-base" : "text-xl")}>
-              {t('BlogDescription')}
+              {t('Blog Description')}
             </p>
           </div>
         </section>
@@ -147,7 +147,7 @@ const Blog = () => {
             <div className={cn("flex flex-col gap-4 max-w-md mx-auto", isMobile ? "gap-2" : "sm:flex-row")}>
               <input 
                 type="email" 
-                placeholder={t('enterEmail')}
+                placeholder={t('Enter Email')}
                 className={cn("flex-1 px-4 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring font-inter", isMobile ? "py-2 text-sm" : "py-3")}
               />
               <button className={cn("bg-gradient-primary text-primary-foreground rounded-md font-medium hover:shadow-elegant transition-all font-inter", isMobile ? "px-4 py-2 text-sm" : "px-6 py-3")}>
