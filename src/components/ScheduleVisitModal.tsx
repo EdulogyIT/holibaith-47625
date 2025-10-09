@@ -162,7 +162,7 @@ const ScheduleVisitModal = ({ isOpen, onClose, propertyTitle, propertyId, hostUs
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-playfair">
             <CalendarIcon className="w-5 h-5" />
-            {t('scheduleVisit') || 'Schedule Property Visit'}
+            {t('Schedule Visit') || 'Schedule Property Visit'}
           </DialogTitle>
           <p className="text-sm text-muted-foreground font-inter">{propertyTitle}</p>
         </DialogHeader>
