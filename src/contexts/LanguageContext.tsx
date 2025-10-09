@@ -1,7 +1,15 @@
-// i18n/LanguageContext.tsx
-import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+// HOLIBAYT/src/contexts/LanguageContext.tsx
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  ReactNode,
+} from 'react';
 
-type Language = 'FR' | 'EN' | 'AR';
+export type Language = 'FR' | 'EN' | 'AR';
 
 interface LanguageContextType {
   currentLang: Language;
@@ -9,11 +17,11 @@ interface LanguageContextType {
   t: (key: string) => string | any;
 }
 
-/**
- * Keep your full translations object here (exactly as you shared).
- * If you maintain it in a separate file, you can import it instead.
- */
-const allTranslations = {
+/* ─────────────────────────────────────────────────────────────
+   FULL TRANSLATIONS (from your message). Keep as-is.
+   If you later add new UI strings, add keys here in all 3 langs.
+   ──────────────────────────────────────────────────────────── */
+const allTranslations: Record<Language, any> = {
   FR: {
     // Navigation
     home: 'Accueil',
@@ -51,19 +59,19 @@ const allTranslations = {
     guest: 'invité',
     guests: 'invités',
     logout: 'Se déconnecter',
-    
+
     // Hero
     heroTitle: 'Holibayt',
     heroSubtitle: 'Achetez. Louez. Vivez l\'Algérie autrement.',
     heroDescription: 'La première plateforme immobilière digitale nouvelle génération pour l\'Algérie.',
-    
+
     // Quick Access
     buyProperty: 'Acheter un bien',
     rentProperty: 'Louer un logement',
     shortStayProperty: 'Court séjour',
     start: 'Commencer',
     bookNow: 'Réserver maintenant',
-    
+
     // Property
     bedrooms: 'Chambres',
     bathrooms: 'Salles de bain',
@@ -76,7 +84,7 @@ const allTranslations = {
     day: 'jour',
     week: 'semaine',
     month: 'mois',
-    
+
     // Common
     search: 'Rechercher',
     cancel: 'Annuler',
@@ -89,7 +97,7 @@ const allTranslations = {
     selectDates: 'Sélectionner des dates',
     noPropertiesFound: 'Aucune propriété trouvée',
     browseAllProperties: 'Parcourir toutes les propriétés',
-    
+
     // Login
     loginSuccess: 'Connexion réussie!',
     loginSuccessDesc: 'Vous êtes maintenant connecté à votre compte Holibayt.',
@@ -100,7 +108,7 @@ const allTranslations = {
     forgotPassword: 'Mot de passe oublié?',
     noAccount: 'Vous n\'avez pas de compte?',
     createAccount: 'Créer un compte',
-    
+
     // Pages
     propertiesForSale: 'Propriétés à Vendre',
     propertiesForSaleDesc: 'Découvrez nos meilleures propriétés disponibles à l\'achat',
@@ -108,7 +116,7 @@ const allTranslations = {
     propertiesForRentDesc: 'Trouvez votre location idéale',
     shortStayTitle: 'Séjours Courts',
     shortStayDesc: 'Hébergements parfaits pour vos courts séjours',
-    
+
     // Quick Access Section
     howCanWeHelp: 'Comment pouvons-nous vous aider ?',
     quickEntriesDesc: 'Des entrées rapides pour tous vos besoins immobiliers',
@@ -123,7 +131,7 @@ const allTranslations = {
     shortStaySubtitle: 'Vacances & voyages d\'affaires',
     needHelp: 'Besoin d\'aide pour faire votre choix ?',
     speakToAdvisor: 'Parler à un conseiller',
-    
+
     // Services Section
     threeWaysToLive: 'Trois façons de',
     liveAlgeria: 'vivre l\'Algérie',
@@ -145,7 +153,7 @@ const allTranslations = {
     qualityDesc: 'Une sélection rigoureuse pour votre satisfaction',
     support247: 'Support 24/7',
     supportDesc: 'Une équipe dédiée à votre service',
-    
+
     // Hero placeholders and options
     cityNeighborhood: 'Ville, quartier ou adresse',
     whereToRent: 'Où cherchez-vous à louer ?',
@@ -175,7 +183,7 @@ const allTranslations = {
     availableProperties: 'Biens disponibles',
     satisfiedUsers: 'Utilisateurs satisfaits',
     wilayasCovered: 'Wilayas couvertes',
-    
+
     // Footer translations
     footerDescription: 'Votre plateforme immobilière de confiance en Algérie',
     quickLinks: 'Liens rapides',
@@ -185,7 +193,7 @@ const allTranslations = {
     legalSupport: 'Support juridique',
     mortgageAdvice: 'Conseils hypothécaires',
     allRightsReserved: 'Tous droits réservés',
-    
+
     // About page translations
     aboutBeitik: 'À propos de Holibayt',
     aboutDescription: 'Holibayt est la plateforme immobilière de référence en Algérie, connectant acheteurs, vendeurs et locataires depuis plus de 15 ans. Notre mission est de simplifier vos transactions immobilières.',
@@ -209,12 +217,12 @@ const allTranslations = {
     visionDescription: 'Devenir la référence incontournable de l\'immobilier au Maghreb et transformer la façon dont les gens achètent et louent.',
     ourValues: 'Nos Valeurs',
     valuesDescription: 'Transparence, confiance, innovation et service client d\'exception sont au cœur de tout ce que nous faisons.',
-    
+
     // Publish property translations
     addPropertyDetails: 'Ajoutez les détails de votre propriété',
     propertyPublished: 'Propriété publiée!',
     propertySubmittedSuccess: 'Votre propriété a été soumise avec succès et sera examinée sous peu.',
-    
+
     // Filter translations
     filters: 'Filtres',
     clearAll: 'Effacer Tout',
@@ -231,7 +239,7 @@ const allTranslations = {
     all: 'Tout',
     location: 'Localisation',
     cityOrDistrict: 'Ville Ou Quartier',
-    
+
     // Property names and locations
     propertyNames: {
       luxuryApartment: 'Appartement de Luxe',
@@ -261,13 +269,13 @@ const allTranslations = {
       husseinDey: 'Hussein Dey',
       elHarrach: 'El Harrach'
     },
-    
+
     // Cities and additional translations
     followUs: 'Suivez-nous',
     privacyPolicy: 'Politique de confidentialité',
     termsOfUse: 'Conditions d\'utilisation',
     cookies: 'Cookies',
-    
+
     // Contact advisor translations
     chooseContactMethod: 'Choisissez votre méthode de contact préférée',
     multipleWaysConnect: 'Plusieurs façons de vous connecter avec nos conseillers experts',
@@ -299,7 +307,7 @@ const allTranslations = {
     sunday: 'Dimanche: 10h00 - 16h00',
     needImmediateHelp: 'Besoin d\'aide immédiate?',
     call247Hotline: 'Appelez notre ligne d\'urgence 24/7',
-    
+
     // Property and publish property translations
     propertyTypeTranslation: 'Type de Propriété',
     forSale: 'À Vendre', 
@@ -379,7 +387,7 @@ const allTranslations = {
     completeRequiredFields: 'Veuillez compléter tous les champs requis',
     next: 'Suivant',
     previous: 'Précédent',
-    
+
     // Property page translations
     contactOwner: 'Contacter le Propriétaire',
     characteristics: 'Caractéristiques',
@@ -398,7 +406,7 @@ const allTranslations = {
     moreThanCitiesAvailable: 'Plus de 20 villes disponibles',
     showLess: 'Voir moins',
     seeAllCities: 'Voir toutes les villes',
-    
+
     // City descriptions
     algerDescription: 'La capitale dynamique de l\'Algérie',
     oranDescription: 'La perle de l\'Ouest algérien',
@@ -408,7 +416,7 @@ const allTranslations = {
     tlemcenDescription: 'Perle du Maghreb',
     bejaiaDescription: 'Fiancée de la Méditerranée',
     blidaDescription: 'Ville des roses',
-    
+
     // Blog translations
     blogInsights: 'Blog & Actualités',
     blogDescription: 'Restez informé des dernières tendances, conseils et analyses du marché immobilier algérien',
@@ -417,7 +425,7 @@ const allTranslations = {
     enterEmail: 'Entrez votre email',
     subscribe: 'S\'abonner',
     backToBlog: "Retour au Blog",
-    
+
     // Property types (specific property type translations)
     propertyVilla: 'Villa',
     propertyAppartement: 'Appartement', 
@@ -429,7 +437,7 @@ const allTranslations = {
     propertySuite: 'Suite',
     propertyPenthouse: 'Penthouse',
     appartement: 'Appartement',
-    
+
     // Pricing units
     currencyDA: 'DA',
     currencyPerMonth: 'DA/mois',
@@ -471,14 +479,14 @@ const allTranslations = {
 
     publishedBy: 'Publié par',
     readMore: 'Lire plus',
-    
+
     // Additional translations
     habitants: 'habitants',
     algeria: 'Algérie',
     tenthCentury: 'Xe siècle',
     thirdMillenniumBC: 'IIIe millénaire av. J.-C.',
     twelfthCenturyBC: 'XIIe siècle av. J.-C.',
-    
+
     // City names
     cityAlger: 'Alger',
     cityOran: 'Oran',
@@ -518,7 +526,7 @@ const allTranslations = {
     cityTlemcen: 'Tlemcen',
     cityBejaia: 'Béjaïa',
     cityBlida: 'Blida',
-    
+
     // City page sections
     historyHeritage: 'Histoire & patrimoine',
     population: 'Population',
@@ -526,13 +534,13 @@ const allTranslations = {
     cityArea: 'Superficie',
     foundedIn: 'Fondée en',
     propertiesAvailableIn: 'Propriétés disponibles à',
-    
+
     // City histories
     oranHistory: 'Oran est une ville côtière du nord-ouest algérien, connue pour son port, la musique raï et un patrimoine mêlant influences françaises et espagnoles. La corniche moderne et les quartiers historiques en font un pôle culturel.',
     algerHistory: 'Alger, la capitale, mêle influences ottomanes, coloniales françaises et modernes ; la Casbah est classée UNESCO.',
     constantineHistory: 'Constantine est célèbre pour ses gorges spectaculaires et ses ponts suspendus, qui ont façonné son histoire.',
     annabaHistory: 'Annaba, sur la Méditerranée, est réputée pour ses plages, l\'héritage de Saint Augustin et un port en développement.',
-    
+
     // Blog categories
     allCategories: 'Toutes',
     marketTrends: 'Tendances du Marché',
@@ -541,7 +549,7 @@ const allTranslations = {
     finance: 'Finance',
     renovation: 'Rénovation',
     legal: 'Juridique',
-    
+
     // Blog post titles
     blogTitle1: 'L\'Avenir de l\'Immobilier en Algérie',
     blogTitle2: 'Comment Choisir l\'Emplacement Parfait',
@@ -549,7 +557,7 @@ const allTranslations = {
     blogTitle4: 'Comprendre l\'Évaluation Immobilière en Algérie',
     blogTitle5: 'Conseils de Rénovation pour un ROI Maximum',
     blogTitle6: 'Considérations Juridiques pour les Acheteurs',
-    
+
     // Blog excerpts
     blogExcerpt1: 'Découvrez les tendances émergentes et les opportunités du marché immobilier algérien en croissance.',
     blogExcerpt2: 'Un guide complet pour sélectionner l\'emplacement idéal pour votre prochain investissement immobilier.',
@@ -557,10 +565,10 @@ const allTranslations = {
     blogExcerpt4: 'Apprenez les facteurs clés qui déterminent la valeur des propriétés dans différentes villes algériennes.',
     blogExcerpt5: 'Stratégies de rénovation intelligentes qui peuvent considérablement augmenter la valeur de votre propriété.',
     blogExcerpt6: 'Aspects juridiques essentiels que tout acheteur de propriété devrait connaître avant de faire un achat.',
-    
+
     // Blog authors
     author1: 'Sarah Benali',
-    author2: 'Ahmed Mansouri', 
+    author2: 'Ahmed Mansouri',
     author3: 'Fatima Ouali',
     author4: 'Karim Hakim',
     author5: 'Leila Benaissa',
@@ -619,7 +627,7 @@ const allTranslations = {
     // Admin translations
     admin: {
       dashboard: 'Tableau de bord',
-      properties: 'Propriétés',  
+      properties: 'Propriétés',
       users: 'Utilisateurs',
       messages: 'Messages',
       settings: 'Paramètres',
@@ -703,19 +711,19 @@ const allTranslations = {
     guest: 'guest',
     guests: 'guests',
     logout: 'Logout',
-    
+
     // Hero
     heroTitle: 'Holibayt',
     heroSubtitle: 'Buy. Rent. Live Algeria differently.',
     heroDescription: 'The first next-generation digital real estate platform for Algeria.',
-    
+
     // Quick Access
     buyProperty: 'Buy a property',
     rentProperty: 'Rent a home',
     shortStayProperty: 'Short stay',
     start: 'Start',
     bookNow: 'Book now',
-    
+
     // Property
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
@@ -728,7 +736,7 @@ const allTranslations = {
     day: 'day',
     week: 'week',
     month: 'month',
-    
+
     // Common
     search: 'Search',
     cancel: 'Cancel',
@@ -741,7 +749,7 @@ const allTranslations = {
     selectDates: 'Select dates',
     noPropertiesFound: 'No properties found',
     browseAllProperties: 'Browse all properties',
-    
+
     // Login
     loginSuccess: 'Login successful!',
     loginSuccessDesc: 'You are now logged in to your Holibayt account.',
@@ -752,7 +760,7 @@ const allTranslations = {
     forgotPassword: 'Forgot password?',
     noAccount: 'Don\'t have an account?',
     createAccount: 'Create account',
-    
+
     // Pages
     propertiesForSale: 'Properties for Sale',
     propertiesForSaleDesc: 'Discover our best properties available for purchase',
@@ -760,7 +768,7 @@ const allTranslations = {
     propertiesForRentDesc: 'Find your ideal rental',
     shortStayTitle: 'Short Stays',
     shortStayDesc: 'Perfect accommodations for your short stays',
-    
+
     // Quick Access Section
     howCanWeHelp: 'How can we help you?',
     quickEntriesDesc: 'Quick entries for all your real estate needs',
@@ -775,7 +783,7 @@ const allTranslations = {
     shortStaySubtitle: 'Vacations & business trips',
     needHelp: 'Need help making your choice?',
     speakToAdvisor: 'Speak to an advisor',
-    
+
     // Services Section
     threeWaysToLive: 'Three ways to',
     liveAlgeria: 'live Algeria',
@@ -797,7 +805,7 @@ const allTranslations = {
     qualityDesc: 'A rigorous selection for your satisfaction',
     support247: 'Support 24/7',
     supportDesc: 'A team dedicated to your service',
-    
+
     // Hero placeholders and options
     cityNeighborhood: 'City, neighborhood or address',
     whereToRent: 'Where are you looking to rent?',
@@ -815,19 +823,19 @@ const allTranslations = {
     stayDates: 'Stay dates',
     stayDuration: 'Stay duration',
     night: 'night',
-    nights: 'nights', 
+    nights: 'nights',
     quickSelection: 'Quick selection',
     oneNight: '1 night',
     oneWeek: '1 week',
     weekend: 'Weekend',
     oneMonth: '1 month',
-    checkIn: 'Check-in', 
+    checkIn: 'Check-in',
     checkOut: 'Check-out',
     travelers: 'Travelers',
     availableProperties: 'Available properties',
     satisfiedUsers: 'Satisfied users',
     wilayasCovered: 'Wilayas covered',
-    
+
     // Footer translations
     footerDescription: 'Your trusted real estate platform in Algeria',
     quickLinks: 'Quick Links',
@@ -837,7 +845,7 @@ const allTranslations = {
     legalSupport: 'Legal support',
     mortgageAdvice: 'Mortgage advice',
     allRightsReserved: 'All rights reserved',
-    
+
     // About page translations
     aboutBeitik: 'About Holibayt',
     aboutDescription: 'Holibayt is Algeria\'s leading real estate platform, connecting buyers, sellers and tenants for over 15 years. Our mission is to simplify your real estate transactions.',
@@ -861,12 +869,12 @@ const allTranslations = {
     visionDescription: 'Become the essential reference for real estate in the Maghreb and transform the way people buy and rent.',
     ourValues: 'Our Values',
     valuesDescription: 'Transparency, trust, innovation and exceptional customer service are at the heart of everything we do.',
-    
+
     // Publish property translations
     addPropertyDetails: 'Add your property details',
     propertyPublished: 'Property published!',
     propertySubmittedSuccess: 'Your property has been successfully submitted and will be reviewed shortly.',
-    
+
     // Filter translations
     filters: 'Filters',
     clearAll: 'Clear All',
@@ -883,7 +891,7 @@ const allTranslations = {
     all: 'All',
     location: 'Location',
     cityOrDistrict: 'City Or District',
-    
+
     // Property names and locations
     propertyNames: {
       luxuryApartment: 'Luxury Apartment',
@@ -913,13 +921,13 @@ const allTranslations = {
       husseinDey: 'Hussein Dey',
       elHarrach: 'El Harrach'
     },
-    
+
     // Cities and additional translations
     followUs: 'Follow us',
     privacyPolicy: 'Privacy Policy',
     termsOfUse: 'Terms of Use',
     cookies: 'Cookies',
-    
+
     // Contact advisor translations
     chooseContactMethod: 'Choose Your Preferred Contact Method',
     multipleWaysConnect: 'Multiple ways to connect with our expert advisors',
@@ -951,11 +959,11 @@ const allTranslations = {
     sunday: 'Sunday: 10:00 AM - 4:00 PM',
     needImmediateHelp: 'Need Immediate Help?',
     call247Hotline: 'Call our 24/7 emergency hotline',
-    
+
     // Property and publish property translations
     propertyTypeTranslation: 'Property Type',
     forSale: 'For Sale',
-    forRent: 'For Rent', 
+    forRent: 'For Rent',
     shortStayRent: 'Short Stay',
     basicInformation: 'Basic Information',
     propertyTitleField: 'Property Title',
@@ -1010,7 +1018,7 @@ const allTranslations = {
     completeRequiredFields: 'Please complete all required fields',
     next: 'Next',
     previous: 'Previous',
-    
+
     // Property page translations
     contactOwner: 'Contact Owner',
     characteristics: 'Characteristics',
@@ -1051,7 +1059,7 @@ const allTranslations = {
     moreThanCitiesAvailable: 'More than 20 cities available',
     showLess: 'Show Less',
     seeAllCities: 'See All Cities',
-    
+
     // City descriptions
     algerDescription: 'Algeria\'s dynamic capital',
     oranDescription: 'Pearl of Western Algeria',
@@ -1061,7 +1069,7 @@ const allTranslations = {
     tlemcenDescription: 'Pearl of the Maghreb',
     bejaiaDescription: 'Bride of the Mediterranean',
     blidaDescription: 'City of Roses',
-    
+
     // Blog translations
     blogInsights: 'Blog & Insights',
     blogDescription: 'Stay updated with the latest trends, tips, and insights from Algeria\'s real estate market',
@@ -1070,10 +1078,10 @@ const allTranslations = {
     enterEmail: 'Enter your email',
     subscribe: 'Subscribe',
     backToBlog: "Back to Blog",
-    
+
     // Property types (specific property type translations)
     propertyVilla: 'Villa',
-    propertyAppartement: 'Apartment', 
+    propertyAppartement: 'Apartment',
     propertyDuplex: 'Duplex',
     propertyMaison: 'House',
     propertyStudio: 'Studio',
@@ -1082,7 +1090,7 @@ const allTranslations = {
     propertySuite: 'Suite',
     propertyPenthouse: 'Penthouse',
     appartement: 'Apartment',
-    
+
     // Pricing units
     currencyDA: 'DZD',
     currencyPerMonth: 'DZD/month',
@@ -1124,14 +1132,14 @@ const allTranslations = {
 
     publishedBy: 'Published by',
     readMore: 'Read more',
-    
+
     // Additional translations
     habitants: 'inhabitants',
     algeria: 'Algeria',
     tenthCentury: '10th century',
     thirdMillenniumBC: '3rd millennium BC',
     twelfthCenturyBC: '12th century BC',
-    
+
     // City names
     cityAlger: 'Algiers',
     cityOran: 'Oran',
@@ -1144,14 +1152,14 @@ const allTranslations = {
 
     // Metrics labels
     verifiedLabel: "100% verified",
-    ratingLabel: "4.8/5 rating", 
+    ratingLabel: "4.8/5 rating",
     responseTimeLabel: "≤ 2h response",
     hoursAbbrev: "h",
     whyChooseDesc: "Discover why thousands of users trust us for their real-estate projects.",
 
     // Service CTAs
     exploreBuy: "Explore Buy",
-    exploreRent: "Explore Rent", 
+    exploreRent: "Explore Rent",
     exploreShortStay: "Explore Short Stay",
 
     // Buy bullets
@@ -1171,7 +1179,7 @@ const allTranslations = {
     stay_feat_instantBooking: "Instant booking",
     stay_feat_localExperiences: "Local experiences",
     stay_feat_travelInsurance: "Travel insurance",
-    
+
     // City page sections
     historyHeritage: 'History & Heritage',
     population: 'Population',
@@ -1179,13 +1187,13 @@ const allTranslations = {
     cityArea: 'Area',
     foundedIn: 'Founded in',
     propertiesAvailableIn: 'Properties available in',
-    
+
     // City histories
     oranHistory: 'Oran is a coastal city in north-western Algeria known for its port, raï music scene, and a blend of French and Spanish architecture. Its modern corniche and historic quarters make it a cultural hub.',
     algerHistory: 'Algiers, the capital, mixes Ottoman, French colonial, and modern influences; the Casbah is a UNESCO World Heritage site.',
     constantineHistory: 'Constantine is famed for its dramatic gorges and suspension bridges, shaping its urban form and history.',
     annabaHistory: 'Annaba, on the Mediterranean, is known for its beaches, Saint Augustine heritage, and a growing port economy.',
-    
+
     // Blog categories
     allCategories: 'All',
     marketTrends: 'Market Trends',
@@ -1194,7 +1202,7 @@ const allTranslations = {
     finance: 'Finance',
     renovation: 'Renovation',
     legal: 'Legal',
-    
+
     // Blog post titles
     blogTitle1: 'The Future of Real Estate in Algeria',
     blogTitle2: 'How to Choose the Perfect Property Location',
@@ -1202,7 +1210,7 @@ const allTranslations = {
     blogTitle4: 'Understanding Property Valuation in Algeria',
     blogTitle5: 'Renovation Tips for Maximum ROI',
     blogTitle6: 'Legal Considerations for Property Buyers',
-    
+
     // Blog excerpts
     blogExcerpt1: 'Discover the emerging trends and opportunities in Algeria\'s growing real estate market.',
     blogExcerpt2: 'A comprehensive guide to selecting the ideal location for your next property investment.',
@@ -1210,10 +1218,10 @@ const allTranslations = {
     blogExcerpt4: 'Learn the key factors that determine property values in different Algerian cities.',
     blogExcerpt5: 'Smart renovation strategies that can significantly increase your property\'s value.',
     blogExcerpt6: 'Essential legal aspects every property buyer should know before making a purchase.',
-    
+
     // Blog authors
     author1: 'Sarah Benali',
-    author2: 'Ahmed Mansouri', 
+    author2: 'Ahmed Mansouri',
     author3: 'Fatima Ouali',
     author4: 'Karim Hakim',
     author5: 'Leila Benaissa',
@@ -1281,13 +1289,13 @@ const allTranslations = {
       adminConsole: 'Admin Console',
       backToSite: 'Back to Site',
       logout: 'Logout',
-      userManagement: 'User Management', 
+      userManagement: 'User Management',
       manageUsersHosts: 'Manage users, hosts and their statuses',
       newUser: 'New User',
       totalUsers: 'Total Users',
       ofTotal: 'of total',
       allRoles: 'All roles',
-      allStatuses: 'All statuses', 
+      allStatuses: 'All statuses',
       searchByNameEmail: 'Search by name or email...',
       adminPanel: 'Admin Panel',
       overviewPlatform: 'Overview of your platform performance',
@@ -1356,19 +1364,19 @@ const allTranslations = {
     guest: 'ضيف',
     guests: 'ضيوف',
     logout: 'تسجيل الخروج',
-    
+
     // Hero
     heroTitle: 'هولي بايت',
     heroSubtitle: 'اشتري. استأجر. عش الجزائر بشكل مختلف.',
     heroDescription: 'أول منصة عقارية رقمية من الجيل الجديد للجزائر.',
-    
+
     // Quick Access
     buyProperty: 'شراء عقار',
     rentProperty: 'استئجار منزل',
     shortStayProperty: 'إقامة قصيرة',
     start: 'ابدأ',
     bookNow: 'احجز الآن',
-    
+
     // Property
     bedrooms: 'غرف النوم',
     bathrooms: 'دورات المياه',
@@ -1381,7 +1389,7 @@ const allTranslations = {
     day: 'يوم',
     week: 'أسبوع',
     month: 'شهر',
-    
+
     // Common
     search: 'بحث',
     cancel: 'إلغاء',
@@ -1394,7 +1402,7 @@ const allTranslations = {
     selectDates: 'اختر التواريخ',
     noPropertiesFound: 'لم يتم العثور على عقارات',
     browseAllProperties: 'تصفح جميع العقارات',
-    
+
     // Login
     loginSuccess: 'تم تسجيل الدخول بنجاح!',
     loginSuccessDesc: 'أنت الآن متصل بحساب هولي بايت الخاص بك.',
@@ -1405,7 +1413,7 @@ const allTranslations = {
     forgotPassword: 'نسيت كلمة المرور؟',
     noAccount: 'ليس لديك حساب؟',
     createAccount: 'إنشاء حساب',
-    
+
     // Pages
     propertiesForSale: 'عقارات للبيع',
     propertiesForSaleDesc: 'اكتشف أفضل العقارات المتاحة للشراء',
@@ -1413,7 +1421,7 @@ const allTranslations = {
     propertiesForRentDesc: 'اعثر على الإيجار المثالي',
     shortStayTitle: 'الإقامات القصيرة',
     shortStayDesc: 'أماكن إقامة مثالية لإقاماتك القصيرة',
-    
+
     // Quick Access Section
     howCanWeHelp: 'كيف يمكننا مساعدتك؟',
     quickEntriesDesc: 'مداخل سريعة لجميع احتياجاتك العقارية',
@@ -1428,7 +1436,7 @@ const allTranslations = {
     shortStaySubtitle: 'إجازات ورحلات عمل',
     needHelp: 'تحتاج مساعدة في اتخاذ القرار؟',
     speakToAdvisor: 'تحدث إلى مستشار',
-    
+
     // Services Section
     threeWaysToLive: 'ثلاث طرق لـ',
     liveAlgeria: 'عيش الجزائر',
@@ -1450,7 +1458,7 @@ const allTranslations = {
     qualityDesc: 'اختيار دقيق لرضاك',
     support247: 'دعم 24/7',
     supportDesc: 'فريق مخصص لخدمتك',
-    
+
     // Hero placeholders and options
     cityNeighborhood: 'المدينة، الحي أو العنوان',
     whereToRent: 'أين تبحث عن الإيجار؟',
@@ -1480,7 +1488,7 @@ const allTranslations = {
     availableProperties: 'العقارات المتاحة',
     satisfiedUsers: 'المستخدمون الراضون',
     wilayasCovered: 'الولايات المغطاة',
-    
+
     // Footer translations
     footerDescription: 'منصتك العقارية الموثوقة في الجزائر',
     quickLinks: 'روابط سريعة',
@@ -1490,7 +1498,7 @@ const allTranslations = {
     legalSupport: 'الدعم القانوني',
     mortgageAdvice: 'نصائح الرهن العقاري',
     allRightsReserved: 'جميع الحقوق محفوظة',
-    
+
     // About page translations
     aboutBeitik: 'حول هوليبايت',
     aboutDescription: 'هوليبايت هي منصة العقارات الرائدة في الجزائر، تربط المشترين والبائعين والمستأجرين لأكثر من 15 عامًا. مهمتنا هي تبسيط معاملاتك العقارية.',
@@ -1514,12 +1522,12 @@ const allTranslations = {
     visionDescription: 'أن نصبح المرجع الأساسي للعقارات في المغرب العربي وتحويل الطريقة التي يشتري ويستأجر بها الناس.',
     ourValues: 'قيمنا',
     valuesDescription: 'الشفافية والثقة والابتكار وخدمة العملاء الاستثنائية هي في قلب كل ما نقوم به.',
-    
+
     // Publish property translations
     addPropertyDetails: 'أضف تفاصيل عقارك',
     propertyPublished: 'تم نشر العقار!',
     propertySubmittedSuccess: 'تم إرسال عقارك بنجاح وسيتم مراجعته قريبًا.',
-    
+
     // Filter translations
     filters: 'المرشحات',
     clearAll: 'مسح الكل',
@@ -1536,7 +1544,7 @@ const allTranslations = {
     all: 'الكل',
     location: 'الموقع',
     cityOrDistrict: 'مدينة أو منطقة',
-    
+
     // Property names and locations
     propertyNames: {
       luxuryApartment: 'شقة فاخرة',
@@ -1566,13 +1574,13 @@ const allTranslations = {
       husseinDey: 'حسين داي',
       elHarrach: 'الحراش'
     },
-    
+
     // Cities and additional translations
     followUs: 'تابعنا',
     privacyPolicy: 'سياسة الخصوصية',
     termsOfUse: 'شروط الاستخدام',
     cookies: 'ملفات تعريف الارتباط',
-    
+
     // Contact advisor translations
     chooseContactMethod: 'اختر طريقة الاتصال المفضلة لديك',
     multipleWaysConnect: 'طرق متعددة للتواصل مع مستشارينا الخبراء',
@@ -1606,7 +1614,7 @@ const allTranslations = {
     sunday: 'الأحد: 10:00 صباحًا - 4:00 مساءً',
     needImmediateHelp: 'تحتاج مساعدة فورية؟',
     call247Hotline: 'اتصل بخط الطوارئ الخاص بنا على مدار الساعة',
-    
+
     // Property and publish property translations
     propertyTypeTranslation: 'نوع العقار',
     forSale: 'للبيع',
@@ -1665,7 +1673,7 @@ const allTranslations = {
     completeRequiredFields: 'يرجى إكمال جميع الحقول المطلوبة',
     next: 'التالي',
     previous: 'السابق',
-    
+
     // Property page translations
     contactOwner: 'الاتصال بالمالك',
     characteristics: 'الخصائص',
@@ -1675,7 +1683,7 @@ const allTranslations = {
     publishedOn: 'نُشر في',
     lastUpdated: 'آخر تحديث',
     daysAgo: 'منذ يومين',
-    
+
     // Cities translations
     exploreByTitle: 'استكشف حسب',
     citiesTitle: 'المدن',
@@ -1685,7 +1693,7 @@ const allTranslations = {
     moreThanCitiesAvailable: 'أكثر من 20 مدينة متاحة',
     showLess: 'إظهار أقل',
     seeAllCities: 'رؤية جميع المدن',
-    
+
     // City descriptions
     algerDescription: 'العاصمة النشطة للجزائر',
     oranDescription: 'لؤلؤة الغرب الجزائري',
@@ -1695,19 +1703,19 @@ const allTranslations = {
     tlemcenDescription: 'لؤلؤة المغرب الأوسط',
     bejaiaDescription: 'عروس البحر الأبيض المتوسط',
     blidaDescription: 'مدينة الورود',
-    
+
     // Blog translations
     blogInsights: 'المدونة والرؤى',
     blogDescription: 'ابق على اطلاع بأحدث الاتجاهات والنصائح والرؤى من سوق العقارات الجزائري',
-    stayUpdated: 'ابق مطلعاً',  
+    stayUpdated: 'ابق مطلعاً',
     newsletterDescription: 'اشترك في نشرتنا الإخبارية ولا تفوت أحدث الرؤى العقارية',
     enterEmail: 'أدخل بريدك الإلكتروني',
     subscribe: 'اشتراك',
     backToBlog: "العودة للمدونة",
-    
+
     // Property types (specific property type translations)
     propertyVilla: 'فيلا',
-    propertyAppartement: 'شقة', 
+    propertyAppartement: 'شقة',
     propertyDuplex: 'دوبلكس',
     propertyMaison: 'منزل',
     propertyStudio: 'استوديو',
@@ -1716,7 +1724,7 @@ const allTranslations = {
     propertySuite: 'جناح',
     propertyPenthouse: 'بنتهاوس',
     appartement: 'شقة',
-    
+
     // Pricing units
     currencyDA: 'دج',
     currencyPerMonth: 'دج/الشهر',
@@ -1758,14 +1766,14 @@ const allTranslations = {
 
     publishedBy: 'نشر بواسطة',
     readMore: 'اقرأ المزيد',
-    
+
     // Additional translations
     habitants: 'ساكن',
     algeria: 'الجزائر',
     tenthCentury: 'القرن العاشر',
     thirdMillenniumBC: 'الألفية الثالثة ق.م.',
     twelfthCenturyBC: 'القرن الثاني عشر ق.م.',
-    
+
     // City names
     cityAlger: 'الجزائر',
     cityOran: 'وهران',
@@ -1805,7 +1813,7 @@ const allTranslations = {
     stay_feat_instantBooking: "حجز فوري",
     stay_feat_localExperiences: "تجارب محلية",
     stay_feat_travelInsurance: "تأمين سفر",
-    
+
     // City page sections
     historyHeritage: 'التاريخ والتراث',
     population: 'السكان',
@@ -1813,13 +1821,13 @@ const allTranslations = {
     cityArea: 'المساحة',
     foundedIn: 'تأسست في',
     propertiesAvailableIn: 'العقارات المتاحة في',
-    
+
     // City histories
     oranHistory: 'وهران مدينة ساحلية في شمال غرب الجزائر، معروفة بمينائها وموسيقى الراي ومزيج من العمارة الفرنسية والإسبانية. كورنيشها الحديث وأحياؤها التاريخية يجعلونها مركزًا ثقافيًا.',
     algerHistory: 'الجزائر العاصمة تمزج بين التأثيرات العثمانية والاستعمارية الفرنسية والحديثة؛ القصبة موقع تراث عالمي لليونسكو.',
     constantineHistory: 'قسنطينة مشهورة بأوديتها العميقة وجسورها المعلقة التي شكّلت تاريخها وعمرانها.',
     annabaHistory: 'عنابة على المتوسط معروفة بشواطئها وإرث القديس أوغسطين ومينائها المتنامي.',
-    
+
     // Blog categories
     allCategories: 'الكل',
     marketTrends: 'اتجاهات السوق',
@@ -1828,7 +1836,7 @@ const allTranslations = {
     finance: 'التمويل',
     renovation: 'التجديد',
     legal: 'قانوني',
-    
+
     // Blog post titles
     blogTitle1: 'مستقبل العقارات في الجزائر',
     blogTitle2: 'كيفية اختيار الموقع المثالي للعقار',
@@ -1836,7 +1844,7 @@ const allTranslations = {
     blogTitle4: 'فهم تقييم العقارات في الجزائر',
     blogTitle5: 'نصائح التجديد لتحقيق أقصى عائد استثمار',
     blogTitle6: 'الاعتبارات القانونية لمشتري العقارات',
-    
+
     // Blog excerpts
     blogExcerpt1: 'اكتشف الاتجاهات الناشئة والفرص في سوق العقارات الجزائري المتنامي.',
     blogExcerpt2: 'دليل شامل لاختيار الموقع المثالي لاستثمارك العقاري القادم.',
@@ -1844,15 +1852,15 @@ const allTranslations = {
     blogExcerpt4: 'تعلم العوامل الرئيسية التي تحدد قيم العقارات في مختلف المدن الجزائرية.',
     blogExcerpt5: 'استراتيجيات تجديد ذكية يمكنها زيادة قيمة عقارك بشكل كبير.',
     blogExcerpt6: 'الجوانب القانونية الأساسية التي يجب على كل مشتري عقار معرفتها قبل الشراء.',
-    
+
     // Blog authors
     author1: 'سارة بن علي',
-    author2: 'أحمد منصوري', 
+    author2: 'أحمد منصوري',
     author3: 'فاطمة والي',
     author4: 'كريم حكيم',
     author5: 'ليلى بن عيسى',
     author6: 'محمد قاسي',
-    
+
     callBtn: 'اتصال',
     sendMessageBtn: 'أرسل رسالة',
 
@@ -1875,10 +1883,10 @@ const allTranslations = {
     alarmSystem: "نظام إنذار",
     airConditioning: "تكييف هواء",
     equippedKitchen: "مطبخ مجهز",
-    
+
     // Blog dates
     march15: "15 مارس 2024",
-    march10: "10 مارس 2024", 
+    march10: "10 مارس 2024",
     march5: "5 مارس 2024",
     february28: "28 فبراير 2024",
     february20: "20 فبراير 2024",
@@ -1939,66 +1947,87 @@ const allTranslations = {
   }
 };
 
-const SUPPORTED: Language[] = ['EN', 'FR', 'AR'];
+/* ───────────────────────────────────────────────────────────── */
 
-/** Utility: browser guards for SSR */
-function isBrowser() {
-  return typeof window !== 'undefined' && typeof document !== 'undefined';
-}
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const SUPPORTED: Language[] = ['FR', 'EN', 'AR'];
 
-/** Normalize any input (param/navigator) to our Language union or null */
-function normalizeLang(input?: string | null): Language | null {
-  if (!input) return null;
-  const up = input.toUpperCase();
+const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined';
+
+function normalizeLang(v?: string | null): Language | null {
+  if (!v) return null;
+  const up = v.toUpperCase();
   return (SUPPORTED as string[]).includes(up) ? (up as Language) : null;
 }
 
-/** Initial language detection with localStorage -> ?lang= -> navigator -> EN */
+function getPath(obj: any, path: string) {
+  return path.split('.').reduce((acc, k) => (acc && typeof acc === 'object' ? acc[k] : undefined), obj);
+}
+
 function detectInitialLang(): Language {
   if (isBrowser()) {
     const saved = normalizeLang(localStorage.getItem('lang'));
     if (saved) return saved;
 
-    const urlParam = new URLSearchParams(window.location.search).get('lang');
-    const fromUrl = normalizeLang(urlParam);
-    if (fromUrl) return fromUrl;
+    const urlParam = normalizeLang(new URLSearchParams(window.location.search).get('lang'));
+    if (urlParam) return urlParam;
 
-    const nav = (navigator?.language ?? (navigator as any)?.languages?.[0]) as string | undefined;
+    const nav = (navigator as any)?.language || (navigator as any)?.languages?.[0];
     const guess = normalizeLang(nav?.slice(0, 2));
     if (guess) return guess;
   }
   return 'EN';
 }
 
-/** Safe deep getter for dotted keys */
-function getPath(obj: any, path: string) {
-  return path.split('.').reduce((acc, k) => (acc && typeof acc === 'object' ? acc[k] : undefined), obj);
+function applyHtmlAttributes(lang: Language) {
+  if (!isBrowser()) return;
+  document.documentElement.lang = lang === 'AR' ? 'ar' : lang.toLowerCase();
+  document.documentElement.dir = lang === 'AR' ? 'rtl' : 'ltr';
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [currentLang, setCurrentLang] = useState<Language>(detectInitialLang);
+  const [currentLang, setCurrentLangState] = useState<Language>(detectInitialLang);
 
-  // Persist, sync URL ?lang=, and update <html lang/dir>
+  // set <html> attrs on mount
   useEffect(() => {
+    applyHtmlAttributes(currentLang);
+  }, []); // once
+
+  const setCurrentLang = useCallback((lang: Language) => {
+    setCurrentLangState(lang);
+
     if (!isBrowser()) return;
 
     // persist
-    localStorage.setItem('lang', currentLang);
+    localStorage.setItem('lang', lang);
 
-    // keep ?lang= param in URL without reload
+    // sync ?lang=
     const url = new URL(window.location.href);
-    url.searchParams.set('lang', currentLang);
+    url.searchParams.set('lang', lang);
     window.history.replaceState({}, '', url.toString());
 
-    // html attributes + RTL
-    document.documentElement.lang = currentLang === 'AR' ? 'ar' : currentLang.toLowerCase();
-    document.documentElement.dir = currentLang === 'AR' ? 'rtl' : 'ltr';
+    // html attrs + RTL
+    applyHtmlAttributes(lang);
+  }, []);
+
+  // Update when user navigates back/forward and ?lang changes
+  useEffect(() => {
+    if (!isBrowser()) return;
+    const onPop = () => {
+      const urlLang = normalizeLang(new URLSearchParams(window.location.search).get('lang'));
+      if (urlLang && urlLang !== currentLang) {
+        setCurrentLangState(urlLang);
+        localStorage.setItem('lang', urlLang);
+        applyHtmlAttributes(urlLang);
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
   }, [currentLang]);
 
-  // Translator with safe fallback: current -> EN -> key
+  // Translator with EN fallback, then dev-key fallback
   const t = useMemo(() => {
+    const isDev = typeof import.meta !== 'undefined' && (import.meta as any).env?.DEV;
     return (key: string): string | any => {
       const cur = getPath(allTranslations[currentLang], key);
       if (cur !== undefined) return cur;
@@ -2006,8 +2035,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       const en = getPath(allTranslations.EN, key);
       if (en !== undefined) return en;
 
-      // Show the key so UI never goes blank (better DX and safer UX)
-      return key;
+      return isDev ? key : '';
     };
   }, [currentLang]);
 
@@ -2019,7 +2047,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) throw new Error('useLanguage must be used within a LanguageProvider');
-  return context;
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error('useLanguage must be used within a LanguageProvider');
+  return ctx;
 };
