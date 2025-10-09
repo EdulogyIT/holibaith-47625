@@ -6,25 +6,16 @@ import MobileFooter from "@/components/MobileFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, Clock, ArrowLeft, Facebook, Twitter, Share2, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
-// Import blog images
-import blogRealEstateFuture from "@/assets/blog-real-estate-future.jpg";
-import blogPropertyLocation from "@/assets/blog-property-location.jpg";
-import blogShortStayRental from "@/assets/blog-short-stay-rental.jpg";
-import blogPropertyValuation from "@/assets/blog-property-valuation.jpg";
-import blogRenovationTips from "@/assets/blog-renovation-tips.jpg";
-import blogLegalConsiderations from "@/assets/blog-legal-considerations.jpg";
 
 const BlogPost = () => {
   const { t, currentLang } = useLanguage();
@@ -45,24 +36,25 @@ const BlogPost = () => {
       fetchBlogPost();
       fetchComments();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchBlogPost = async () => {
     try {
       const { data, error } = await supabase
-        .from('blog_posts' as any)
-        .select('*')
-        .eq('id', id)
+        .from("blog_posts" as any)
+        .select("*")
+        .eq("id", id)
         .single();
 
       if (error) throw error;
       setPost(data);
     } catch (error) {
-      console.error('Error fetching blog post:', error);
+      console.error("Error fetching blog post:", error);
       toast({
-        title: 'Error',
-        description: 'Failed to load blog post',
-        variant: 'destructive',
+        title: t("error") || "Error",
+        description: t("errorLoading") || "Failed to load blog post",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -72,14 +64,14 @@ const BlogPost = () => {
   const fetchComments = async () => {
     try {
       const { data } = await supabase
-        .from('blog_comments' as any)
-        .select('*')
-        .eq('blog_post_id', id)
-        .is('parent_comment_id', null)
-        .order('created_at', { ascending: false });
+        .from("blog_comments" as any)
+        .select("*")
+        .eq("blog_post_id", id)
+        .is("parent_comment_id", null)
+        .order("created_at", { ascending: false });
       setComments(data || []);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error("Error fetching comments:", error);
     }
   };
 
@@ -88,7 +80,7 @@ const BlogPost = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading post...</p>
+          <p className="mt-4 text-muted-foreground">{t("loading") ?? "Loading..."}</p>
         </div>
       </div>
     );
@@ -98,28 +90,40 @@ const BlogPost = () => {
     return <Navigate to="/blog" replace />;
   }
 
+  // ─── Localized helpers (single source of truth) ──────────────────────────────
+  const lang = currentLang.toLowerCase(); // 'en' | 'fr' | 'ar'
+  const dateLocale = currentLang === "AR" ? "ar-DZ" : currentLang === "FR" ? "fr-FR" : "en-US";
+
+  const localizedTitle = (post[`title_${lang}`] as string) ?? post.title;
+  const localizedContent = (post[`content_${lang}`] as string) ?? post.content;
+  const localizedExcerpt = (
+    ((post[`excerpt_${lang}`] as string) ?? localizedContent ?? "") as string
+  )
+    .replace(/<[^>]*>/g, "")
+    .trim();
+
+  const localizedAuthor = (post[`author_name_${lang}`] as string) ?? post.author_name;
+  const localizedCategory =
+    (post[`category_${lang}`] as string) ?? post.category ?? (t("allCategories") as string);
+
   return (
     <div className="min-h-screen bg-background">
       {isMobile ? <MobileHeader /> : <Navigation />}
       <main className={cn(isMobile ? "pt-14 pb-24" : "pt-20")}>
         {/* Back Button */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/blog')}
-            className="font-inter mb-6"
-          >
+          <Button variant="ghost" onClick={() => navigate("/blog")} className="font-inter mb-6">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {t('backToBlog')}
+            {t("backToBlog")}
           </Button>
         </div>
 
         {/* Hero Image */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
           <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-            <img 
-              src={post.image_url || '/placeholder.jpg'}
-              alt={post.title}
+            <img
+              src={post.image_url || "/placeholder.jpg"}
+              alt={localizedTitle}
               className="w-full h-full object-cover"
             />
           </div>
@@ -130,54 +134,44 @@ const BlogPost = () => {
           {/* Article Header */}
           <header className="mb-8">
             <div className="flex items-center gap-4 mb-4">
-              <Badge variant="secondary">
-                {post[`category_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.category || t('allCategories')}
-              </Badge>
+              <Badge variant="secondary">{localizedCategory}</Badge>
               <div className="flex items-center text-sm text-muted-foreground">
                 <Clock className="w-4 h-4 mr-1" />
-                5 {t('readTime')}
+                {(post.read_minutes ?? post.read_time ?? 5)} {t("readTime")}
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-playfair">
-              {post[`title_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.title}
+              {localizedTitle}
             </h1>
-            
+
             <p className="text-xl text-muted-foreground mb-6 font-inter line-clamp-3">
-              {post.content.replace(/<[^>]*>/g, '').slice(0, 200)}...
+              {localizedExcerpt.slice(0, 200)}...
             </p>
 
             <div className="flex items-center justify-between text-sm text-muted-foreground font-inter border-b border-border pb-6">
               <div className="flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                <span className="mr-4">
-                  {post[`author_name_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.author_name}
-                </span>
+                <span className="mr-4">{localizedAuthor}</span>
                 <Calendar className="w-4 h-4 mr-1" />
-                <span>
-                  {new Date(post.created_at).toLocaleDateString(
-                    currentLang === 'AR' ? 'ar-DZ' : currentLang === 'FR' ? 'fr-FR' : 'en-US'
-                  )}
-                </span>
+                <span>{new Date(post.created_at).toLocaleDateString(dateLocale)}</span>
               </div>
               <div className="text-xs">
-                {t('author')}: {post[`author_name_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.author_name}
+                {t("author")}: {localizedAuthor}
               </div>
             </div>
           </header>
 
           {/* Article Body */}
-          <div 
+          <div
             className="prose prose-lg max-w-none font-inter"
-            dangerouslySetInnerHTML={{ 
-              __html: post[`content_${currentLang.toLowerCase()}` as keyof typeof post] as string || post.content 
-            }}
+            dangerouslySetInnerHTML={{ __html: localizedContent }}
           />
 
           {/* Tags */}
           {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
             <div className="mt-12 pt-8 border-t border-border">
-              <h3 className="text-lg font-semibold mb-4 font-playfair">Tags</h3>
+              <h3 className="text-lg font-semibold mb-4 font-playfair">{t("tags") || "Tags"}</h3>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag: string) => (
                   <Badge key={tag} variant="outline" className="font-inter">
@@ -199,47 +193,58 @@ const BlogPost = () => {
                 size={isMobile ? "sm" : "default"}
                 onClick={() => {
                   const url = window.location.href;
-                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+                    "_blank"
+                  );
                 }}
                 className="gap-2"
               >
                 <Facebook className="h-4 w-4" />
                 Facebook
               </Button>
+
               <Button
                 variant="outline"
                 size={isMobile ? "sm" : "default"}
                 onClick={() => {
                   const url = window.location.href;
-                  const text = post.title;
-                  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+                  const text = localizedTitle;
+                  window.open(
+                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(
+                      text
+                    )}`,
+                    "_blank"
+                  );
                 }}
                 className="gap-2"
               >
                 <Twitter className="h-4 w-4" />
                 X (Twitter)
               </Button>
+
               <Button
                 variant="outline"
                 size={isMobile ? "sm" : "default"}
                 onClick={() => {
                   const url = window.location.href;
-                  const text = post.title;
-                  window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+                  const text = localizedTitle;
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, "_blank");
                 }}
                 className="gap-2"
               >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </Button>
+
               <Button
                 variant="outline"
                 size={isMobile ? "sm" : "default"}
                 onClick={async () => {
                   try {
                     await navigator.share({
-                      title: post.title,
-                      text: post.excerpt,
+                      title: localizedTitle,
+                      text: localizedExcerpt.slice(0, 140),
                       url: window.location.href,
                     });
                   } catch (error) {
@@ -276,9 +281,11 @@ const BlogPost = () => {
                 className={cn("mt-3", isMobile && "w-full")}
                 onClick={async () => {
                   if (!comment.trim()) return;
-                  
+
                   try {
-                    const { data: { user } } = await supabase.auth.getUser();
+                    const {
+                      data: { user },
+                    } = await supabase.auth.getUser();
                     if (!user) {
                       toast({
                         title: t("error") || "Error",
@@ -288,13 +295,11 @@ const BlogPost = () => {
                       return;
                     }
 
-                    const { error } = await supabase
-                      .from('blog_comments' as any)
-                      .insert({
-                        blog_post_id: id,
-                        user_id: user.id,
-                        content: comment.trim(),
-                      });
+                    const { error } = await supabase.from("blog_comments" as any).insert({
+                      blog_post_id: id,
+                      user_id: user.id,
+                      content: comment.trim(),
+                    });
 
                     if (error) throw error;
 
@@ -305,13 +310,13 @@ const BlogPost = () => {
                     setComment("");
                     // Refresh comments
                     const { data } = await supabase
-                      .from('blog_comments' as any)
-                      .select('*')
-                      .eq('blog_post_id', id)
-                      .order('created_at', { ascending: false });
+                      .from("blog_comments" as any)
+                      .select("*")
+                      .eq("blog_post_id", id)
+                      .order("created_at", { ascending: false });
                     setComments(data || []);
                   } catch (error) {
-                    console.error('Error adding comment:', error);
+                    console.error("Error adding comment:", error);
                     toast({
                       title: t("error") || "Error",
                       description: t("commentFailed") || "Failed to add comment",
@@ -332,7 +337,7 @@ const BlogPost = () => {
                 <div key={c.id} className="flex gap-3">
                   <Avatar className={cn(isMobile ? "h-8 w-8" : "h-10 w-10")}>
                     <AvatarFallback className={cn(isMobile && "text-xs")}>
-                      {c.user_id?.slice(0, 2).toUpperCase() || 'U'}
+                      {c.user_id?.slice(0, 2).toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -340,13 +345,11 @@ const BlogPost = () => {
                       <p className={cn("text-sm font-medium mb-1", isMobile && "text-xs")}>
                         User {c.user_id?.slice(0, 8)}
                       </p>
-                      <p className={cn("text-foreground", isMobile && "text-sm")}>
-                        {c.content}
-                      </p>
+                      <p className={cn("text-foreground", isMobile && "text-sm")}>{c.content}</p>
                     </div>
                     <div className={cn("flex items-center gap-4 mt-2", isMobile && "text-xs")}>
                       <span className="text-muted-foreground text-xs">
-                        {new Date(c.created_at).toLocaleDateString()}
+                        {new Date(c.created_at).toLocaleDateString(dateLocale)}
                       </span>
                       <Button
                         variant="ghost"
@@ -365,16 +368,18 @@ const BlogPost = () => {
                           placeholder={t("writeReply") || "Write your reply..."}
                           value={replyText}
                           onChange={(e) => setReplyText(e.target.value)}
-                          className={cn(isMobile ? "min-h-[80px]" : "min-h-[100px]")}
+                          className={cn(isMobile ? "min-h[80px]" : "min-h-[100px]")}
                         />
                         <div className="flex gap-2 mt-2">
                           <Button
                             size="sm"
                             onClick={async () => {
                               if (!replyText.trim()) return;
-                              
+
                               try {
-                                const { data: { user } } = await supabase.auth.getUser();
+                                const {
+                                  data: { user },
+                                } = await supabase.auth.getUser();
                                 if (!user) {
                                   toast({
                                     title: t("error") || "Error",
@@ -384,14 +389,12 @@ const BlogPost = () => {
                                   return;
                                 }
 
-                                const { error } = await supabase
-                                  .from('blog_comments' as any)
-                                  .insert({
-                                    blog_post_id: id,
-                                    user_id: user.id,
-                                    content: replyText.trim(),
-                                    parent_comment_id: c.id,
-                                  });
+                                const { error } = await supabase.from("blog_comments" as any).insert({
+                                  blog_post_id: id,
+                                  user_id: user.id,
+                                  content: replyText.trim(),
+                                  parent_comment_id: c.id,
+                                });
 
                                 if (error) throw error;
 
@@ -403,13 +406,13 @@ const BlogPost = () => {
                                 setReplyTo(null);
                                 // Refresh comments
                                 const { data } = await supabase
-                                  .from('blog_comments' as any)
-                                  .select('*')
-                                  .eq('blog_post_id', id)
-                                  .order('created_at', { ascending: false });
+                                  .from("blog_comments" as any)
+                                  .select("*")
+                                  .eq("blog_post_id", id)
+                                  .order("created_at", { ascending: false });
                                 setComments(data || []);
                               } catch (error) {
-                                console.error('Error adding reply:', error);
+                                console.error("Error adding reply:", error);
                                 toast({
                                   title: t("error") || "Error",
                                   description: t("replyFailed") || "Failed to add reply",
