@@ -33,10 +33,10 @@ const ServicesSection = () => {
     {
       id: "buy",
       icon: Home,
-      title: t('buyTitle'),
-      subtitle: t('buySubtitle'),
-      description: t('buyDescription'),
-      features: [t('buy_feat_verified'), t('buy_feat_virtualTour'), t('buy_feat_legal'), t('buy_feat_financing')],
+      title: t('Buy Title'),
+      subtitle: t('Buy Subtitle'),
+      description: t('Buy Description'),
+      features: [t('Buy_feat_Verified'), t('Buy_feat_VirtualTour'), t('Buy_feat_Legal'), t('Buy_feat_Financing')],
       color: "bg-primary",
       gradient: "from-primary to-primary/80",
       image: villaMediterranean,
@@ -45,10 +45,10 @@ const ServicesSection = () => {
     {
       id: "rent",
       icon: Key,
-      title: t('rentTitle'),
-      subtitle: t('rentSubtitle'),
-      description: t('rentDescription'),
-      features: [t('rent_feat_paymentGuarantee'), t('rent_feat_secureContracts'), t('rent_feat_dedicatedTeam'), t('rent_feat_digitalInspection')],
+      title: t('Rent Title'),
+      subtitle: t('Rent Subtitle'),
+      description: t('Rent Description'),
+      features: [t('Rent_feat_PaymentGuarantee'), t('Rent_feat_SecureContracts'), t('Rent_feat_DedicatedTeam'), t('Rent_feat_DigitalInspection')],
       color: "bg-accent",
       gradient: "from-accent to-accent/80",
       image: modernApartment,
@@ -57,10 +57,10 @@ const ServicesSection = () => {
     {
       id: "stay",
       icon: Bed,
-      title: t('stayTitle'),
-      subtitle: t('staySubtitle'),
-      description: t('stayDescription'),
-      features: [t('stay_feat_instantBooking'), t('stay_feat_verifiedHosts'), t('stay_feat_travelInsurance'), t('stay_feat_localExperiences')],
+      title: t('Stay Title'),
+      subtitle: t('Stay Subtitle'),
+      description: t('Stay Description'),
+      features: [t('Stay_feat_InstantBooking'), t('Stay_feat_VerifiedHosts'), t('Stay_feat_TravelInsurance'), t('Stay_feat_LocalExperiences')],
       color: "bg-foreground",
       gradient: "from-foreground to-foreground/80",
       image: shortStay,
@@ -74,7 +74,7 @@ const ServicesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-playfair font-bold text-foreground mb-6">
-            {t('threeWaysToLive')} <span className="text-primary">{t('liveAlgeria')}</span>
+            {t('Three Ways To Live In Algeria')} <span className="text-primary">{t('Live Algeria')}</span>
           </h2>
           <p className="text-xl text-muted-foreground font-inter font-light max-w-3xl mx-auto">
             {t('platformDesc')}
@@ -128,7 +128,7 @@ const ServicesSection = () => {
                       className="h-11 px-5 text-sm font-medium whitespace-nowrap w-full bg-gradient-primary font-inter group-hover:shadow-elegant transition-all duration-300"
                       onClick={() => navigate(`/${service.id === 'stay' ? 'short-stay' : service.id}`)}
                     >
-                      <span className="whitespace-nowrap">{t(service.ctaKey)}</span>
+                      <span className="whitespace-nowrap">{t(Service.ctaKey)}</span>
                     </Button>
                   </div>
                 </CardContent>
@@ -144,10 +144,10 @@ const ServicesSection = () => {
               <Star className="h-8 w-8" />
             </div>
             <h3 className="text-3xl md:text-4xl font-playfair font-bold text-foreground mb-4">
-              {t('whyChooseHolibayt')}
+              {t('Why Choose Holibayt')}
             </h3>
             <p className="text-lg text-muted-foreground font-inter max-w-2xl mx-auto">
-              {t('whyChooseDesc')}
+              {t('WhyChooseDesc')}
             </p>
           </div>
           
@@ -156,27 +156,27 @@ const ServicesSection = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-primary text-primary-foreground rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                 <Shield className="h-8 w-8" />
               </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('securityGuaranteed')}</h4>
-              <p className="text-muted-foreground font-inter">{t('securityDesc')}</p>
-              <div className="mt-4 text-primary font-semibold font-inter text-sm">{t('verifiedLabel')}</div>
+              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Security Guaranteed')}</h4>
+              <p className="text-muted-foreground font-inter">{t('SecurityDesc')}</p>
+              <div className="mt-4 text-primary font-semibold font-inter text-sm">{t('Verified Label')}</div>
             </div>
             
             <div className="group text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-accent text-accent-foreground rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                 <Star className="h-8 w-8" />
               </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('premiumQuality')}</h4>
-              <p className="text-muted-foreground font-inter">{t('qualityDesc')}</p>
-              <div className="mt-4 text-accent font-semibold font-inter text-sm">{t('ratingLabel')}</div>
+              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Premium Quality')}</h4>
+              <p className="text-muted-foreground font-inter">{t('QualityDesc')}</p>
+              <div className="mt-4 text-accent font-semibold font-inter text-sm">{t('Rating Label')}</div>
             </div>
             
             <div className="group text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-foreground text-background rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                 <Clock className="h-8 w-8" />
               </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('support247')}</h4>
-              <p className="text-muted-foreground font-inter">{t('supportDesc')}</p>
-              <div className="mt-4 text-foreground font-semibold font-inter text-sm">{t('responseTimeLabel')}</div>
+              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Support 247')}</h4>
+              <p className="text-muted-foreground font-inter">{t('SupportDesc')}</p>
+              <div className="mt-4 text-foreground font-semibold font-inter text-sm">{t('Response Time Label')}</div>
             </div>
           </div>
         </div>
