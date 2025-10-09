@@ -45,12 +45,12 @@ const FeaturedListings = () => {
   return (
     <section className="px-4 py-4 bg-gray-50">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold">{t('featuredListings')}</h2>
+        <h2 className="text-xl font-bold">{t('Featured Listings')}</h2>
         <button 
           onClick={() => navigate('/featured-listings')}
           className="text-primary font-medium text-xs hover:underline"
         >
-          {t('seeAll')}
+          {t('See All')}
         </button>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
