@@ -55,13 +55,13 @@ const QuickAccessSection = () => {
         </div>
 
         {/* Quick Access Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-6 lg:gap-8">
+        <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
           {quickActions.map((action) => {
             const IconComponent = action.icon;
             return (
               <Card 
                 key={action.id} 
-                className={`group relative overflow-hidden border-2 ${action.borderColor} hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 cursor-pointer bg-card/50 backdrop-blur-sm flex flex-col h-full min-h-[420px]`}
+                className={`group relative overflow-hidden border-2 ${action.borderColor} hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 cursor-pointer bg-card/50 backdrop-blur-sm flex flex-col h-full min-h-[420px] w-[280px] md:w-[320px] flex-shrink-0 snap-center`}
               >
                 <CardContent className="p-6 md:p-8 text-center flex flex-col h-full">
                   {/* Icon Container */}

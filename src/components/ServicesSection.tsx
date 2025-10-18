@@ -82,11 +82,11 @@ const ServicesSection = () => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 items-stretch gap-6 mb-16">
+        <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.id} className="group relative overflow-hidden border-border/50 hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 bg-card flex flex-col h-full min-h-[420px]">
+              <Card key={service.id} className="group relative overflow-hidden border-border/50 hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 bg-card flex flex-col h-full min-h-[420px] w-[280px] md:w-[320px] flex-shrink-0 snap-center">
                 {/* Hero Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img 
@@ -137,49 +137,6 @@ const ServicesSection = () => {
           })}
         </div>
 
-        {/* Trust Indicators - Enhanced */}
-        <div className="bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/20 rounded-3xl p-8 md:p-12 shadow-elegant border border-primary/20">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/20 text-primary rounded-2xl mb-6 animate-pulse">
-              <Star className="h-8 w-8" />
-            </div>
-            <h3 className="text-3xl md:text-4xl font-playfair font-bold text-foreground mb-4">
-              {t('Why Choose Holibayt')}
-            </h3>
-            <p className="text-lg text-muted-foreground font-inter max-w-2xl mx-auto">
-              {t('WhyChooseDesc')}
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary text-primary-foreground rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <Shield className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Security Guaranteed')}</h4>
-              <p className="text-muted-foreground font-inter">{t('SecurityDesc')}</p>
-              <div className="mt-4 text-primary font-semibold font-inter text-sm">{t('Verified Label')}</div>
-            </div>
-            
-            <div className="group text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-accent text-accent-foreground rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <Star className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Premium Quality')}</h4>
-              <p className="text-muted-foreground font-inter">{t('QualityDesc')}</p>
-              <div className="mt-4 text-accent font-semibold font-inter text-sm">{t('Rating Label')}</div>
-            </div>
-            
-            <div className="group text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm hover:bg-white/80 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-foreground text-background rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                <Clock className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-playfair font-bold text-foreground mb-3">{t('Support 247')}</h4>
-              <p className="text-muted-foreground font-inter">{t('SupportDesc')}</p>
-              <div className="mt-4 text-foreground font-semibold font-inter text-sm">{t('Response Time Label')}</div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
