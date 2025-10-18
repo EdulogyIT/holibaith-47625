@@ -62,7 +62,7 @@ const Messages = () => {
             sender_id,
             created_at
           ),
-          sender_profile:profiles!conversations_recipient_id_fkey(name)
+          user_profile:profiles!conversations_user_id_fkey(name, avatar_url)
         `)
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
@@ -342,7 +342,7 @@ const Messages = () => {
                 </Button>
                 <div className="flex-1">
                   <div className="font-semibold">
-                    {conversations.find(c => c.id === selectedConversation)?.sender_profile?.name || 'Support Team'}
+                    Support Team
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {conversations.find(c => c.id === selectedConversation)?.subject || 'Property Inquiry'}
@@ -454,7 +454,7 @@ const Messages = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold truncate">
-                          {conversation.sender_profile?.name || 'Support Team'}
+                          Support Team
                         </div>
                         <div className="text-sm text-muted-foreground truncate">
                           {conversation.subject || 'Property Inquiry'}

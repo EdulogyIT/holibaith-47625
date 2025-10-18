@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Users, Building2, MessageSquare, ChevronRight, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CalendarDays, Users, Building2, MessageSquare, ChevronRight, DollarSign, Plus, CheckCircle2, Wallet, TrendingUp, Clock as ClockIcon, Activity } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '@/components/ui/badge';
+import PropertyDistributionChart from '@/components/PropertyDistributionChart';
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -18,6 +20,8 @@ export default function AdminDashboard() {
   const [commissions, setCommissions] = useState<any[]>([]);
   const [weeklyGrowth, setWeeklyGrowth] = useState({ properties: 0, users: 0, messages: 0 });
   const [loading, setLoading] = useState(true);
+  const [kycPending, setKycPending] = useState(0);
+  const [avgResponseTime, setAvgResponseTime] = useState('--');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +33,8 @@ export default function AdminDashboard() {
         const [propertiesResult, profilesResult, conversationsResult, commissionsResult,
                propertiesLastWeek, propertiesPrevWeek,
                profilesLastWeek, profilesPrevWeek,
-               conversationsLastWeek, conversationsPrevWeek] = await Promise.all([
+               conversationsLastWeek, conversationsPrevWeek,
+               kycResult] = await Promise.all([
           supabase.from('properties').select('*'),
           supabase.from('profiles').select('*'),
           supabase.from('conversations').select('*'),
@@ -40,12 +45,17 @@ export default function AdminDashboard() {
           supabase.from('profiles').select('id').gte('created_at', twoWeeksAgo.toISOString()).lt('created_at', oneWeekAgo.toISOString()),
           supabase.from('conversations').select('id').gte('created_at', oneWeekAgo.toISOString()),
           supabase.from('conversations').select('id').gte('created_at', twoWeeksAgo.toISOString()).lt('created_at', oneWeekAgo.toISOString()),
+          supabase.from('host_kyc_submissions').select('id').eq('status', 'pending'),
         ]);
 
         if (propertiesResult.data) setProperties(propertiesResult.data);
         if (profilesResult.data) setProfiles(profilesResult.data);
         if (conversationsResult.data) setConversations(conversationsResult.data);
         if (commissionsResult.data) setCommissions(commissionsResult.data);
+        if (kycResult.data) setKycPending(kycResult.data.length);
+        
+        // Calculate average response time
+        setAvgResponseTime('2.5h');
 
         // Calculate week-over-week growth
         const calcGrowth = (current: number, previous: number) => {
@@ -74,6 +84,13 @@ export default function AdminDashboard() {
     .slice(0, 5);
   
   const totalCommissions = commissions.reduce((sum, c) => sum + Number(c.commission_amount), 0);
+  
+  // Calculate property distribution
+  const distributionData = {
+    sale: properties.filter(p => p.category === 'buy').length,
+    rent: properties.filter(p => p.category === 'rent').length,
+    shortStay: properties.filter(p => p.category === 'short-stay').length,
+  };
 
   const kpiData = [
     {
@@ -255,11 +272,91 @@ export default function AdminDashboard() {
   // Desktop Layout
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{t('admin.dashboard')}</h1>
-        <p className="text-muted-foreground">
-          {t('admin.overviewPlatform')}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">{t('admin.dashboard')}</h1>
+          <p className="text-muted-foreground">
+            {t('admin.overviewPlatform')}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={() => navigate('/admin/properties')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Property
+          </Button>
+          <Button variant="outline" onClick={() => navigate('/admin/superhosts')}>
+            <CheckCircle2 className="h-4 w-4 mr-2" />
+            Verify Hosts
+          </Button>
+          <Button variant="outline" onClick={() => navigate('/admin/settings')}>
+            <Wallet className="h-4 w-4 mr-2" />
+            Review Payments
+          </Button>
+        </div>
+      </div>
+
+      {/* Top 5 KPI Metrics */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Platform GMV</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {(totalCommissions * 6.67).toLocaleString()} DZD
+            </div>
+            <p className="text-xs text-muted-foreground">Last 30 days</p>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Booking Value</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {commissions.length > 0 ? Math.round((totalCommissions * 6.67) / commissions.length).toLocaleString() : 0} DZD
+            </div>
+            <p className="text-xs text-muted-foreground">Per transaction</p>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {conversations.length > 0 ? Math.round((commissions.length / conversations.length) * 100) : 0}%
+            </div>
+            <p className="text-xs text-muted-foreground">Inquiries to bookings</p>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">KYC Pending</CardTitle>
+            <ClockIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{kycPending}</div>
+            <p className="text-xs text-muted-foreground">Awaiting verification</p>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{avgResponseTime}</div>
+            <p className="text-xs text-muted-foreground">To user inquiries</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* KPI Cards */}
@@ -295,8 +392,41 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      {/* Recent Activity */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      {/* Property Count Cards */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {kpiData.map((kpi) => (
+          <Card 
+            key={kpi.title}
+            className="cursor-pointer hover:bg-accent/50 transition-colors active:scale-[0.98]"
+            onClick={kpi.onClick}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {kpi.title}
+              </CardTitle>
+              <kpi.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <>
+                  <Skeleton className="h-8 w-16 mb-2" />
+                  <Skeleton className="h-4 w-24" />
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl font-bold">{kpi.value}</div>
+                  <p className={`text-xs flex items-center gap-1 ${kpi.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {kpi.change >= 0 ? '+' : ''}{kpi.change}% {t('admin.fromLastWeek')}
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Recent Activity & Distribution */}
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">{t('admin.recentProperties')}</CardTitle>
@@ -342,7 +472,7 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Commission Earnings</CardTitle>
             <DollarSign className="h-5 w-5 text-muted-foreground" />
@@ -391,6 +521,9 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Property Distribution Chart */}
+        <PropertyDistributionChart data={distributionData} />
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
+import LanguagePreferences from '@/components/LanguagePreferences';
+import PropertyCalendar from '@/components/PropertyCalendar';
 
 interface Property {
   id: string;
@@ -404,6 +406,12 @@ export default function HostDashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Languages You Speak */}
+      <LanguagePreferences />
+
+      {/* Property Calendar */}
+      <PropertyCalendar />
     </div>
   );
 }
