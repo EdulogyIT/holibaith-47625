@@ -343,6 +343,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     checkInDate: 'Date d\'Arrivée',
     checkOutDate: 'Date de Départ',
     numberOfGuests: 'Nombre d\'Invités',
+    
+    // Services Section - Three Ways
+    'Three Ways To Live In Algeria': 'Trois Façons de Vivre en Algérie',
+    'Buy Title': 'Acheter',
+    'Buy Subtitle': 'Trouvez Votre Maison de Rêve',
+    'Buy Description': 'Explorez des propriétés vérifiées avec des visites virtuelles et un support juridique complet',
+    'Rent Title': 'Louer',
+    'Rent Subtitle': 'Louez en Toute Confiance',
+    'Rent Description': 'Contrats sécurisés et équipe dédiée pour une expérience de location sans souci',
+    'Stay Title': 'Court Séjour',
+    'Stay Subtitle': 'Séjournez Confortablement',
+    'Stay Description': 'Réservation instantanée avec des hôtes vérifiés et des expériences locales authentiques',
+    
+    // Services Features
+    'Buy_feat_Verified': 'Propriétés Vérifiées',
+    'Buy_feat_VirtualTour': 'Visite Virtuelle',
+    'Buy_feat_Legal': 'Support Juridique',
+    'Buy_feat_Financing': 'Options de Financement',
+    'Rent_feat_PaymentGuarantee': 'Garantie de Paiement',
+    'Rent_feat_SecureContracts': 'Contrats Sécurisés',
+    'Rent_feat_DedicatedTeam': 'Équipe Dédiée',
+    'Rent_feat_DigitalInspection': 'Inspection Numérique',
+    'Stay_feat_InstantBooking': 'Réservation Instantanée',
+    'Stay_feat_VerifiedHosts': 'Hôtes Vérifiés',
+    'Stay_feat_TravelInsurance': 'Assurance Voyage',
+    'Stay_feat_LocalExperiences': 'Expériences Locales',
+    
+    // Quick Access Section
+    howCanWeHelp: 'Comment Pouvons-Nous Vous Aider?',
+    buyPropertyTitle: 'Acheter une Propriété',
+    buyPropertySubtitle: 'Investissez dans votre futur',
+    buyPropertyDesc: 'Trouvez la propriété parfaite pour votre famille avec notre expertise',
+    rentPropertyTitle: 'Louer une Propriété',
+    rentPropertySubtitle: 'Trouvez votre chez-vous idéal',
+    rentPropertyDesc: 'Découvrez des locations de qualité qui correspondent à votre style de vie',
+    shortStayTitle2: 'Court Séjour',
+    shortStaySubtitle: 'Séjours mémorables',
+    shortStayDesc2: 'Réservez des hébergements uniques pour vos vacances en Algérie',
   },
   EN: {
     // Navigation
@@ -665,6 +703,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     checkInDate: 'Check-in Date',
     checkOutDate: 'Check-out Date',
     numberOfGuests: 'Number of Guests',
+    
+    // Services Section - Three Ways
+    'Three Ways To Live In Algeria': 'Three Ways To Live In Algeria',
+    'Buy Title': 'Buy',
+    'Buy Subtitle': 'Find Your Dream Home',
+    'Buy Description': 'Explore verified properties with virtual tours and comprehensive legal support',
+    'Rent Title': 'Rent',
+    'Rent Subtitle': 'Rent with Confidence',
+    'Rent Description': 'Secure contracts and dedicated team for a worry-free rental experience',
+    'Stay Title': 'Short Stay',
+    'Stay Subtitle': 'Stay Comfortably',
+    'Stay Description': 'Instant booking with verified hosts and authentic local experiences',
+    
+    // Services Features
+    'Buy_feat_Verified': 'Verified Properties',
+    'Buy_feat_VirtualTour': 'Virtual Tour',
+    'Buy_feat_Legal': 'Legal Support',
+    'Buy_feat_Financing': 'Financing Options',
+    'Rent_feat_PaymentGuarantee': 'Payment Guarantee',
+    'Rent_feat_SecureContracts': 'Secure Contracts',
+    'Rent_feat_DedicatedTeam': 'Dedicated Team',
+    'Rent_feat_DigitalInspection': 'Digital Inspection',
+    'Stay_feat_InstantBooking': 'Instant Booking',
+    'Stay_feat_VerifiedHosts': 'Verified Hosts',
+    'Stay_feat_TravelInsurance': 'Travel Insurance',
+    'Stay_feat_LocalExperiences': 'Local Experiences',
+    
+    // Quick Access Section
+    howCanWeHelp: 'How Can We Help?',
+    buyPropertyTitle: 'Buy a Property',
+    buyPropertySubtitle: 'Invest in your future',
+    buyPropertyDesc: 'Find the perfect property for your family with our expert guidance',
+    rentPropertyTitle: 'Rent a Property',
+    rentPropertySubtitle: 'Find your ideal home',
+    rentPropertyDesc: 'Discover quality rentals that match your lifestyle and budget',
+    shortStayTitle2: 'Short Stay',
+    shortStaySubtitle: 'Memorable stays',
+    shortStayDesc2: 'Book unique accommodations for your vacation in Algeria',
   },
   AR: {
     // Navigation
@@ -987,6 +1063,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     checkInDate: 'تاريخ تسجيل الوصول',
     checkOutDate: 'تاريخ تسجيل المغادرة',
     numberOfGuests: 'عدد الضيوف',
+    
+    // Services Section - Three Ways
+    'Three Ways To Live In Algeria': 'ثلاث طرق للعيش في الجزائر',
+    'Buy Title': 'شراء',
+    'Buy Subtitle': 'اعثر على منزل أحلامك',
+    'Buy Description': 'استكشف العقارات الموثقة مع جولات افتراضية ودعم قانوني شامل',
+    'Rent Title': 'إيجار',
+    'Rent Subtitle': 'استأجر بثقة',
+    'Rent Description': 'عقود آمنة وفريق متخصص لتجربة إيجار خالية من القلق',
+    'Stay Title': 'إقامة قصيرة',
+    'Stay Subtitle': 'أقم بشكل مريح',
+    'Stay Description': 'حجز فوري مع مضيفين موثقين وتجارب محلية أصيلة',
+    
+    // Services Features
+    'Buy_feat_Verified': 'عقارات موثقة',
+    'Buy_feat_VirtualTour': 'جولة افتراضية',
+    'Buy_feat_Legal': 'دعم قانوني',
+    'Buy_feat_Financing': 'خيارات التمويل',
+    'Rent_feat_PaymentGuarantee': 'ضمان الدفع',
+    'Rent_feat_SecureContracts': 'عقود آمنة',
+    'Rent_feat_DedicatedTeam': 'فريق متخصص',
+    'Rent_feat_DigitalInspection': 'فحص رقمي',
+    'Stay_feat_InstantBooking': 'حجز فوري',
+    'Stay_feat_VerifiedHosts': 'مضيفون موثقون',
+    'Stay_feat_TravelInsurance': 'تأمين السفر',
+    'Stay_feat_LocalExperiences': 'تجارب محلية',
+    
+    // Quick Access Section
+    howCanWeHelp: 'كيف يمكننا مساعدتك؟',
+    buyPropertyTitle: 'شراء عقار',
+    buyPropertySubtitle: 'استثمر في مستقبلك',
+    buyPropertyDesc: 'اعثر على العقار المثالي لعائلتك مع إرشاداتنا الخبيرة',
+    rentPropertyTitle: 'استئجار عقار',
+    rentPropertySubtitle: 'اعثر على منزلك المثالي',
+    rentPropertyDesc: 'اكتشف إيجارات عالية الجودة تتناسب مع نمط حياتك وميزانيتك',
+    shortStayTitle2: 'إقامة قصيرة',
+    shortStaySubtitle: 'إقامات لا تُنسى',
+    shortStayDesc2: 'احجز أماكن إقامة فريدة لعطلتك في الجزائر',
   },
 };
 
