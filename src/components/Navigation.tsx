@@ -69,6 +69,9 @@ const Navigation = () => {
             <Link to="/short-stay" className="text-foreground hover:text-primary transition-colors font-inter">
               {t('shortStay')}
             </Link>
+            <Link to="/holibayt-pay" className="text-foreground hover:text-primary transition-colors font-inter">
+              Holibayt Pay
+            </Link>
             <Link to="/about" className="text-foreground hover:text-primary transition-colors font-inter">
               {t('about')}
             </Link>

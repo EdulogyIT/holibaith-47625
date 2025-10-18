@@ -53,6 +53,7 @@ import BookingCancel from "./pages/BookingCancel";
 
 import TrendingAreas from "./pages/TrendingAreas";
 import FeaturedListingsPage from "./pages/FeaturedListingsPage";
+import HolibaytPay from "./pages/HolibaytPay";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ const App = () => (
               <Route path="/cities" element={<Cities />} />
               <Route path="/trending-areas" element={<TrendingAreas />} />
               <Route path="/featured-listings" element={<FeaturedListingsPage />} />
+              <Route path="/holibayt-pay" element={<HolibaytPay />} />
               <Route path="/publish-property" element={
                 <ProtectedRoute requireAuth>
                   <PublishProperty />

@@ -39,6 +39,12 @@ const MobileFooter = () => {
         <div className="text-center text-sm text-muted-foreground pb-2">
           © 2024 Holibayt • Algeria's trusted real estate platform
         </div>
+        <div className="flex justify-center gap-4 text-xs text-muted-foreground pb-2">
+          <a href="/about" className="hover:text-primary">About</a>
+          <a href="/holibayt-pay" className="hover:text-primary">Holibayt Pay</a>
+          <a href="/blog" className="hover:text-primary">Blog</a>
+          <a href="/contact-advisor" className="hover:text-primary">Contact</a>
+        </div>
       </div>
     </footer>
   );

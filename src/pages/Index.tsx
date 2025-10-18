@@ -1,17 +1,26 @@
 import SEOHead from "@/components/SEOHead";
 import MobileHeader from "@/components/MobileHeader";
 import MobileHeroSearch from "@/components/MobileHeroSearch";
+import HeroSection from "@/components/HeroSection";
 import TrendingAreas from "@/components/TrendingAreas";
 import FeaturedListings from "@/components/FeaturedListings";
 import LatestInsights from "@/components/LatestInsights";
 import ThreeWaysSection from "@/components/ThreeWaysSection";
+import ServicesSection from "@/components/ServicesSection";
+import QuickAccessSection from "@/components/QuickAccessSection";
 import ExploreCities from "@/components/ExploreCities";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import StatsSection from "@/components/StatsSection";
+import NewsletterSection from "@/components/NewsletterSection";
 import ExpertGuidanceCTA from "@/components/ExpertGuidanceCTA";
 import MobileFooter from "@/components/MobileFooter";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FloatingMapButton from "@/components/FloatingMapButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
+  const isMobile = useIsMobile();
+  
   const schema = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
@@ -46,24 +55,32 @@ const Index = () => {
       />
       <MobileHeader />
       <main className="pb-20">
-        {/* Background Image Hero - Reduced Height and Moved Up */}
-        <div 
-          className="h-[360px] relative bg-cover bg-center pt-14"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
-          }}
-        >
-          <div className="absolute inset-0 flex flex-col justify-end pb-4">
-            <MobileHeroSearch />
+        {/* Conditional Hero - Desktop uses HeroSection, Mobile uses MobileHeroSearch */}
+        {!isMobile ? (
+          <HeroSection />
+        ) : (
+          <div 
+            className="h-[360px] relative bg-cover bg-center pt-14"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
+            }}
+          >
+            <div className="absolute inset-0 flex flex-col justify-end pb-4">
+              <MobileHeroSearch />
+            </div>
           </div>
-        </div>
+        )}
 
+        <StatsSection />
         <TrendingAreas />
         <FeaturedListings />
+        <ServicesSection />
+        <QuickAccessSection />
         <LatestInsights />
-        <ThreeWaysSection />
         <ExploreCities />
+        <TestimonialsSection />
         <ExpertGuidanceCTA />
+        <NewsletterSection />
         <MobileFooter />
       </main>
       <MobileBottomNav />
