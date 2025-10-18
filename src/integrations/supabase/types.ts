@@ -14,6 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_audit_log_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_analytics: {
+        Row: {
+          blog_post_id: string | null
+          created_at: string | null
+          id: string
+          user_id: string | null
+          view_duration_seconds: number | null
+        }
+        Insert: {
+          blog_post_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+          view_duration_seconds?: number | null
+        }
+        Update: {
+          blog_post_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+          view_duration_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_analytics_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_analytics_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_comments: {
         Row: {
           blog_post_id: string
@@ -76,6 +156,11 @@ export type Database = {
           created_at: string | null
           id: string
           image_url: string | null
+          like_count: number | null
+          meta_description: string | null
+          meta_title: string | null
+          scheduled_publish_at: string | null
+          slug: string | null
           status: string | null
           title: string
           title_ar: string | null
@@ -83,6 +168,7 @@ export type Database = {
           title_fr: string | null
           updated_at: string | null
           user_id: string
+          view_count: number | null
         }
         Insert: {
           author_name: string
@@ -100,6 +186,11 @@ export type Database = {
           created_at?: string | null
           id?: string
           image_url?: string | null
+          like_count?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          scheduled_publish_at?: string | null
+          slug?: string | null
           status?: string | null
           title: string
           title_ar?: string | null
@@ -107,6 +198,7 @@ export type Database = {
           title_fr?: string | null
           updated_at?: string | null
           user_id: string
+          view_count?: number | null
         }
         Update: {
           author_name?: string
@@ -124,6 +216,11 @@ export type Database = {
           created_at?: string | null
           id?: string
           image_url?: string | null
+          like_count?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          scheduled_publish_at?: string | null
+          slug?: string | null
           status?: string | null
           title?: string
           title_ar?: string | null
@@ -131,19 +228,24 @@ export type Database = {
           title_fr?: string | null
           updated_at?: string | null
           user_id?: string
+          view_count?: number | null
         }
         Relationships: []
       }
       bookings: {
         Row: {
+          auto_release_scheduled: boolean | null
           booking_fee: number
           cancelled_at: string | null
           check_in_date: string
           check_out_date: string
           contact_phone: string | null
           created_at: string
+          escrow_release_eligible_at: string | null
+          guest_confirmed_completion: boolean | null
           guests_count: number
           id: string
+          keys_received_at: string | null
           payment_id: string | null
           property_id: string
           refund_amount: number | null
@@ -155,14 +257,18 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          auto_release_scheduled?: boolean | null
           booking_fee?: number
           cancelled_at?: string | null
           check_in_date: string
           check_out_date: string
           contact_phone?: string | null
           created_at?: string
+          escrow_release_eligible_at?: string | null
+          guest_confirmed_completion?: boolean | null
           guests_count?: number
           id?: string
+          keys_received_at?: string | null
           payment_id?: string | null
           property_id: string
           refund_amount?: number | null
@@ -174,14 +280,18 @@ export type Database = {
           user_id: string
         }
         Update: {
+          auto_release_scheduled?: boolean | null
           booking_fee?: number
           cancelled_at?: string | null
           check_in_date?: string
           check_out_date?: string
           contact_phone?: string | null
           created_at?: string
+          escrow_release_eligible_at?: string | null
+          guest_confirmed_completion?: boolean | null
           guests_count?: number
           id?: string
+          keys_received_at?: string | null
           payment_id?: string | null
           property_id?: string
           refund_amount?: number | null
@@ -209,11 +319,51 @@ export type Database = {
           },
         ]
       }
+      client_reviews: {
+        Row: {
+          approved: boolean | null
+          avatar_initials: string | null
+          client_location: string | null
+          client_name: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          rating: number | null
+          review_text: string
+          updated_at: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          avatar_initials?: string | null
+          client_location?: string | null
+          client_name: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          rating?: number | null
+          review_text: string
+          updated_at?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          avatar_initials?: string | null
+          client_location?: string | null
+          client_name?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          rating?: number | null
+          review_text?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       commission_transactions: {
         Row: {
           commission_amount: number
           commission_rate: number
           created_at: string | null
+          escrow_released_at: string | null
           host_amount: number
           host_user_id: string
           id: string
@@ -228,6 +378,7 @@ export type Database = {
           commission_amount: number
           commission_rate: number
           created_at?: string | null
+          escrow_released_at?: string | null
           host_amount: number
           host_user_id: string
           id?: string
@@ -242,6 +393,7 @@ export type Database = {
           commission_amount?: number
           commission_rate?: number
           created_at?: string | null
+          escrow_released_at?: string | null
           host_amount?: number
           host_user_id?: string
           id?: string
@@ -319,6 +471,7 @@ export type Database = {
       conversations: {
         Row: {
           admin_id: string | null
+          assigned_admin_id: string | null
           conversation_type: string | null
           created_at: string
           id: string
@@ -332,6 +485,7 @@ export type Database = {
         }
         Insert: {
           admin_id?: string | null
+          assigned_admin_id?: string | null
           conversation_type?: string | null
           created_at?: string
           id?: string
@@ -345,6 +499,7 @@ export type Database = {
         }
         Update: {
           admin_id?: string | null
+          assigned_admin_id?: string | null
           conversation_type?: string | null
           created_at?: string
           id?: string
@@ -358,10 +513,166 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "conversations_assigned_admin_id_fkey"
+            columns: ["assigned_admin_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "conversations_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_templates: {
+        Row: {
+          created_at: string | null
+          html_content: string
+          id: string
+          subject: string
+          template_key: string
+          text_content: string | null
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          html_content: string
+          id?: string
+          subject: string
+          template_key: string
+          text_content?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          html_content?: string
+          id?: string
+          subject?: string
+          template_key?: string
+          text_content?: string | null
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      host_kyc_submissions: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          address_line_1: string
+          address_line_2: string | null
+          address_proof_type: string | null
+          address_proof_url: string | null
+          admin_notes: string | null
+          bank_name: string | null
+          bio: string | null
+          city: string
+          country: string
+          created_at: string | null
+          date_of_birth: string
+          full_name: string
+          hosting_experience: string | null
+          iban: string | null
+          id: string
+          id_document_url: string | null
+          id_expiry_date: string
+          id_number: string
+          id_type: string
+          languages_spoken: string[] | null
+          nationality: string
+          phone_number: string
+          postal_code: string
+          rejection_reason: string | null
+          state: string
+          status: string
+          swift_code: string | null
+          updated_at: string | null
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          address_line_1: string
+          address_line_2?: string | null
+          address_proof_type?: string | null
+          address_proof_url?: string | null
+          admin_notes?: string | null
+          bank_name?: string | null
+          bio?: string | null
+          city: string
+          country?: string
+          created_at?: string | null
+          date_of_birth: string
+          full_name: string
+          hosting_experience?: string | null
+          iban?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_expiry_date: string
+          id_number: string
+          id_type: string
+          languages_spoken?: string[] | null
+          nationality: string
+          phone_number: string
+          postal_code: string
+          rejection_reason?: string | null
+          state: string
+          status?: string
+          swift_code?: string | null
+          updated_at?: string | null
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          address_line_1?: string
+          address_line_2?: string | null
+          address_proof_type?: string | null
+          address_proof_url?: string | null
+          admin_notes?: string | null
+          bank_name?: string | null
+          bio?: string | null
+          city?: string
+          country?: string
+          created_at?: string | null
+          date_of_birth?: string
+          full_name?: string
+          hosting_experience?: string | null
+          iban?: string | null
+          id?: string
+          id_document_url?: string | null
+          id_expiry_date?: string
+          id_number?: string
+          id_type?: string
+          languages_spoken?: string[] | null
+          nationality?: string
+          phone_number?: string
+          postal_code?: string
+          rejection_reason?: string | null
+          state?: string
+          status?: string
+          swift_code?: string | null
+          updated_at?: string | null
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "host_kyc_submissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -425,6 +736,167 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      lawyer_requests: {
+        Row: {
+          admin_notes: string | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string | null
+          id: string
+          lawyer_id: string
+          message: string | null
+          property_id: string | null
+          request_type: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          id?: string
+          lawyer_id: string
+          message?: string | null
+          property_id?: string | null
+          request_type: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          id?: string
+          lawyer_id?: string
+          message?: string | null
+          property_id?: string | null
+          request_type?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lawyer_requests_lawyer_id_fkey"
+            columns: ["lawyer_id"]
+            isOneToOne: false
+            referencedRelation: "lawyers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lawyer_requests_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lawyers: {
+        Row: {
+          address: string | null
+          availability_status: string | null
+          bio: string | null
+          city: string
+          consultation_fee: number | null
+          created_at: string | null
+          email: string
+          experience_years: number | null
+          full_name: string
+          id: string
+          license_number: string
+          phone: string
+          profile_photo_url: string | null
+          specializations: string[]
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+          verified_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          availability_status?: string | null
+          bio?: string | null
+          city: string
+          consultation_fee?: number | null
+          created_at?: string | null
+          email: string
+          experience_years?: number | null
+          full_name: string
+          id?: string
+          license_number: string
+          phone: string
+          profile_photo_url?: string | null
+          specializations?: string[]
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          availability_status?: string | null
+          bio?: string | null
+          city?: string
+          consultation_fee?: number | null
+          created_at?: string | null
+          email?: string
+          experience_years?: number | null
+          full_name?: string
+          id?: string
+          license_number?: string
+          phone?: string
+          profile_photo_url?: string | null
+          specializations?: string[]
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      message_templates: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -509,6 +981,9 @@ export type Database = {
           created_at: string
           currency: string
           description: string | null
+          escrow_release_reason: string | null
+          escrow_released_at: string | null
+          escrow_status: string | null
           id: string
           metadata: Json | null
           payment_type: Database["public"]["Enums"]["payment_type"]
@@ -526,6 +1001,9 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          escrow_release_reason?: string | null
+          escrow_released_at?: string | null
+          escrow_status?: string | null
           id?: string
           metadata?: Json | null
           payment_type: Database["public"]["Enums"]["payment_type"]
@@ -543,6 +1021,9 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          escrow_release_reason?: string | null
+          escrow_released_at?: string | null
+          escrow_status?: string | null
           id?: string
           metadata?: Json | null
           payment_type?: Database["public"]["Enums"]["payment_type"]
@@ -598,11 +1079,23 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          id_verified: boolean | null
           is_superhost: boolean | null
+          kyc_approved_at: string | null
+          kyc_submitted_at: string | null
+          languages_spoken: string[] | null
+          last_login_at: string | null
           name: string | null
+          ownership_verified: boolean | null
+          response_rate: number | null
           role: Database["public"]["Enums"]["app_role"]
+          spoken_languages: Json | null
           total_reviews: number | null
+          transaction_count: number | null
+          trust_score: number | null
           updated_at: string
+          verification_date: string | null
+          verified_host: boolean | null
         }
         Insert: {
           avatar_url?: string | null
@@ -610,11 +1103,23 @@ export type Database = {
           created_at?: string
           email: string
           id: string
+          id_verified?: boolean | null
           is_superhost?: boolean | null
+          kyc_approved_at?: string | null
+          kyc_submitted_at?: string | null
+          languages_spoken?: string[] | null
+          last_login_at?: string | null
           name?: string | null
+          ownership_verified?: boolean | null
+          response_rate?: number | null
           role?: Database["public"]["Enums"]["app_role"]
+          spoken_languages?: Json | null
           total_reviews?: number | null
+          transaction_count?: number | null
+          trust_score?: number | null
           updated_at?: string
+          verification_date?: string | null
+          verified_host?: boolean | null
         }
         Update: {
           avatar_url?: string | null
@@ -622,124 +1127,402 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          id_verified?: boolean | null
           is_superhost?: boolean | null
+          kyc_approved_at?: string | null
+          kyc_submitted_at?: string | null
+          languages_spoken?: string[] | null
+          last_login_at?: string | null
           name?: string | null
+          ownership_verified?: boolean | null
+          response_rate?: number | null
           role?: Database["public"]["Enums"]["app_role"]
+          spoken_languages?: Json | null
           total_reviews?: number | null
+          transaction_count?: number | null
+          trust_score?: number | null
           updated_at?: string
+          verification_date?: string | null
+          verified_host?: boolean | null
         }
         Relationships: []
       }
       properties: {
         Row: {
           area: string
+          availability_status: string | null
           bathrooms: string | null
           bedrooms: string | null
+          cancellation_policy: string | null
           category: string
           check_in_time: string | null
           check_out_time: string | null
           city: string
           commission_rate: number | null
+          condition: string | null
           contact_email: string
           contact_name: string
           contact_phone: string
+          contract_digitally_available: boolean | null
           created_at: string
           description: string | null
           district: string | null
           features: Json | null
+          fees: Json | null
+          financing_available: boolean | null
           floor_number: string | null
           full_address: string | null
+          furnished: boolean | null
+          holibayt_pay_eligible: boolean | null
+          house_rules: Json | null
           id: string
           images: string[] | null
           is_featured: boolean | null
           is_hot_deal: boolean | null
           is_new: boolean | null
           is_verified: boolean | null
+          last_verified_at: string | null
+          latitude: number | null
           location: string
+          longitude: number | null
+          minimum_rental_term: string | null
+          new_build: boolean | null
+          occupancy_available_from: string | null
           owner_account_id: string | null
           pets_allowed: boolean | null
           price: string
           price_currency: string | null
           price_type: string
           property_type: string
+          safety_features: Json | null
           status: string | null
           title: string
           updated_at: string
           user_id: string
+          verification_notes: string | null
+          verified: boolean | null
+          view_count: number | null
         }
         Insert: {
           area: string
+          availability_status?: string | null
           bathrooms?: string | null
           bedrooms?: string | null
+          cancellation_policy?: string | null
           category: string
           check_in_time?: string | null
           check_out_time?: string | null
           city: string
           commission_rate?: number | null
+          condition?: string | null
           contact_email: string
           contact_name: string
           contact_phone: string
+          contract_digitally_available?: boolean | null
           created_at?: string
           description?: string | null
           district?: string | null
           features?: Json | null
+          fees?: Json | null
+          financing_available?: boolean | null
           floor_number?: string | null
           full_address?: string | null
+          furnished?: boolean | null
+          holibayt_pay_eligible?: boolean | null
+          house_rules?: Json | null
           id?: string
           images?: string[] | null
           is_featured?: boolean | null
           is_hot_deal?: boolean | null
           is_new?: boolean | null
           is_verified?: boolean | null
+          last_verified_at?: string | null
+          latitude?: number | null
           location: string
+          longitude?: number | null
+          minimum_rental_term?: string | null
+          new_build?: boolean | null
+          occupancy_available_from?: string | null
           owner_account_id?: string | null
           pets_allowed?: boolean | null
           price: string
           price_currency?: string | null
           price_type: string
           property_type: string
+          safety_features?: Json | null
           status?: string | null
           title: string
           updated_at?: string
           user_id: string
+          verification_notes?: string | null
+          verified?: boolean | null
+          view_count?: number | null
         }
         Update: {
           area?: string
+          availability_status?: string | null
           bathrooms?: string | null
           bedrooms?: string | null
+          cancellation_policy?: string | null
           category?: string
           check_in_time?: string | null
           check_out_time?: string | null
           city?: string
           commission_rate?: number | null
+          condition?: string | null
           contact_email?: string
           contact_name?: string
           contact_phone?: string
+          contract_digitally_available?: boolean | null
           created_at?: string
           description?: string | null
           district?: string | null
           features?: Json | null
+          fees?: Json | null
+          financing_available?: boolean | null
           floor_number?: string | null
           full_address?: string | null
+          furnished?: boolean | null
+          holibayt_pay_eligible?: boolean | null
+          house_rules?: Json | null
           id?: string
           images?: string[] | null
           is_featured?: boolean | null
           is_hot_deal?: boolean | null
           is_new?: boolean | null
           is_verified?: boolean | null
+          last_verified_at?: string | null
+          latitude?: number | null
           location?: string
+          longitude?: number | null
+          minimum_rental_term?: string | null
+          new_build?: boolean | null
+          occupancy_available_from?: string | null
           owner_account_id?: string | null
           pets_allowed?: boolean | null
           price?: string
           price_currency?: string | null
           price_type?: string
           property_type?: string
+          safety_features?: Json | null
           status?: string | null
           title?: string
           updated_at?: string
           user_id?: string
+          verification_notes?: string | null
+          verified?: boolean | null
+          view_count?: number | null
         }
         Relationships: []
+      }
+      property_views: {
+        Row: {
+          created_at: string | null
+          id: string
+          property_id: string | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          property_id?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          property_id?: string | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_views_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rent_payments: {
+        Row: {
+          agreement_id: string
+          amount: number
+          created_at: string | null
+          currency: string | null
+          due_date: string
+          host_user_id: string
+          id: string
+          late_fee: number | null
+          notes: string | null
+          payment_date: string | null
+          payment_intent_id: string | null
+          status: string | null
+          stripe_payment_id: string | null
+          tenant_user_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          agreement_id: string
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          due_date: string
+          host_user_id: string
+          id?: string
+          late_fee?: number | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_intent_id?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          tenant_user_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          agreement_id?: string
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          due_date?: string
+          host_user_id?: string
+          id?: string
+          late_fee?: number | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_intent_id?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          tenant_user_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rent_payments_agreement_id_fkey"
+            columns: ["agreement_id"]
+            isOneToOne: false
+            referencedRelation: "rental_agreements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rental_agreements: {
+        Row: {
+          agreement_pdf_url: string | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          created_at: string | null
+          currency: string
+          deposit_amount: number
+          end_date: string | null
+          expires_at: string | null
+          host_signature_data: Json | null
+          host_signed_at: string | null
+          host_user_id: string
+          house_rules: Json | null
+          id: string
+          lease_duration_months: number
+          monthly_rent: number
+          payment_terms: Json | null
+          property_id: string
+          renewal_terms: Json | null
+          renewed_from: string | null
+          special_clauses: string | null
+          start_date: string
+          status: string
+          template_version: string | null
+          tenant_signature_data: Json | null
+          tenant_signed_at: string | null
+          tenant_user_id: string | null
+          updated_at: string | null
+          utilities_included: Json | null
+        }
+        Insert: {
+          agreement_pdf_url?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          currency?: string
+          deposit_amount: number
+          end_date?: string | null
+          expires_at?: string | null
+          host_signature_data?: Json | null
+          host_signed_at?: string | null
+          host_user_id: string
+          house_rules?: Json | null
+          id?: string
+          lease_duration_months: number
+          monthly_rent: number
+          payment_terms?: Json | null
+          property_id: string
+          renewal_terms?: Json | null
+          renewed_from?: string | null
+          special_clauses?: string | null
+          start_date: string
+          status?: string
+          template_version?: string | null
+          tenant_signature_data?: Json | null
+          tenant_signed_at?: string | null
+          tenant_user_id?: string | null
+          updated_at?: string | null
+          utilities_included?: Json | null
+        }
+        Update: {
+          agreement_pdf_url?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          currency?: string
+          deposit_amount?: number
+          end_date?: string | null
+          expires_at?: string | null
+          host_signature_data?: Json | null
+          host_signed_at?: string | null
+          host_user_id?: string
+          house_rules?: Json | null
+          id?: string
+          lease_duration_months?: number
+          monthly_rent?: number
+          payment_terms?: Json | null
+          property_id?: string
+          renewal_terms?: Json | null
+          renewed_from?: string | null
+          special_clauses?: string | null
+          start_date?: string
+          status?: string
+          template_version?: string | null
+          tenant_signature_data?: Json | null
+          tenant_signed_at?: string | null
+          tenant_user_id?: string | null
+          updated_at?: string | null
+          utilities_included?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rental_agreements_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rental_agreements_renewed_from_fkey"
+            columns: ["renewed_from"]
+            isOneToOne: false
+            referencedRelation: "rental_agreements"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -807,6 +1590,36 @@ export type Database = {
           },
         ]
       }
+      saved_searches: {
+        Row: {
+          created_at: string | null
+          filters: Json | null
+          id: string
+          notification_enabled: boolean | null
+          search_type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          notification_enabled?: boolean | null
+          search_type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          filters?: Json | null
+          id?: string
+          notification_enabled?: boolean | null
+          search_type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -849,6 +1662,54 @@ export type Database = {
         }
         Relationships: []
       }
+      zone_statistics: {
+        Row: {
+          average_price_buy: number | null
+          average_price_rent: number | null
+          average_price_short_stay: number | null
+          city: string
+          commute_to_downtown_minutes: number | null
+          created_at: string | null
+          id: string
+          monthly_views: number | null
+          popularity_index: number | null
+          safety_score: number | null
+          updated_at: string | null
+          verified_percentage: number | null
+          zone_name: string
+        }
+        Insert: {
+          average_price_buy?: number | null
+          average_price_rent?: number | null
+          average_price_short_stay?: number | null
+          city: string
+          commute_to_downtown_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          monthly_views?: number | null
+          popularity_index?: number | null
+          safety_score?: number | null
+          updated_at?: string | null
+          verified_percentage?: number | null
+          zone_name: string
+        }
+        Update: {
+          average_price_buy?: number | null
+          average_price_rent?: number | null
+          average_price_short_stay?: number | null
+          city?: string
+          commute_to_downtown_minutes?: number | null
+          created_at?: string | null
+          id?: string
+          monthly_views?: number | null
+          popularity_index?: number | null
+          safety_score?: number | null
+          updated_at?: string | null
+          verified_percentage?: number | null
+          zone_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -856,6 +1717,26 @@ export type Database = {
     Functions: {
       auto_complete_bookings: {
         Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      calculate_avg_booking_value: {
+        Args: { days_back?: number }
+        Returns: number
+      }
+      calculate_avg_response_time: {
+        Args: Record<PropertyKey, never>
+        Returns: unknown
+      }
+      calculate_conversion_rate: {
+        Args: { days_back?: number }
+        Returns: number
+      }
+      calculate_end_date: {
+        Args: { duration: number; start_d: string }
+        Returns: string
+      }
+      calculate_platform_gmv: {
+        Args: { days_back?: number }
         Returns: number
       }
       get_booking_property_category: {

@@ -67,9 +67,10 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error updating exchange rates:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(
       JSON.stringify({
-        error: error.message,
+        error: errorMessage,
         timestamp: new Date().toISOString()
       }),
       {

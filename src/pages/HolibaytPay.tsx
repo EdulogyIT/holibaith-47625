@@ -3,39 +3,51 @@ import MobileHeader from "@/components/MobileHeader";
 import MobileFooter from "@/components/MobileFooter";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Shield, Clock, CheckCircle, Lock, ArrowRight, CreditCard, Users, TrendingUp } from "lucide-react";
+import { Shield, CheckCircle, CreditCard, Clock, ArrowRight, Lock, Users, TrendingUp, MapPin, Wallet, UserCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const HolibaytPay = () => {
-  const { t } = useLanguage();
+  const { t, currentLang: language } = useLanguage();
   const navigate = useNavigate();
 
   const features = [
     {
+      icon: MapPin,
+      title: language === 'FR' ? 'Conçu pour l\'Algérie' : language === 'AR' ? 'مصمم للجزائر' : 'Designed for Algeria',
+      description: language === 'FR' 
+        ? 'Système de paiement localisé spécialement conçu pour le marché immobilier algérien.' 
+        : language === 'AR' 
+        ? 'نظام دفع محلي مصمم خصيصًا لسوق العقارات الجزائري.'
+        : 'Localized payment system specifically designed for the Algerian real estate market.'
+    },
+    {
+      icon: Wallet,
+      title: language === 'FR' ? 'Support Multi-Devises' : language === 'AR' ? 'دعم متعدد العملات' : 'Multi-Currency Support',
+      description: language === 'FR'
+        ? 'Payez en DZD, EUR ou USD avec conversion automatique des taux de change.'
+        : language === 'AR'
+        ? 'ادفع بالدينار الجزائري أو اليورو أو الدولار الأمريكي مع تحويل تلقائي لأسعار الصرف.'
+        : 'Pay in DZD, EUR, or USD with automatic exchange rate conversion.'
+    },
+    {
+      icon: UserCheck,
+      title: language === 'FR' ? 'Utilisateurs Vérifiés Uniquement' : language === 'AR' ? 'مستخدمون موثقون فقط' : 'Verified Users Only',
+      description: language === 'FR'
+        ? 'Tous les utilisateurs passent par une vérification d\'identité avant de pouvoir effectuer des transactions.'
+        : language === 'AR'
+        ? 'جميع المستخدمين يخضعون للتحقق من الهوية قبل إجراء المعاملات.'
+        : 'All users undergo identity verification before they can transact.'
+    },
+    {
       icon: Shield,
-      title: "Payment Protection",
-      description: "Your payment is held securely in escrow until check-in is confirmed",
-      color: "bg-primary"
-    },
-    {
-      icon: Lock,
-      title: "Secure Transactions",
-      description: "Bank-level encryption with Stripe Connect integration",
-      color: "bg-accent"
-    },
-    {
-      icon: Clock,
-      title: "Automatic Release",
-      description: "Funds released 24h after check-out for short stays",
-      color: "bg-foreground"
-    },
-    {
-      icon: CheckCircle,
-      title: "Verified Hosts",
-      description: "All hosts undergo KYC verification before receiving payments",
-      color: "bg-primary"
+      title: language === 'FR' ? 'Protection par Dépôt Fiduciaire' : language === 'AR' ? 'حماية الضمان' : 'Escrow-Protected',
+      description: language === 'FR'
+        ? 'Fonds détenus en sécurité jusqu\'à confirmation de la remise des clés ou de la signature du contrat.'
+        : language === 'AR'
+        ? 'الأموال محفوظة بأمان حتى تأكيد تسليم المفاتيح أو توقيع العقد.'
+        : 'Funds held securely until keys handover or contract signing is confirmed.'
     }
   ];
 
@@ -114,7 +126,7 @@ const HolibaytPay = () => {
                 return (
                   <Card key={index} className="group hover:shadow-elegant transition-all duration-300 hover:-translate-y-2">
                     <CardContent className="p-6 text-center">
-                      <div className={`inline-flex items-center justify-center w-16 h-16 ${feature.color} text-primary-foreground rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
                         <IconComponent className="h-8 w-8" />
                       </div>
                       <h3 className="text-lg font-playfair font-semibold text-foreground mb-2">

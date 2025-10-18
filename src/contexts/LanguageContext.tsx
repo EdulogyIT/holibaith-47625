@@ -212,6 +212,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     emailPlaceholder: "Votre adresse email",
     subscribe: "S'abonner",
     
+    // Stats section
+    propertiesListed: "Propriétés Listées",
+    activeUsers: "Utilisateurs Actifs",
+    successfulTransactions: "Transactions Réussies",
+    satisfactionRate: "Taux de Satisfaction",
+    
+    // Holibayt Pay features
+    holibaytPayProtected: "Transaction Sécurisée par Holibayt Pay™",
+    fundsInEscrow: "Fonds détenus en dépôt fiduciaire jusqu'à confirmation de la transaction",
+    estimatedClosingTime: "Temps de Clôture Estimé",
+    instantConfirmation: "Confirmation instantanée",
+    businessDays: "3-5 jours ouvrables",
+    legalReview: "Demander une Révision Légale",
+    legalReviewDesc: "Obtenez une assistance juridique experte tout au long du processus",
+    chatSecurely: "Discuter en Sécurité",
+    bookViewingSafely: "Réserver une Visite en Toute Sécurité",
+    allCommunicationWarning: "Toutes les communications et paiements doivent passer par Holibayt Pay™ pour rester protégés.",
+    rentSafetyNotice: "Avis de Sécurité de Location",
+    totalProtected: "Total Protégé",
+    
+    // Language preferences
+    languagesYouSpeak: "Langues que Vous Parlez",
+    saveLanguages: "Enregistrer les Langues",
+    languagesSaved: "Langues enregistrées avec succès!",
+    errorSavingLanguages: "Échec de l'enregistrement des langues",
+    
+    // Admin dashboard
+    verifyHosts: "Vérifier les Hôtes",
+    reviewPayments: "Examiner les Paiements",
+    platformGMV: "GMV de la Plateforme",
+    avgBookingValue: "Valeur Moy. de Réservation",
+    conversionRate: "Taux de Conversion",
+    verificationPending: "Vérification en Attente",
+    avgResponseTime: "Temps de Réponse Moy.",
+    propertyDistribution: "Distribution des Propriétés",
+    addNewProperty: "Ajouter une Nouvelle Propriété",
+    learnMore: "En Savoir Plus",
+    
     // Contact
     contactUs: "Contactez-nous",
     fullName: "Nom Complet",
@@ -289,12 +327,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     // Testimonials Section
     testimonialsTitle: 'Ce Que Disent Nos Clients',
     testimonialsSubtitle: 'Expériences réelles de vraies personnes qui ont trouvé leur propriété parfaite',
-    
-    // Stats Section
-    propertiesListed: 'Propriétés Listées',
-    happyClients: 'Clients Satisfaits',
-    verifiedHosts: 'Hôtes Vérifiés',
-    averageRating: 'Note Moyenne',
     
     // Newsletter Section (already has some keys, adding more specific ones)
     newsletterCTA: 'Restez Informé des Dernières Opportunités',
@@ -502,6 +534,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     emailPlaceholder: "Your email address",
     subscribe: "Subscribe",
     
+    // Stats section
+    propertiesListed: "Properties Listed",
+    activeUsers: "Active Users",
+    successfulTransactions: "Successful Transactions",
+    satisfactionRate: "Satisfaction Rate",
+    
+    // Holibayt Pay features
+    holibaytPayProtected: "Transaction Secured by Holibayt Pay™",
+    fundsInEscrow: "Funds held in escrow until transaction confirmation",
+    estimatedClosingTime: "Estimated Time to Close",
+    instantConfirmation: "Instant confirmation",
+    businessDays: "3-5 business days",
+    legalReview: "Request Legal Review",
+    legalReviewDesc: "Get expert legal assistance throughout the process",
+    chatSecurely: "Chat Securely",
+    bookViewingSafely: "Book Viewing Safely",
+    allCommunicationWarning: "All communication and payments must go through Holibayt Pay™ to remain protected.",
+    rentSafetyNotice: "Rent Safety Notice",
+    totalProtected: "Total Protected",
+    
+    // Language preferences
+    languagesYouSpeak: "Languages You Speak",
+    saveLanguages: "Save Languages",
+    languagesSaved: "Languages saved successfully!",
+    errorSavingLanguages: "Failed to save languages",
+    
+    // Admin dashboard
+    verifyHosts: "Verify Hosts",
+    reviewPayments: "Review Payments",
+    platformGMV: "Platform GMV",
+    avgBookingValue: "Avg Booking Value",
+    conversionRate: "Conversion Rate",
+    verificationPending: "Verification Pending",
+    avgResponseTime: "Avg Response Time",
+    propertyDistribution: "Property Distribution",
+    addNewProperty: "Add New Property",
+    learnMore: "Learn More",
+    
     // Contact
     contactUs: "Contact Us",
     fullName: "Full Name",
@@ -579,12 +649,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     // Testimonials Section
     testimonialsTitle: 'What Our Clients Say',
     testimonialsSubtitle: 'Real experiences from real people who found their perfect property',
-    
-    // Stats Section
-    propertiesListed: 'Properties Listed',
-    happyClients: 'Happy Clients',
-    verifiedHosts: 'Verified Hosts',
-    averageRating: 'Average Rating',
     
     // Newsletter Section
     newsletterCTA: 'Stay Updated with Latest Opportunities',
@@ -792,6 +856,44 @@ const allTranslations: Record<Language, Record<string, string>> = {
     emailPlaceholder: "عنوان بريدك الإلكتروني",
     subscribe: "اشترك",
     
+    // Stats section
+    propertiesListed: "العقارات المدرجة",
+    activeUsers: "المستخدمون النشطون",
+    successfulTransactions: "المعاملات الناجحة",
+    satisfactionRate: "معدل الرضا",
+    
+    // Holibayt Pay features
+    holibaytPayProtected: "المعاملة محمية بواسطة Holibayt Pay™",
+    fundsInEscrow: "الأموال محفوظة في الضمان حتى تأكيد المعاملة",
+    estimatedClosingTime: "الوقت المتوقع للإغلاق",
+    instantConfirmation: "تأكيد فوري",
+    businessDays: "3-5 أيام عمل",
+    legalReview: "طلب مراجعة قانونية",
+    legalReviewDesc: "احصل على مساعدة قانونية متخصصة طوال العملية",
+    chatSecurely: "دردشة آمنة",
+    bookViewingSafely: "حجز معاينة بأمان",
+    allCommunicationWarning: "يجب أن تتم جميع الاتصالات والدفعات عبر Holibayt Pay™ للبقاء محميًا.",
+    rentSafetyNotice: "إشعار أمان الإيجار",
+    totalProtected: "الإجمالي المحمي",
+    
+    // Language preferences
+    languagesYouSpeak: "اللغات التي تتحدثها",
+    saveLanguages: "حفظ اللغات",
+    languagesSaved: "تم حفظ اللغات بنجاح!",
+    errorSavingLanguages: "فشل في حفظ اللغات",
+    
+    // Admin dashboard
+    verifyHosts: "التحقق من المضيفين",
+    reviewPayments: "مراجعة المدفوعات",
+    platformGMV: "إجمالي قيمة البضائع",
+    avgBookingValue: "متوسط قيمة الحجز",
+    conversionRate: "معدل التحويل",
+    verificationPending: "التحقق قيد الانتظار",
+    avgResponseTime: "متوسط وقت الاستجابة",
+    propertyDistribution: "توزيع العقارات",
+    addNewProperty: "إضافة عقار جديد",
+    learnMore: "اعرف المزيد",
+    
     // Contact
     contactUs: "اتصل بنا",
     fullName: "الاسم الكامل",
@@ -869,12 +971,6 @@ const allTranslations: Record<Language, Record<string, string>> = {
     // Testimonials Section
     testimonialsTitle: 'ماذا يقول عملاؤنا',
     testimonialsSubtitle: 'تجارب حقيقية من أشخاص حقيقيين وجدوا عقارهم المثالي',
-    
-    // Stats Section
-    propertiesListed: 'عقارات مدرجة',
-    happyClients: 'عملاء سعداء',
-    verifiedHosts: 'مضيفون موثقون',
-    averageRating: 'التقييم المتوسط',
     
     // Newsletter Section
     newsletterCTA: 'ابق على اطلاع بأحدث الفرص',
