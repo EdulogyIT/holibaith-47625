@@ -216,14 +216,14 @@ const Navigation = () => {
                   <Link to="/short-stay" className="text-foreground hover:text-primary transition-colors font-inter font-medium" onClick={() => setIsMenuOpen(false)}>
                     {t('shortStay')}
                   </Link>
+                  <Link to="/holibayt-pay" className="text-foreground hover:text-primary transition-colors font-inter font-medium" onClick={() => setIsMenuOpen(false)}>
+                    Holibayt Pay
+                  </Link>
                   <Link to="/about" className="text-foreground hover:text-primary transition-colors font-inter font-medium" onClick={() => setIsMenuOpen(false)}>
                     {t('about')}
                   </Link>
               <Link to="/blog" className="text-foreground hover:text-primary transition-colors font-inter font-medium" onClick={() => setIsMenuOpen(false)}>
                 {t('blog')}
-              </Link>
-              <Link to="/holibayt-pay" className="text-foreground hover:text-primary transition-colors font-inter font-medium" onClick={() => setIsMenuOpen(false)}>
-                Holibayt Pay
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-border">
                 {/* Currency Selector Mobile */}
