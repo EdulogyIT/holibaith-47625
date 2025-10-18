@@ -10,7 +10,6 @@ import ServicesSection from "@/components/ServicesSection";
 import QuickAccessSection from "@/components/QuickAccessSection";
 import ExploreCities from "@/components/ExploreCities";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import StatsSection from "@/components/StatsSection";
 import NewsletterSection from "@/components/NewsletterSection";
 import ExpertGuidanceCTA from "@/components/ExpertGuidanceCTA";
 import MobileFooter from "@/components/MobileFooter";
@@ -71,7 +70,6 @@ const Index = () => {
           </div>
         )}
 
-        <StatsSection />
         <TrendingAreas />
         <FeaturedListings />
         <ServicesSection />
