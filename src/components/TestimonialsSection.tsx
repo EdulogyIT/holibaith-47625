@@ -59,54 +59,54 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/5">
+    <section className="py-4 bg-gradient-to-br from-primary/5 to-accent/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/20 text-primary rounded-2xl mb-6">
-            <Quote className="h-8 w-8" />
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-2xl mb-4">
+            <Quote className="h-6 w-6" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-playfair font-bold text-foreground mb-4">
+          <h2 className="text-xl font-playfair font-bold text-foreground mb-2">
             {t('testimonialsTitle')}
           </h2>
-          <p className="text-xl text-muted-foreground font-inter font-light max-w-3xl mx-auto">
+          <p className="text-sm text-muted-foreground font-inter font-light max-w-3xl mx-auto">
             {t('testimonialsSubtitle')}
           </p>
         </div>
 
         {/* Testimonials Horizontal Scroll */}
         <div className="relative -mx-4 px-4">
-          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
             {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="flex-shrink-0 w-[280px] md:w-[340px] group hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 bg-card snap-start">
-                <CardContent className="p-6">
+              <Card key={testimonial.id} className="flex-shrink-0 w-64 group hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 bg-card snap-start">
+                <CardContent className="p-3">
                   {/* Quote Icon */}
-                  <div className="mb-4">
-                    <Quote className="h-10 w-10 text-primary/30" />
+                  <div className="mb-2">
+                    <Quote className="h-8 w-8 text-primary/30" />
                   </div>
 
                   {/* Rating */}
-                  <div className="flex gap-1 mb-4">
+                  <div className="flex gap-1 mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                     ))}
                   </div>
 
                   {/* Review Text */}
-                  <p className="text-muted-foreground font-inter text-sm leading-relaxed mb-6 line-clamp-4">
+                  <p className="text-muted-foreground font-inter text-xs leading-relaxed mb-4 line-clamp-4">
                     {testimonial.review_text}
                   </p>
 
                   {/* Client Info */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-border">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-primary text-primary-foreground rounded-full font-semibold text-sm">
+                  <div className="flex items-center gap-2 pt-3 border-t border-border">
+                    <div className="flex items-center justify-center w-10 h-10 bg-gradient-primary text-primary-foreground rounded-full font-semibold text-xs">
                       {testimonial.avatar_initials}
                     </div>
                     <div>
-                      <h4 className="font-inter font-semibold text-foreground">
+                      <h4 className="font-inter font-semibold text-foreground text-sm">
                         {testimonial.client_name}
                       </h4>
-                      <p className="text-sm text-muted-foreground font-inter">
+                      <p className="text-xs text-muted-foreground font-inter">
                         {testimonial.client_location}
                       </p>
                     </div>

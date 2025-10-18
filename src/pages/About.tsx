@@ -46,9 +46,9 @@ const About = () => {
           
           <div className={cn("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10")}>
             <div className="text-center">
-              <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-5xl")}>{t('aboutBeitik')}</h1>
+              <h1 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-3xl mb-4" : "text-5xl")}>About Holibayt</h1>
               <p className={cn("text-muted-foreground max-w-3xl mx-auto font-inter", isMobile ? "text-base" : "text-xl")}>
-                {t('AboutDescription')}
+                Your trusted partner in Algeria's real estate market, connecting property seekers with their perfect homes through secure, transparent, and innovative solutions.
               </p>
             </div>
           </div>
@@ -79,22 +79,22 @@ const About = () => {
 
           {/* Company Story */}
           <div className={cn("bg-muted/50 rounded-lg", isMobile ? "p-4 mb-8" : "p-8 mb-16")}>
-            <h2 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-2xl mb-4" : "text-3xl")}>{t('ourStory')}</h2>
+            <h2 className={cn("font-bold text-foreground mb-6 font-playfair", isMobile ? "text-2xl mb-4" : "text-3xl")}>Our Story</h2>
             <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-2")}>
               <div>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('StoryParagraph1')}
+                  Founded with a vision to transform Algeria's real estate landscape, Holibayt emerged from a simple observation: finding and securing property transactions needed to be easier, safer, and more transparent. We set out to bridge the gap between property seekers and homeowners through technology and trust.
                 </p>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('StoryParagraph2')}
+                  Starting in Algiers, we quickly expanded across Algeria's major cities - from Oran to Constantine, Annaba to Tlemcen. Our platform has become synonymous with reliable property transactions, serving thousands of families in their journey to find their perfect home.
                 </p>
               </div>
               <div>
                 <p className={cn("text-muted-foreground mb-4 font-inter", isMobile && "text-sm")}>
-                  {t('StoryParagraph3')}
+                  What sets us apart is our commitment to security and transparency. We pioneered Holibayt Pay, an escrow-based payment system that protects both buyers and sellers, ensuring every transaction is secure and worry-free. Our verification processes and legal review services add layers of confidence to every deal.
                 </p>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('StoryParagraph4')}
+                  Today, Holibayt stands as Algeria's leading real estate platform, trusted by over 50,000 clients and listing 10,000+ properties. But we're more than numbers - we're about real people finding real homes, creating memories, and building futures.
                 </p>
               </div>
             </div>
@@ -104,33 +104,33 @@ const About = () => {
           <div className={cn("grid gap-8", isMobile ? "grid-cols-1 gap-4" : "md:grid-cols-3")}>
             <Card>
               <CardHeader className={cn(isMobile && "p-4")}>
-                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourMission')}</CardTitle>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>Our Mission</CardTitle>
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('MissionDescription')}
+                  To revolutionize Algeria's real estate market by providing a secure, transparent, and user-friendly platform that connects property seekers with their ideal homes. We're committed to eliminating the stress and uncertainty traditionally associated with property transactions through innovative technology and unwavering dedication to customer protection.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className={cn(isMobile && "p-4")}>
-                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourVision')}</CardTitle>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>Our Vision</CardTitle>
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('VisionDescription')}
+                  To become the most trusted name in Algerian real estate, setting the standard for secure property transactions across North Africa. We envision a future where every property transaction is protected, every listing is verified, and every client feels confident in their real estate journey. Our goal is to make property ownership accessible and stress-free for all Algerians.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className={cn(isMobile && "p-4")}>
-                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>{t('ourValues')}</CardTitle>
+                <CardTitle className={cn("font-playfair", isMobile ? "text-lg" : "text-xl")}>Our Values</CardTitle>
               </CardHeader>
               <CardContent className={cn(isMobile && "p-4 pt-0")}>
                 <p className={cn("text-muted-foreground font-inter", isMobile && "text-sm")}>
-                  {t('ValuesDescription')}
+                  Trust, transparency, and innovation drive everything we do. We believe in protecting our clients through secure escrow payments, verifying every listing for authenticity, providing exceptional customer service, and continuously improving our platform. We're committed to integrity in every transaction and building lasting relationships with the communities we serve.
                 </p>
               </CardContent>
             </Card>

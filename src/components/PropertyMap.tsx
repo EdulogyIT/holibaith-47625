@@ -17,15 +17,44 @@ const PropertyMap = ({ location, address }: PropertyMapProps) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-          {/* Placeholder for map - in a real app, this would be integrated with Google Maps or similar */}
-          <div className="text-center space-y-2 p-4">
-            <MapPin className="w-8 h-8 text-primary mx-auto" />
-            <p className="font-inter font-medium text-foreground">{location}</p>
-            {address && (
-              <p className="font-inter text-sm text-muted-foreground">{address}</p>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+          {/* Map-like Background with Grid */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background/30 to-accent/5" />
+          
+          {/* Street Grid Pattern */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-1/4 left-0 right-0 h-px bg-muted-foreground/30" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-muted-foreground/30" />
+            <div className="absolute top-3/4 left-0 right-0 h-px bg-muted-foreground/30" />
+            <div className="absolute left-1/4 top-0 bottom-0 w-px bg-muted-foreground/30" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-muted-foreground/30" />
+            <div className="absolute left-3/4 top-0 bottom-0 w-px bg-muted-foreground/30" />
           </div>
+
+          {/* Central Location Marker with "You're Here" */}
+          <div className="relative z-10 flex flex-col items-center">
+            {/* Pulsing Circle Animation */}
+            <div className="absolute w-24 h-24 rounded-full bg-primary/20 animate-ping" />
+            <div className="absolute w-16 h-16 rounded-full bg-primary/30 animate-pulse" />
+            
+            {/* Main Marker Pin */}
+            <div className="relative">
+              <MapPin className="w-12 h-12 text-primary fill-primary/20 drop-shadow-lg animate-bounce" style={{ animationDuration: '2s' }} />
+            </div>
+            
+            {/* "You're Here" Badge */}
+            <div className="mt-2 bg-primary text-primary-foreground px-4 py-2 rounded-full shadow-elegant font-inter font-semibold text-sm">
+              You're here
+            </div>
+            
+            {/* Location Name */}
+            <p className="mt-3 font-inter font-medium text-foreground text-center">{location}</p>
+            {address && (
+              <p className="font-inter text-sm text-muted-foreground text-center mt-1">{address}</p>
+            )}
+          </div>
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
         </div>
         
         <div className="space-y-2">
