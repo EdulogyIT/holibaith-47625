@@ -61,38 +61,38 @@ const QuickAccessSection = () => {
             return (
               <Card 
                 key={action.id} 
-                className={`group relative overflow-hidden border-2 ${action.borderColor} hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 cursor-pointer bg-card/50 backdrop-blur-sm flex flex-col h-full min-h-[420px] w-[280px] md:w-[320px] flex-shrink-0 snap-center`}
+                className={`group relative overflow-hidden border-2 ${action.borderColor} hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 cursor-pointer bg-card/50 backdrop-blur-sm flex flex-col h-full min-h-[320px] w-[260px] md:w-[300px] flex-shrink-0 snap-center`}
               >
-                <CardContent className="p-6 md:p-8 text-center flex flex-col h-full">
+                <CardContent className="p-4 md:p-6 text-center flex flex-col h-full">
                   {/* Icon Container */}
-                  <div className="relative mb-6">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 ${action.color} text-primary-foreground rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
+                  <div className="relative mb-4">
+                    <div className={`inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 ${action.color} text-primary-foreground rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <IconComponent className="h-6 w-6 md:h-7 md:w-7" />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="mb-6 flex-grow">
-                    <h3 className="text-xl md:text-2xl font-playfair font-semibold text-foreground mb-2">
+                  <div className="mb-4 flex-grow">
+                    <h3 className="text-lg md:text-xl font-playfair font-semibold text-foreground mb-1">
                       {action.title}
                     </h3>
-                    <p className="text-sm text-primary font-inter font-medium mb-3">
+                    <p className="text-xs text-primary font-inter font-medium mb-2">
                       {action.subtitle}
                     </p>
-                    <p className="text-muted-foreground font-inter text-sm md:text-base leading-relaxed">
+                    <p className="text-muted-foreground font-inter text-xs md:text-sm leading-relaxed">
                       {action.description}
                     </p>
                   </div>
 
                   {/* CTA Button - Footer */}
-                  <div className="mt-auto pt-6">
+                  <div className="mt-auto pt-4">
                     <Button 
                       variant="ghost" 
-                      className={`group/btn font-inter font-medium text-foreground hover:text-primary-foreground ${action.hoverColor} transition-all duration-300 h-11 px-5 text-sm whitespace-nowrap w-full`}
+                      className={`group/btn font-inter font-medium text-foreground hover:text-primary-foreground ${action.hoverColor} transition-all duration-300 h-9 px-4 text-xs whitespace-nowrap w-full`}
                       onClick={() => navigate(`/${action.id === 'stay' ? 'short-stay' : action.id}`)}
                     >
                       <span className="whitespace-nowrap">{t('start')}</span>
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform duration-300" />
                     </Button>
                   </div>
                 </CardContent>

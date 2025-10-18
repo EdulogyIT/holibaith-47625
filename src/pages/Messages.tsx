@@ -21,6 +21,10 @@ interface Conversation {
   admin_id: string | null;
   last_read_at: string | null;
   messages?: any[];
+  recipient_id?: string;
+  sender_profile?: {
+    name: string;
+  };
 }
 
 interface Message {
@@ -57,7 +61,8 @@ const Messages = () => {
             id,
             sender_id,
             created_at
-          )
+          ),
+          sender_profile:profiles!conversations_recipient_id_fkey(name)
         `)
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
@@ -337,9 +342,11 @@ const Messages = () => {
                 </Button>
                 <div className="flex-1">
                   <div className="font-semibold">
-                    {conversations.find(c => c.id === selectedConversation)?.subject || 'Support Team'}
+                    {conversations.find(c => c.id === selectedConversation)?.sender_profile?.name || 'Support Team'}
                   </div>
-                  <div className="text-xs text-muted-foreground">Online</div>
+                  <div className="text-xs text-muted-foreground">
+                    {conversations.find(c => c.id === selectedConversation)?.subject || 'Property Inquiry'}
+                  </div>
                 </div>
               </div>
 
@@ -447,10 +454,10 @@ const Messages = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold truncate">
-                          {conversation.subject || 'Support Request'}
+                          {conversation.sender_profile?.name || 'Support Team'}
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Tap to open chat
+                        <div className="text-sm text-muted-foreground truncate">
+                          {conversation.subject || 'Property Inquiry'}
                         </div>
                       </div>
                       <div className="text-xs text-muted-foreground">

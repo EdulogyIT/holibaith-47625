@@ -86,9 +86,9 @@ const ServicesSection = () => {
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <Card key={service.id} className="group relative overflow-hidden border-border/50 hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 bg-card flex flex-col h-full min-h-[420px] w-[280px] md:w-[320px] flex-shrink-0 snap-center">
+              <Card key={service.id} className="group relative overflow-hidden border-border/50 hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 bg-card flex flex-col h-full min-h-[320px] w-[260px] md:w-[300px] flex-shrink-0 snap-center">
                 {/* Hero Image */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-36 overflow-hidden">
                   <img 
                     src={service.image} 
                     alt={`${service.title} - ${service.subtitle}`}
@@ -102,16 +102,16 @@ const ServicesSection = () => {
                   </div>
                 </div>
 
-                <CardContent className="relative p-6 flex flex-col flex-grow">
+                <CardContent className="relative p-4 flex flex-col flex-grow">
                   {/* Content */}
-                  <div className="mb-6">
-                    <h3 className="text-xl font-playfair font-semibold text-foreground mb-1">{service.title}</h3>
-                    <p className="text-primary font-inter font-medium text-sm mb-3">{service.subtitle}</p>
-                    <p className="text-muted-foreground font-inter text-sm leading-relaxed">{service.description}</p>
+                  <div className="mb-4">
+                    <h3 className="text-lg font-playfair font-semibold text-foreground mb-1">{service.title}</h3>
+                    <p className="text-primary font-inter font-medium text-xs mb-2">{service.subtitle}</p>
+                    <p className="text-muted-foreground font-inter text-xs leading-relaxed">{service.description}</p>
                   </div>
 
                   {/* Features */}
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <div className="grid grid-cols-2 gap-2">
                       {service.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-2">
@@ -123,9 +123,9 @@ const ServicesSection = () => {
                   </div>
 
                   {/* CTA Button - Anchored to bottom */}
-                  <div className="mt-auto pt-6">
+                  <div className="mt-auto pt-4">
                     <Button 
-                      className="h-11 px-5 text-sm font-medium whitespace-nowrap w-full bg-gradient-primary font-inter group-hover:shadow-elegant transition-all duration-300"
+                      className="h-9 px-4 text-xs font-medium whitespace-nowrap w-full bg-gradient-primary font-inter group-hover:shadow-elegant transition-all duration-300"
                       onClick={() => navigate(`/${service.id === 'stay' ? 'short-stay' : service.id}`)}
                     >
                       <span className="whitespace-nowrap">{t(service.ctaKey)}</span>
