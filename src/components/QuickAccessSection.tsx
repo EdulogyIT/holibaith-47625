@@ -107,7 +107,7 @@ const QuickAccessSection = () => {
         {/* Bottom CTA */}
         <div className="text-center mt-12">
           <p className="text-muted-foreground font-inter text-2xl md:text-3xl mb-6 font-semibold animate-pulse">
-            {t('needHelp')}
+            {t('Need Help Making Choices?')}
           </p>
           <Button 
             variant="outline" 
@@ -115,7 +115,7 @@ const QuickAccessSection = () => {
             className="font-inter font-medium text-lg px-8 py-3 hover:shadow-elegant hover:scale-105 transition-all duration-300 border-2 border-primary hover:bg-primary hover:text-primary-foreground"
             onClick={() => navigate('/contact-advisor')}
           >
-            {t('speakToAdvisor')}
+            {t('Speak To Advisor')}
           </Button>
         </div>
       </div>
