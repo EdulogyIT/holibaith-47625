@@ -432,7 +432,7 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
               {formData.category === 'short-stay' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="checkInTime">{t('checkInTime')}</Label>
+                    <Label htmlFor="checkInTime">Check-in Time</Label>
                     <Input
                       id="checkInTime"
                       type="time"
@@ -441,7 +441,7 @@ const PublishPropertySteps = ({ onSubmit, isSubmitting = false }: PublishPropert
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="checkOutTime">{t('checkOutTime')}</Label>
+                    <Label htmlFor="checkOutTime">Check-out Time</Label>
                     <Input
                       id="checkOutTime"
                       type="time"

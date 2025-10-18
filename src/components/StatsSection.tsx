@@ -8,25 +8,25 @@ const StatsSection = () => {
     {
       icon: Home,
       value: "10,000+",
-      label: "Properties Listed",
+      labelKey: "propertiesListed",
       color: "bg-primary"
     },
     {
       icon: Users,
       value: "50,000+",
-      label: "Happy Clients",
+      labelKey: "happyClients",
       color: "bg-accent"
     },
     {
       icon: Shield,
       value: "100%",
-      label: "Verified Hosts",
+      labelKey: "verifiedHosts",
       color: "bg-foreground"
     },
     {
       icon: TrendingUp,
       value: "4.8/5",
-      label: "Average Rating",
+      labelKey: "averageRating",
       color: "bg-primary"
     }
   ];
@@ -34,7 +34,8 @@ const StatsSection = () => {
   return (
     <section className="py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {/* Desktop: Grid Layout */}
+        <div className="hidden md:grid md:grid-cols-4 gap-8">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
@@ -46,11 +47,33 @@ const StatsSection = () => {
                   {stat.value}
                 </div>
                 <div className="text-sm md:text-base text-muted-foreground font-inter">
-                  {stat.label}
+                  {t(stat.labelKey)}
                 </div>
               </div>
             );
           })}
+        </div>
+        
+        {/* Mobile: Horizontal Scroll */}
+        <div className="md:hidden -mx-4 px-4">
+          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div key={index} className="flex-shrink-0 w-[200px] text-center group snap-start">
+                  <div className={`inline-flex items-center justify-center w-16 h-16 ${stat.color} text-primary-foreground rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                    <IconComponent className="h-8 w-8" />
+                  </div>
+                  <div className="text-3xl font-playfair font-bold text-foreground mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-muted-foreground font-inter">
+                    {t(stat.labelKey)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

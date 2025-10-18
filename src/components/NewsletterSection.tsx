@@ -16,8 +16,8 @@ const NewsletterSection = () => {
     
     if (!email || !email.includes('@')) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address",
+        title: t('subscriptionError'),
+        description: t('subscriptionError'),
         variant: "destructive"
       });
       return;
@@ -28,8 +28,8 @@ const NewsletterSection = () => {
     // Simulate subscription (implement actual API call here)
     setTimeout(() => {
       toast({
-        title: "Subscribed Successfully!",
-        description: "Thank you for subscribing to our newsletter"
+        title: t('subscriptionSuccess'),
+        description: t('newsletterDescription')
       });
       setEmail("");
       setLoading(false);
@@ -47,10 +47,10 @@ const NewsletterSection = () => {
 
           {/* Heading */}
           <h2 className="text-3xl md:text-4xl font-playfair font-bold text-white mb-4">
-            Stay Updated with Holibayt
+            {t('newsletterCTA')}
           </h2>
           <p className="text-lg text-white/90 font-inter font-light mb-8 max-w-2xl mx-auto">
-            Get the latest property listings, market insights, and exclusive deals delivered to your inbox
+            {t('newsletterSubtitle')}
           </p>
 
           {/* Subscribe Form */}
@@ -58,7 +58,7 @@ const NewsletterSection = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <Input
                 type="email"
-                placeholder="Enter your email address"
+                placeholder={t('emailPlaceholderNewsletter')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 h-12 bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:bg-white/20"
@@ -70,11 +70,9 @@ const NewsletterSection = () => {
                 disabled={loading}
                 className="bg-white text-primary hover:bg-white/90 transition-all duration-300 hover:shadow-lg h-12 px-8"
               >
-                {loading ? (
-                  "Subscribing..."
-                ) : (
+                {loading ? t('subscribing') : (
                   <>
-                    Subscribe <Send className="ml-2 h-4 w-4" />
+                    {t('subscribeNow')} <Send className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
@@ -83,7 +81,7 @@ const NewsletterSection = () => {
 
           {/* Privacy Note */}
           <p className="text-sm text-white/70 font-inter mt-4">
-            We respect your privacy. Unsubscribe at any time.
+            {t('privacyPolicy')}
           </p>
         </div>
       </div>

@@ -288,7 +288,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ property, trigger })
           {/* Booking Form */}
           <div className="space-y-4">
             <div>
-              <Label>Select Dates</Label>
+              <Label>Check-in & Check-out Dates</Label>
               <DateRangePicker
                 value={dateRange}
                 onChange={setDateRange}

@@ -285,6 +285,32 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'Acheter un bien',
     rentProperty: 'Louer un logement',
     shortStayProperty: 'Court séjour',
+    
+    // Testimonials Section
+    testimonialsTitle: 'Ce Que Disent Nos Clients',
+    testimonialsSubtitle: 'Expériences réelles de vraies personnes qui ont trouvé leur propriété parfaite',
+    
+    // Stats Section
+    propertiesListed: 'Propriétés Listées',
+    happyClients: 'Clients Satisfaits',
+    verifiedHosts: 'Hôtes Vérifiés',
+    averageRating: 'Note Moyenne',
+    
+    // Newsletter Section (already has some keys, adding more specific ones)
+    newsletterCTA: 'Restez Informé des Dernières Opportunités',
+    newsletterSubtitle: 'Recevez les meilleures offres immobilières directement dans votre boîte mail',
+    emailPlaceholderNewsletter: 'Entrez votre email',
+    subscribeNow: 'S\'abonner Maintenant',
+    subscribing: 'Inscription...',
+    subscriptionSuccess: 'Merci pour votre inscription!',
+    subscriptionError: 'Veuillez entrer une adresse email valide',
+    
+    // Check-in/Check-out (fixing camelCase)
+    checkInTime: 'Heure d\'Arrivée',
+    checkOutTime: 'Heure de Départ',
+    checkInDate: 'Date d\'Arrivée',
+    checkOutDate: 'Date de Départ',
+    numberOfGuests: 'Nombre d\'Invités',
   },
   EN: {
     // Navigation
@@ -549,6 +575,32 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'Buy property',
     rentProperty: 'Rent property',
     shortStayProperty: 'Short stay',
+    
+    // Testimonials Section
+    testimonialsTitle: 'What Our Clients Say',
+    testimonialsSubtitle: 'Real experiences from real people who found their perfect property',
+    
+    // Stats Section
+    propertiesListed: 'Properties Listed',
+    happyClients: 'Happy Clients',
+    verifiedHosts: 'Verified Hosts',
+    averageRating: 'Average Rating',
+    
+    // Newsletter Section
+    newsletterCTA: 'Stay Updated with Latest Opportunities',
+    newsletterSubtitle: 'Get the best real estate deals delivered straight to your inbox',
+    emailPlaceholderNewsletter: 'Enter your email',
+    subscribeNow: 'Subscribe Now',
+    subscribing: 'Subscribing...',
+    subscriptionSuccess: 'Thank you for subscribing!',
+    subscriptionError: 'Please enter a valid email address',
+    
+    // Check-in/Check-out (fixing camelCase)
+    checkInTime: 'Check-in Time',
+    checkOutTime: 'Check-out Time',
+    checkInDate: 'Check-in Date',
+    checkOutDate: 'Check-out Date',
+    numberOfGuests: 'Number of Guests',
   },
   AR: {
     // Navigation
@@ -813,6 +865,32 @@ const allTranslations: Record<Language, Record<string, string>> = {
     buyProperty: 'شراء عقار',
     rentProperty: 'استئجار عقار',
     shortStayProperty: 'إقامة قصيرة',
+    
+    // Testimonials Section
+    testimonialsTitle: 'ماذا يقول عملاؤنا',
+    testimonialsSubtitle: 'تجارب حقيقية من أشخاص حقيقيين وجدوا عقارهم المثالي',
+    
+    // Stats Section
+    propertiesListed: 'عقارات مدرجة',
+    happyClients: 'عملاء سعداء',
+    verifiedHosts: 'مضيفون موثقون',
+    averageRating: 'التقييم المتوسط',
+    
+    // Newsletter Section
+    newsletterCTA: 'ابق على اطلاع بأحدث الفرص',
+    newsletterSubtitle: 'احصل على أفضل عروض العقارات مباشرة في صندوق بريدك',
+    emailPlaceholderNewsletter: 'أدخل بريدك الإلكتروني',
+    subscribeNow: 'اشترك الآن',
+    subscribing: 'جاري الاشتراك...',
+    subscriptionSuccess: 'شكراً لاشتراكك!',
+    subscriptionError: 'يرجى إدخال عنوان بريد إلكتروني صالح',
+    
+    // Check-in/Check-out (fixing camelCase)
+    checkInTime: 'وقت تسجيل الوصول',
+    checkOutTime: 'وقت تسجيل المغادرة',
+    checkInDate: 'تاريخ تسجيل الوصول',
+    checkOutDate: 'تاريخ تسجيل المغادرة',
+    numberOfGuests: 'عدد الضيوف',
   },
 };
 
