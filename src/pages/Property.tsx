@@ -8,7 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Bed, Bath, Square, Phone, Mail, Calendar, User } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Phone, Mail, Calendar, User, MessageSquare, AlertTriangle } from "lucide-react";
+import HolibaytPayBadge from "@/components/HolibaytPayBadge";
+import NeighborhoodInsights from "@/components/NeighborhoodInsights";
+import ThingsToKnow from "@/components/ThingsToKnow";
+import HolibaytPayProtection from "@/components/HolibaytPayProtection";
+import CurrencySelector from "@/components/CurrencySelector";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -190,6 +195,11 @@ const Property = () => {
                     alt={`${property.title} ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
+                  {index === 0 && (
+                    <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                      1 / {property.images.length}
+                    </div>
+                  )}
                 </div>
               ))}
               {property.images.length > 5 && (
@@ -216,10 +226,14 @@ const Property = () => {
                     {t(property.property_type) || property.property_type}
                   </Badge>
                 </div>
-                <div className="flex items-center text-muted-foreground text-sm mb-3">
-                  <MapPin className="w-4 h-4 mr-1.5" />
-                  <span className="font-inter">{property.city}, {property.location}</span>
-                </div>
+              <div className="flex items-center text-muted-foreground text-sm mb-2">
+                <MapPin className="w-4 h-4 mr-1.5" />
+                <span className="font-inter">{property.city}, {property.location}</span>
+              </div>
+              
+              {property.category === 'short-stay' && (
+                <HolibaytPayBadge className="mb-2" />
+              )}
                 <div className="text-3xl font-bold text-primary font-playfair">
                   {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'EUR')}
                 </div>
@@ -342,6 +356,30 @@ const Property = () => {
                 />
               </div>
 
+              {/* Neighborhood Insights */}
+              {property.category === 'short-stay' && (
+                <NeighborhoodInsights 
+                  city={property.city}
+                  location={property.location}
+                />
+              )}
+
+              {/* Things to Know */}
+              {property.category === 'short-stay' && (
+                <ThingsToKnow 
+                  checkInTime={(property as any).check_in_time}
+                  checkOutTime={(property as any).check_out_time}
+                  houseRules={(property as any).house_rules}
+                  safetyFeatures={(property as any).safety_features}
+                  cancellationPolicy={(property as any).cancellation_policy}
+                />
+              )}
+
+              {/* Holibayt Pay Protection */}
+              {property.category === 'short-stay' && (
+                <HolibaytPayProtection />
+              )}
+
               {/* Meet Your Host */}
               {property.user_id && (
                 <div className="space-y-3">
@@ -361,54 +399,56 @@ const Property = () => {
                 />
               </div>
 
-              {/* Contact Owner */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold font-playfair flex items-center">
-                  <User className="w-5 h-5 mr-2" />
-                  {t('contactOwner')}
-                </h3>
-                {property.contact_name ? (
-                  <div className="space-y-3">
-                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
-                      <h4 className="font-semibold text-sm mb-2 font-inter">{property.contact_name}</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center text-xs text-muted-foreground font-inter">
-                          <Phone className="w-3.5 h-3.5 mr-2" />
-                          {property.contact_phone}
-                        </div>
-                        <div className="flex items-center text-xs text-muted-foreground font-inter">
-                          <Mail className="w-3.5 h-3.5 mr-2" />
-                          {property.contact_email}
+              {/* Contact Owner - Only for non-short-stay */}
+              {property.category !== 'short-stay' && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold font-playfair flex items-center">
+                    <User className="w-5 h-5 mr-2" />
+                    {t('contactOwner')}
+                  </h3>
+                  {property.contact_name ? (
+                    <div className="space-y-3">
+                      <div className="p-4 bg-muted/50 rounded-xl border border-border">
+                        <h4 className="font-semibold text-sm mb-2 font-inter">{property.contact_name}</h4>
+                        <div className="space-y-2">
+                          <div className="flex items-center text-xs text-muted-foreground font-inter">
+                            <Phone className="w-3.5 h-3.5 mr-2" />
+                            {property.contact_phone}
+                          </div>
+                          <div className="flex items-center text-xs text-muted-foreground font-inter">
+                            <Mail className="w-3.5 h-3.5 mr-2" />
+                            {property.contact_email}
+                          </div>
                         </div>
                       </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button size="lg" className="bg-gradient-primary hover:shadow-elegant font-inter">
+                          <Phone className="w-4 h-4 mr-1.5" />
+                          {t('callBtn')}
+                        </Button>
+                        <Button 
+                          size="lg"
+                          variant="outline" 
+                          className="font-inter"
+                          onClick={() => setIsMessageModalOpen(true)}
+                        >
+                          <Mail className="w-4 h-4 mr-1.5" />
+                          {t('sendMessageBtn')}
+                        </Button>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button size="lg" className="bg-gradient-primary hover:shadow-elegant font-inter">
-                        <Phone className="w-4 h-4 mr-1.5" />
-                        {t('callBtn')}
-                      </Button>
-                      <Button 
-                        size="lg"
-                        variant="outline" 
-                        className="font-inter"
-                        onClick={() => setIsMessageModalOpen(true)}
-                      >
-                        <Mail className="w-4 h-4 mr-1.5" />
-                        {t('sendMessageBtn')}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Button 
-                    size="lg"
-                    className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
-                    onClick={() => setIsMessageModalOpen(true)}
-                  >
-                    <Mail className="w-4 h-4 mr-2" />
-                    {t('contactOwnerSecure')}
-                  </Button>
-                )}
-              </div>
+                  ) : (
+                    <Button 
+                      size="lg"
+                      className="w-full bg-gradient-primary hover:shadow-elegant font-inter"
+                      onClick={() => setIsMessageModalOpen(true)}
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      {t('contactOwnerSecure')}
+                    </Button>
+                  )}
+                </div>
+              )}
 
               {/* Property Details */}
               <div className="space-y-3 pb-32">
@@ -430,30 +470,90 @@ const Property = () => {
               </div>
             </div>
 
-            {/* Fixed Bottom CTA */}
-            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border px-4 py-2.5 safe-bottom z-40">
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <div className="text-[10px] text-muted-foreground font-inter uppercase tracking-wide">
-                    {property.category === 'short-stay' ? t('pricePerNight') : t('totalPrice')}
-                  </div>
-                  <div className="text-xl font-bold text-primary font-playfair leading-tight">
-                    {formatPrice(property.price, property.price_type, (property.price_currency as any) || 'EUR')}
-                  </div>
-                </div>
-              </div>
+            {/* Fixed Bottom CTA - Website Style */}
+            <div className="fixed bottom-16 left-0 right-0 bg-background border-t border-border px-4 py-3 safe-bottom z-40">
               {property.category === 'short-stay' ? (
-                <BookingModal 
-                  property={{
-                    id: property.id,
-                    title: property.title,
-                    price: property.price,
-                    price_type: property.price_type,
-                    category: property.category
-                  }}
-                />
+                <>
+                  {/* Price Display */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="text-2xl font-bold text-primary font-playfair">
+                        {formatPrice(property.price, property.price_type, (property.price_currency || 'EUR') as any)}
+                      </div>
+                      <CurrencySelector />
+                    </div>
+                  </div>
+
+                  {/* Primary: Book Now Button */}
+                  <BookingModal 
+                    property={{
+                      id: property.id,
+                      title: property.title,
+                      price: property.price,
+                      price_type: property.price_type,
+                      category: property.category
+                    }}
+                  />
+
+                  {/* Secondary: Chat Securely Button */}
+                  <Button 
+                    size="lg"
+                    variant="outline"
+                    className="w-full border-2 mt-2"
+                    onClick={() => setIsMessageModalOpen(true)}
+                  >
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Chat Securely
+                  </Button>
+
+                  {/* Security Badges */}
+                  <div className="mt-3 space-y-2">
+                    {/* Transaction Secured Badge */}
+                    <div className="flex items-start gap-2 text-xs">
+                      <div className="w-4 h-4 text-green-600 shrink-0 mt-0.5">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="font-semibold">Transaction Secured by Holibayt Pay™</div>
+                        <div className="text-muted-foreground text-[10px]">Funds held in escrow until transaction confirmation</div>
+                      </div>
+                    </div>
+
+                    {/* Estimated Time Badge */}
+                    <div className="flex items-start gap-2 text-xs">
+                      <div className="w-4 h-4 text-orange-600 shrink-0 mt-0.5">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <path d="M12 6v6l4 2"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="font-semibold">Estimated Time to Close</div>
+                        <div className="text-muted-foreground text-[10px]">Instant confirmation</div>
+                      </div>
+                    </div>
+
+                    {/* Warning Banner */}
+                    <div className="flex items-start gap-2 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-2.5">
+                      <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-yellow-800 dark:text-yellow-200">
+                        All communication and payments must go through Holibayt Pay™ to remain protected.
+                      </p>
+                    </div>
+                  </div>
+                </>
               ) : property.category === 'sale' ? (
-                <div className="space-y-1.5">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex-1">
+                      <div className="text-xs text-muted-foreground">{t('priceFrom')}</div>
+                      <div className="text-xl font-bold text-primary font-playfair">
+                        {formatPrice(property.price, property.price_type, (property.price_currency || 'EUR') as any)}
+                      </div>
+                    </div>
+                  </div>
                   <Button 
                     size="default"
                     className="w-full bg-gradient-primary hover:shadow-elegant font-inter text-sm h-10"
@@ -480,14 +580,24 @@ const Property = () => {
                   })()}
                 </div>
               ) : (
-                <Button 
-                  size="default"
-                  className="w-full bg-gradient-primary hover:shadow-elegant font-inter text-sm h-10"
-                  onClick={() => setIsScheduleModalOpen(true)}
-                >
-                  <Calendar className="w-4 h-4 mr-1.5" />
-                  {t('scheduleVisit')}
-                </Button>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex-1">
+                      <div className="text-xs text-muted-foreground">{t('priceFrom')}</div>
+                      <div className="text-xl font-bold text-primary font-playfair">
+                        {formatPrice(property.price, property.price_type, (property.price_currency || 'EUR') as any)}
+                      </div>
+                    </div>
+                  </div>
+                  <Button 
+                    size="default"
+                    className="w-full bg-gradient-primary hover:shadow-elegant font-inter text-sm h-10"
+                    onClick={() => setIsScheduleModalOpen(true)}
+                  >
+                    <Calendar className="w-4 h-4 mr-1.5" />
+                    {t('scheduleVisit')}
+                  </Button>
+                </div>
               )}
             </div>
           </div>

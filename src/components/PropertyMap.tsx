@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
+import { MapPin, Navigation } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PropertyMapProps {
   location: string;
@@ -81,6 +82,19 @@ const PropertyMap = ({ location, address }: PropertyMapProps) => {
             <div className="text-xs font-inter text-muted-foreground mt-1">À proximité</div>
           </div>
         </div>
+        
+        <Button 
+          variant="outline" 
+          className="w-full mt-3"
+          onClick={() => {
+            const query = encodeURIComponent(address || location);
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+            window.open(mapsUrl, '_blank');
+          }}
+        >
+          <Navigation className="w-4 h-4 mr-2" />
+          Get Directions
+        </Button>
       </CardContent>
     </Card>
   );
