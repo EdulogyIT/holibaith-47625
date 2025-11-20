@@ -1,63 +1,88 @@
-// src/pages/index.tsx  (or wherever your Index component lives)
-
 import SEOHead from "@/components/SEOHead";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-
-import { HeroSection } from "@/components/home/hero-section";
-import { DualOfferingSection } from "@/components/home/dual-offering-section";
-import { FeaturedDestinations } from "@/components/home/featured-destinations";
-import { PropertyShowcase } from "@/components/home/property-showcase";
-import { WhyHolibayt } from "@/components/home/why-holibayt";
-import { CTASection } from "@/components/home/cta-section";
+import MobileHeader from "@/components/MobileHeader";
+import MobileHeroSearch from "@/components/MobileHeroSearch";
+import HeroSection from "@/components/HeroSection";
+import TrendingAreas from "@/components/TrendingAreas";
+import FeaturedListings from "@/components/FeaturedListings";
+import LatestInsights from "@/components/LatestInsights";
+import ThreeWaysSection from "@/components/ThreeWaysSection";
+import ServicesSection from "@/components/ServicesSection";
+import QuickAccessSection from "@/components/QuickAccessSection";
+import ExploreCities from "@/components/ExploreCities";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import NewsletterSection from "@/components/NewsletterSection";
+import ExpertGuidanceCTA from "@/components/ExpertGuidanceCTA";
+import MobileFooter from "@/components/MobileFooter";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import FloatingMapButton from "@/components/FloatingMapButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
-  // same Schema.org data you had inside <script> in Next.js
+  const isMobile = useIsMobile();
+  
   const schema = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Holibayt - Hotels and Short Stays in Algeria",
-    description:
-      "Discover premium hotels and verified short-stay accommodations across Algeria",
-    url: "https://holibayt.com",
-    isPartOf: {
-      "@type": "WebSite",
-      name: "Holibayt",
-      url: "https://holibayt.com",
+    "@type": "RealEstateAgent",
+    "name": "Holibayt",
+    "url": "https://holibayt.com",
+    "logo": "https://holibayt.com/lovable-uploads/bd206675-bfd0-4aee-936b-479f6c1240ca.png",
+    "description": "Plateforme immobilière leader en Algérie pour l'achat, la location et la location saisonnière de propriétés",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "DZ",
+      "addressLocality": "Alger"
     },
-    about: {
-      "@type": "Thing",
-      name: "Algeria Tourism and Hospitality",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+213-21-123-456",
+      "contactType": "customer service"
     },
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: "EUR",
-      lowPrice: "45",
-      highPrice: "500",
-      offerCount: "2500",
-    },
+    "sameAs": [
+      "https://facebook.com/holibayt",
+      "https://instagram.com/holibayt"
+    ]
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <SEOHead
-        title="Holibayt | Discover Algeria Differently - Hotels & Verified Homes"
-        description="Book premium hotels and verified short-stay homes across Algeria. Explore Algiers, Oran, Constantine with curated accommodations. Experience authentic Algerian hospitality with trusted, verified properties in 48+ cities."
-        keywords="algeria hotels, algeria accommodation, algiers hotels, oran vacation rentals, constantine lodging, algeria tourism, verified homes algeria, luxury hotels algeria, short stay algeria, algeria travel booking"
+    <div className="min-h-screen bg-gray-50">
+      <SEOHead 
+        title="Accueil - Immobilier Algérie"
+        description="Découvrez des milliers de propriétés à vendre et à louer en Algérie. Villa, appartement, studio - Trouvez votre propriété idéale avec Holibayt."
+        keywords="immobilier algérie, achat maison alger, location appartement, villa à vendre, propriété algérie"
+        schema={schema}
         canonicalUrl="https://holibayt.com"
-        schema={schema} // SEOHead already accepts `schema` in your project
       />
+      <MobileHeader />
+      <main className="pb-20">
+        {/* Conditional Hero - Desktop uses HeroSection, Mobile uses MobileHeroSearch */}
+        {!isMobile ? (
+          <HeroSection />
+        ) : (
+          <div 
+            className="h-[360px] relative bg-cover bg-center pt-14"
+            style={{
+              backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), url(${new URL('../assets/algeria-hero-mobile.jpg', import.meta.url).href})`
+            }}
+          >
+            <div className="absolute inset-0 flex flex-col justify-end pb-4">
+              <MobileHeroSearch />
+            </div>
+          </div>
+        )}
 
-      <main className="min-h-screen">
-        <Navbar />
-        <HeroSection />
-        <DualOfferingSection />
-        <FeaturedDestinations />
-        <PropertyShowcase />
-        <WhyHolibayt />
-        <CTASection />
-        <Footer />
+        <TrendingAreas />
+        <FeaturedListings />
+        <ServicesSection />
+        <QuickAccessSection />
+        <LatestInsights />
+        <ExploreCities />
+        <TestimonialsSection />
+        <ExpertGuidanceCTA />
+        <NewsletterSection />
+        <MobileFooter />
       </main>
+      <MobileBottomNav />
+      <FloatingMapButton />
     </div>
   );
 };
